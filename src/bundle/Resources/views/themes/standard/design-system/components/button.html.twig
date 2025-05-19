@@ -5,17 +5,26 @@
 {% set disabled = disabled|default(false) %}
 {% set attr = attr|default({}) %}
 
-{% set classes = ibexa_create_css_class({
-    'ibexa-btn': true,
-    ('ibexa-btn--' ~ type): true,
-    ('ibexa-btn--' ~ size): true,
-    'disabled': disabled,
-}, attr) %}
-{% set attr = attr|merge({
-    class: classes,
-    type: 'button',
-}) %}
+{% set classes =
+    ibexa_create_css_class(
+        {
+            'ids-btn': true,
+            ('ids-btn--' ~ type): true,
+            ('ids-btn--' ~ size): true,
+            disabled: disabled
+        },
+        attr
+    )
+%}
+{% set attr =
+    attr|merge({
+        class: classes,
+        type: 'button'
+    })
+%}
 
 <button {{ html.attributes(attr) }}>
-    {% block content %}{% endblock %}
+    {% block content %}
+
+    {% endblock %}
 </button>

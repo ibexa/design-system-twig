@@ -15,7 +15,7 @@ const getInstance = <InstanceType>(domElement: HTMLElementIbexaInstance<Instance
         return domElement.ibexaInstance;
     }
 
-    throw new Error('Instance for this DOM element doesn\'t exists!');
+    throw new Error("Instance for this DOM element doesn't exists!");
 };
 const clearInstance = <InstanceType>(domElement: HTMLElementIbexaInstance<InstanceType>): void => {
     delete domElement.ibexaInstance;

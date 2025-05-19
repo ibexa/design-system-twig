@@ -1,6 +1,6 @@
 {% macro attributes(attr, do_not_escape = false) -%}
     {%- for attrname, attrvalue in attr -%}
-        {{- " " -}}
+        {{- ' ' -}}
         {%- if attrvalue is same as(true) -%}
             {%- if do_not_escape -%}
                 {{- attrname }}="{{ attrname }}"

@@ -11,5 +11,5 @@ export default abstract class Base {
 
     init() {
         this.container.dispatchEvent(new CustomEvent('ibexa-ds:component:initialized', { detail: { component: this } }));
-    };
+    }
 }
