@@ -1,0 +1,29 @@
+{% import ibexa_get_template('design-system/macros/html') as html %}
+
+{% set size = size|default('') %}
+{% set attr = attr|default({}) %}
+
+{% if custom_path is defined %}
+    {% set link_href = custom_path %}
+{% elseif name is defined %}
+    {% set link_href = ibexa_icon_path(name) %}
+{% endif %}
+
+{% set classes =
+    ibexa_create_css_class(
+        {
+            'ids-icon': true,
+            ('ids-icon--' ~ size): size
+        },
+        attr
+    )
+%}
+{% set attr =
+    attr|merge({
+        class: classes
+    })
+%}
+
+<svg {{ html.attributes(attr) }}>
+    <use xlink:href="{{ link_href }}" />
+</svg>

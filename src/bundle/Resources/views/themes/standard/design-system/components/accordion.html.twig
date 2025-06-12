@@ -1,0 +1,31 @@
+{% set initially_expanded = initially_expanded|default(false) %}
+
+{% set classes =
+    ibexa_create_css_class({
+        'ids-accordion': true,
+        'ids-accordion--is-expanded': initially_expanded
+    })
+%}
+
+<div class="{{ classes }}">
+    <div class="ids-accordion__header">
+        <div class="ids-accordion__header-content">
+            {% block header %}
+                {{ header }}
+            {% endblock %}
+        </div>
+        {% include ibexa_get_template('design-system/components/expander') with {
+            has_icon: true,
+            is_expanded: initially_expanded,
+            collapse_label: 'ibexa.expander.label.collapse'|trans|desc('Hide'),
+            expand_label: 'ibexa.expander.label.expand'|trans|desc('Show')
+        } only %}
+    </div>
+    <div class="ids-accordion__content">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</div>
+
+{{ encore_entry_script_tags('ibexa-design-system-accordion-js', null, 'ibexa') }}

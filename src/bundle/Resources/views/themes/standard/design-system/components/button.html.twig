@@ -1,0 +1,30 @@
+{% import ibexa_get_template('design-system/macros/html') as html %}
+
+{% set type = type|default('primary') %}
+{% set size = size|default('large') %}
+{% set disabled = disabled|default(false) %}
+{% set attr = attr|default({}) %}
+
+{% set classes =
+    ibexa_create_css_class(
+        {
+            'ids-btn': true,
+            ('ids-btn--' ~ type): true,
+            ('ids-btn--' ~ size): true,
+            disabled: disabled
+        },
+        attr
+    )
+%}
+{% set attr =
+    attr|merge({
+        class: classes,
+        type: 'button'
+    })
+%}
+
+<button {{ html.attributes(attr) }}>
+    {% block content %}
+
+    {% endblock %}
+</button>
