@@ -2,6 +2,7 @@
 
 {% set size = size|default('') %}
 {% set attr = attr|default({}) %}
+{% set classes = attr.class|default('') %}
 
 {% if custom_path is defined %}
     {% set link_href = custom_path %}
@@ -13,9 +14,9 @@
     ids_create_css_class(
         {
             'ids-icon': true,
-            ('ids-icon--' ~ size): size
-        },
-        attr
+            ('ids-icon--' ~ size): size,
+            (classes): true,
+        }
     )
 %}
 {% set attr =
