@@ -25,7 +25,7 @@ final class CssClassExtension extends AbstractExtension
     {
         return [
             new TwigFunction(
-                'ibexa_create_css_class',
+                'ids_create_css_class',
                 $this->createCssClass(...),
                 [
                     'is_safe' => ['html'],
@@ -34,13 +34,9 @@ final class CssClassExtension extends AbstractExtension
         ];
     }
 
-    public function createCssClass(array $classes, array $attrs = []): string
+    public function createCssClass(array $classes): string
     {
         $class_list = array_keys(array_filter($classes));
-
-        if (!empty($attrs['class'])) {
-            array_push($class_list, $attrs['class']);
-        }
 
         return implode(' ', $class_list);
     }

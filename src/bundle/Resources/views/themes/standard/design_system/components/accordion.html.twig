@@ -1,7 +1,7 @@
 {% set initially_expanded = initially_expanded|default(false) %}
 
 {% set classes =
-    ibexa_create_css_class({
+    ids_create_css_class({
         'ids-accordion': true,
         'ids-accordion--is-expanded': initially_expanded
     })
@@ -14,7 +14,7 @@
                 {{ header }}
             {% endblock %}
         </div>
-        {% include ibexa_get_template('design-system/components/expander') with {
+        {% include ids_get('expander') with {
             has_icon: true,
             is_expanded: initially_expanded,
             collapse_label: 'ibexa.expander.label.collapse'|trans|desc('Hide'),

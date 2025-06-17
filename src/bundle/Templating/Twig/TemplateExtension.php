@@ -13,18 +13,17 @@ use Twig\TwigFunction;
 
 final class TemplateExtension extends AbstractExtension
 {
-    private $base_template_path = '@IbexaDesignSystemTwig/themes/standard/';
-
-    public function __construct()
-    {
-    //     $this->iconPathResolver = $iconPathResolver;
-    }
+    private $baseTemplatePath = '@IbexaDesignSystemTwig/themes/standard/design_system/';
+    private $defaultTemplatePath = 'components/';
+    private $templatePathMapping = [
+        'macros/html' => '',
+    ];
 
     public function getFunctions(): array
     {
         return [
             new TwigFunction(
-                'ibexa_get_template',
+                'ids_get',
                 $this->getTemplate(...),
                 [
                     'is_safe' => ['html'],
@@ -33,8 +32,18 @@ final class TemplateExtension extends AbstractExtension
         ];
     }
 
-    public function getTemplate(string $relative_template_path): string
+    public function getTemplate(string $templateName): string
     {
-        return $this->base_template_path . $relative_template_path . '.html.twig';
+        $fullTemplatePath = $this->baseTemplatePath;
+
+        if (isset($this->templatePathMapping[$templateName])) {
+            $fullTemplatePath .= $this->templatePathMapping[$templateName];
+        } else {
+            $fullTemplatePath .= $this->defaultTemplatePath;
+        }
+
+        $fullTemplatePath .= $templateName . '.html.twig';
+
+        return $fullTemplatePath;
     }
 }

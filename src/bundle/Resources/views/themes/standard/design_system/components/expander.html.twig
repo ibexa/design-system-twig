@@ -5,7 +5,7 @@
 
 {% set label = is_expanded ? collapse_label : expand_label %}
 {% set classes =
-    ibexa_create_css_class({
+    ids_create_css_class({
         'ids-expander': true,
         'ids-expander--has-icon': has_icon,
         'ids-expander--has-label': label != '',
@@ -13,7 +13,7 @@
     })
 %}
 
-{%- embed ibexa_get_template('design-system/components/button')
+{%- embed ids_get('button')
     with {
         type: 'black-tertiary',
         size: 'small',
