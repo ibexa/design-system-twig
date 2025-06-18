@@ -13,19 +13,11 @@ use Twig\TwigFunction;
 
 final class CssClassExtension extends AbstractExtension
 {
-    // /** @var \Ibexa\Contracts\AdminUi\Resolver\IconPathResolverInterface */
-    // private $iconPathResolver;
-
-    public function __construct()
-    {
-    //     $this->iconPathResolver = $iconPathResolver;
-    }
-
     public function getFunctions(): array
     {
         return [
             new TwigFunction(
-                'ibexa_create_css_class',
+                'ids_create_css_class',
                 $this->createCssClass(...),
                 [
                     'is_safe' => ['html'],
@@ -34,14 +26,12 @@ final class CssClassExtension extends AbstractExtension
         ];
     }
 
-    public function createCssClass(array $classes, array $attrs = []): string
+    public function createCssClass(array $classes): string
     {
-        $class_list = array_keys(array_filter($classes));
+        $classList = array_keys(array_filter($classes));
+        $classList = array_filter($classList, static fn ($value) => $value !== '');
+        $classList = array_map('trim', $classList);
 
-        if (!empty($attrs['class'])) {
-            array_push($class_list, $attrs['class']);
-        }
-
-        return implode(' ', $class_list);
+        return implode(' ', $classList);
     }
 }

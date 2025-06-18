@@ -1,7 +1,8 @@
-{% import ibexa_get_template('design-system/macros/html') as html %}
+{% import ids_get('macros/html') as html %}
 
 {% set size = size|default('') %}
 {% set attr = attr|default({}) %}
+{% set classes = attr.class|default('') %}
 
 {% if custom_path is defined %}
     {% set link_href = custom_path %}
@@ -10,12 +11,12 @@
 {% endif %}
 
 {% set classes =
-    ibexa_create_css_class(
+    ids_create_css_class(
         {
             'ids-icon': true,
-            ('ids-icon--' ~ size): size
-        },
-        attr
+            ('ids-icon--' ~ size): size,
+            (classes): true,
+        }
     )
 %}
 {% set attr =
