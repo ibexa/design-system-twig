@@ -6,26 +6,37 @@
 {% set attr = attr|default({}) %}
 {% set classes = attr.class|default('') %}
 
-{% set classes =
-    ids_create_css_class(
-        {
-            'ids-btn': true,
-            ('ids-btn--' ~ type): true,
-            ('ids-btn--' ~ size): true,
-            disabled: disabled,
-            (classes): true,
-        }
-    )
-%}
+{% set button_classes = html_cva(
+    base: 'ids-btn',
+    variants: {
+        type: {
+            'primary': 'ids-btn--primary', 
+            'secondary': 'ids-btn--secondary', 
+            'tertiary': 'ids-btn--tertiary', 
+            'black-secondary': 'ids-btn--black-secondary', 
+            'black-tertiary': 'ids-btn--black-tertiary', 
+        },
+        size: {
+            'large': 'ids-btn--large', 
+            'small': 'ids-btn--small', 
+            'extra-small': 'ids-btn--extra-small',
+        },
+        disabled: {
+            true: 'ids-btn--disabled',
+        },
+    }
+) %}
+
 {% set attr =
     attr|merge({
-        class: classes,
-        type: 'button'
+        class: button_classes.apply({ type, size, disabled }, classes),
+        disabled,
+        type: 'button',
     })
 %}
 
 <button {{ html.attributes(attr) }}>
     {% block content %}
-
+        {{ content|raw }}
     {% endblock %}
 </button>
