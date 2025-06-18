@@ -6,6 +6,91 @@
 {% set attr = attr|default({}) %}
 {% set classes = attr.class|default('') %}
 
+{# All in html_cva #}
+{# 
+    pros: all types/sizes in one place, easy to read and maintain, allows to more vast mapping, modifiers can be any string
+    cons: true/false are little iffy 
+
+    'example' added only to showcase elasticity of html_cva in terms of mapping
+#}
+{% set button_classes = html_cva(
+    base: 'ids-btn',
+    variants: {
+        type: {
+            'primary': 'ids-btn--primary', 
+            'secondary': 'ids-btn--secondary', 
+            'tertiary': 'ids-btn--tertiary', 
+            'black-secondary': 'ids-btn--black-secondary', 
+            'black-tertiary': 'ids-btn--black-tertiary', 
+        },
+        size: {
+            'large': 'ids-btn--large', 
+            'small': 'ids-btn--small', 
+            'extra-small': 'ids-btn--extra-small',
+        },
+        example: {
+            'submit': 'ids-btn--primary ids-btn--large',
+            'cancel': 'ids-btn--secondary ids-btn--large',
+        }
+        disabled: {
+            true: 'ids-btn--disabled',
+        },
+    }
+) %}
+
+{{ button_classes.apply({ type, size, disabled }, classes)}}
+
+{# All in html_classes #}
+{# 
+    pros: true/false are clear,
+    cons: types/sizes are magic values, unlike in html_cva we don't see available options, it allows to use only variable modifiers 
+#}
+{% set button_classes2 = html_classes(
+    'ids-btn',
+    'ids-btn--' ~ type,
+    'ids-btn--' ~ size,
+    {
+        'ids-btn--disabled': disabled,
+    },
+    classes,
+) %}
+
+{{ button_classes2 }}
+
+{# Combined - true/false as html_classes, variants as html_cva #}
+{#
+    pros: true/false are clear, types/sizes are in one place, easy to read and maintain, allows to more vast mapping, modifiers can be any string
+    cons: uses two different methods, needs to either use two different variables or putting html_classes directly as base
+#}
+{% set button_classes3_base = html_classes(
+    'ids-btn',
+    {
+        'ids-btn--disabled': disabled,
+    },
+) %}
+
+{% set button_classes3 = html_cva(
+    base: button_classes3_base,
+    variants: {
+        type: {
+            'primary': 'ids-btn--primary', 
+            'secondary': 'ids-btn--secondary', 
+            'tertiary': 'ids-btn--tertiary', 
+            'black-secondary': 'ids-btn--black-secondary', 
+            'black-tertiary': 'ids-btn--black-tertiary', 
+        },
+        size: {
+            'large': 'ids-btn--large', 
+            'small': 'ids-btn--small', 
+            'extra-small': 'ids-btn--extra-small',
+        },
+    }
+) %}
+
+{{ button_classes3.apply({ type, size }, classes)}}
+
+{# end #}
+
 {% set classes =
     ids_create_css_class(
         {
