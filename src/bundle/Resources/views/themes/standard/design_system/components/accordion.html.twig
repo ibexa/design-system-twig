@@ -1,11 +1,8 @@
 {% set initially_expanded = initially_expanded|default(false) %}
 
-{% set classes =
-    ids_create_css_class({
-        'ids-accordion': true,
-        'ids-accordion--is-expanded': initially_expanded
-    })
-%}
+{% set classes = html_classes('ids-accordion', {
+    'ids-accordion--is-expanded': initially_expanded
+}) %}
 
 <div class="{{ classes }}">
     <div class="ids-accordion__header">
@@ -23,7 +20,7 @@
     </div>
     <div class="ids-accordion__content">
         {% block content %}
-
+            {{ content }}
         {% endblock %}
     </div>
 </div>

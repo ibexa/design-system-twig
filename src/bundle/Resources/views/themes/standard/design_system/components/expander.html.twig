@@ -4,29 +4,20 @@
 {% set expand_label = expand_label|default('') %}
 
 {% set label = is_expanded ? collapse_label : expand_label %}
-{% set classes =
-    ids_create_css_class({
-        'ids-expander': true,
-        'ids-expander--has-icon': has_icon,
-        'ids-expander--has-label': label != '',
-        'ids-expander--is-expanded': is_expanded
-    })
-%}
+{% set classes = html_classes('ids-expander', 'ids-expander--has-label', {
+    'ids-expander--has-icon': has_icon,
+    'ids-expander--is-expanded': is_expanded
+}) %}
 
-{%- embed ids_get('button')
-    with {
-        type: 'black-tertiary',
-        size: 'small',
-        attr: {
-            class: classes,
-            'data-expand-label': expand_label,
-            'data-collapse-label': collapse_label
-        }
+{% include ids_get('button') with {
+    type: 'black-tertiary',
+    size: 'small',
+    content: label,
+    attr: {
+        class: classes,
+        'data-expand-label': expand_label,
+        'data-collapse-label': collapse_label
     }
--%}
-    {% block content %}
-        {{ label }}
-    {% endblock %}
-{%- endembed -%}
+} %}
 
 {{ encore_entry_script_tags('ibexa-design-system-expander-js', null, 'ibexa') }}

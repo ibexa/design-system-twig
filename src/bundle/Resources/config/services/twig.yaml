@@ -4,10 +4,6 @@ services:
         autowire: true
         autoconfigure: true
 
-    Ibexa\Bundle\DesignSystemTwig\Templating\Twig\CssClassExtension:
-        tags:
-            - { name: twig.extension }
-
     Ibexa\Bundle\DesignSystemTwig\Templating\Twig\TemplateExtension:
         tags:
             - { name: twig.extension }
