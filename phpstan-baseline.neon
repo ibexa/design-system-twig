@@ -1,0 +1,25 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method Ibexa\\Bundle\\DesignSystemTwig\\Templating\\Twig\\CssClassExtension\:\:createCssClass\(\) has parameter \$classes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/bundle/Templating/Twig/CssClassExtension.php
+
+		-
+			message: '#^Property Ibexa\\Bundle\\DesignSystemTwig\\Templating\\Twig\\TemplateExtension\:\:\$baseTemplatePath has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/bundle/Templating/Twig/TemplateExtension.php
+
+		-
+			message: '#^Property Ibexa\\Bundle\\DesignSystemTwig\\Templating\\Twig\\TemplateExtension\:\:\$defaultTemplatePath has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/bundle/Templating/Twig/TemplateExtension.php
+
+		-
+			message: '#^Property Ibexa\\Bundle\\DesignSystemTwig\\Templating\\Twig\\TemplateExtension\:\:\$templatePathMapping has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/bundle/Templating/Twig/TemplateExtension.php
