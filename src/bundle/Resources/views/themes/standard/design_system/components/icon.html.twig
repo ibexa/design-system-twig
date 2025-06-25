@@ -10,25 +10,32 @@
     {% set link_href = ibexa_icon_path(name) %}
 {% endif %}
 
-{% set icon_classes = html_cva(
-    base: 'ids-icon',
-    variants: {
-        size: {
-            'tiny': 'ids-icon--tiny',
-            'tiny-small': 'ids-icon--tiny-small',
-            'small': 'ids-icon--small',
-            'small-medium': 'ids-icon--small-medium',
-            'medium': 'ids-icon--medium',
-            'medium-large': 'ids-icon--medium-large',
-            'large': 'ids-icon--large',
-            'extra-large': 'ids-icon--extra-large',
+{% set icon_classes =
+    html_cva(
+        base: 'ids-icon',
+        variants: {
+            size: {
+                tiny: 'ids-icon--tiny',
+                'tiny-small': 'ids-icon--tiny-small',
+                small: 'ids-icon--small',
+                'small-medium': 'ids-icon--small-medium',
+                medium: 'ids-icon--medium',
+                'medium-large': 'ids-icon--medium-large',
+                large: 'ids-icon--large',
+                'extra-large': 'ids-icon--extra-large'
+            }
         }
-    }
-) %}
+    )
+%}
 
 {% set attr =
     attr|merge({
-        class: icon_classes.apply({ size }, classes),
+        class: icon_classes.apply(
+            {
+                size
+            },
+            classes
+        )
     })
 %}
 

@@ -4,10 +4,16 @@
 {% set expand_label = expand_label|default('') %}
 
 {% set label = is_expanded ? collapse_label : expand_label %}
-{% set classes = html_classes('ids-expander', 'ids-expander--has-label', {
-    'ids-expander--has-icon': has_icon,
-    'ids-expander--is-expanded': is_expanded
-}) %}
+{% set classes =
+    html_classes(
+        'ids-expander',
+        'ids-expander--has-label',
+        {
+            'ids-expander--has-icon': has_icon,
+            'ids-expander--is-expanded': is_expanded
+        }
+    )
+%}
 
 {% include ids_get('button') with {
     type: 'black-tertiary',
