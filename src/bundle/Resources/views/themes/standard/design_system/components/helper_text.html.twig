@@ -1,0 +1,60 @@
+{% import ids_get('macros/html') as html %}
+
+{% set type = type|default('default') %}
+{% set title = title|default('') %}
+{% set attr = attr|default({}) %}
+{% set classes = attr.class|default('') %}
+
+{% set ICONS_TYPE_MAP = {
+    default: 'info-circle',
+    error: 'alert-error'
+} %}
+
+{% set helper_text_classes =
+    html_cva(
+        base: 'ids-helper-text',
+        variants: {
+            type: {
+                default: 'ids-helper-text--default',
+                error: 'ids-helper-text--error'
+            }
+        }
+    )
+%}
+{% set attr =
+    attr|merge({
+        class: helper_text_classes.apply(
+            {
+                type
+            },
+            classes
+        ),
+        title: title
+    })
+%}
+
+<div {{ html.attributes(attr) }}>
+    {% block icon_wrapper %}
+        <div class="ids-helper-text__icon-wrapper">
+            {% block icon_content %}
+                {{
+                    include(
+                        ids_get('icon'),
+                        {
+                            attr: {
+                                class: 'ids-icon ids-helper-text__icon'
+                            },
+                            name: ICONS_TYPE_MAP[type],
+                            size: 'small'
+                        }
+                    )
+                }}
+            {% endblock %}
+        </div>
+    {% endblock %}
+    {% block content_wrapper %}
+        <div class="ids-helper-text__content-wrapper">
+            {{ content|raw }}
+        </div>
+    {% endblock %}
+</div>

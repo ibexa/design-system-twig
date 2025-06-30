@@ -1,8 +1,13 @@
 {% set initially_expanded = initially_expanded|default(false) %}
 
-{% set classes = html_classes('ids-accordion', {
-    'ids-accordion--is-expanded': initially_expanded
-}) %}
+{% set classes =
+    html_classes(
+        'ids-accordion',
+        {
+            'ids-accordion--is-expanded': initially_expanded
+        }
+    )
+%}
 
 <div class="{{ classes }}">
     <div class="ids-accordion__header">

@@ -1,0 +1,26 @@
+{% import ids_get('macros/html') as html %}
+
+{% set error = error|default(false) %}
+{% set required = required|default(false) %}
+{% set title = title|default('') %}
+{% set attr = attr|default({}) %}
+
+{% set classes =
+    html_classes(
+        'ids-label',
+        attr.classes|default(''),
+        {
+            'ids-label--error': error,
+            'ids-label--required': required
+        }
+    )
+%}
+{% set attr =
+    attr|merge({
+        class: classes,
+        for,
+        title,
+    })
+%}
+
+<label {{ html.attributes(attr) }}>{{ content|raw }}</label>

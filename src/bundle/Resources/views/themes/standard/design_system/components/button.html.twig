@@ -6,32 +6,43 @@
 {% set attr = attr|default({}) %}
 {% set classes = attr.class|default('') %}
 
-{% set button_classes = html_cva(
-    base: 'ids-btn',
-    variants: {
-        type: {
-            'primary': 'ids-btn--primary', 
-            'secondary': 'ids-btn--secondary', 
-            'tertiary': 'ids-btn--tertiary', 
-            'black-secondary': 'ids-btn--black-secondary', 
-            'black-tertiary': 'ids-btn--black-tertiary', 
-        },
-        size: {
-            'large': 'ids-btn--large', 
-            'small': 'ids-btn--small', 
-            'extra-small': 'ids-btn--extra-small',
-        },
-        disabled: {
-            true: 'ids-btn--disabled',
-        },
-    }
-) %}
+{# prettier-ignore-start #}
+{% set button_classes =
+    html_cva(
+        base: 'ids-btn',
+        variants: {
+            type: {
+                primary: 'ids-btn--primary',
+                secondary: 'ids-btn--secondary',
+                tertiary: 'ids-btn--tertiary',
+                'black-secondary': 'ids-btn--black-secondary',
+                'black-tertiary': 'ids-btn--black-tertiary'
+            },
+            size: {
+                large: 'ids-btn--large',
+                small: 'ids-btn--small',
+                'extra-small': 'ids-btn--extra-small'
+            },
+            disabled: {
+                'true': 'ids-btn--disabled'
+            }
+        }
+    )
+%}
+{# prettier-ignore-end #}
 
 {% set attr =
     attr|merge({
-        class: button_classes.apply({ type, size, disabled }, classes),
+        class: button_classes.apply(
+            {
+                type,
+                size,
+                disabled
+            },
+            classes
+        ),
         disabled,
-        type: 'button',
+        type: 'button'
     })
 %}
 
