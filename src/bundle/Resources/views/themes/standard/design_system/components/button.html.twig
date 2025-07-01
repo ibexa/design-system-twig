@@ -2,7 +2,7 @@
 
 {% set ICON_SIZE_MAPPING = {
     medium: 'small',
-    small: 'tiny-small',
+    small: 'tiny-small'
 } %}
 
 {% set type = type|default('primary') %}
@@ -15,37 +15,42 @@
 {% set has_label = block('label')|trim is not empty %}
 {% set is_icon_only = icon is not null and not has_label %}
 
-{% set button_classes = html_cva(
-    base: 'ids-btn',
-    variants: {
-        type: {
-            'primary': 'ids-btn--primary',
-            'secondary': 'ids-btn--secondary',
-            'tertiary': 'ids-btn--tertiary',
-            'black-secondary': 'ids-btn--black-secondary',
-            'black-tertiary': 'ids-btn--black-tertiary',
-        },
-        size: {
-            'medium': 'ids-btn--medium',
-            'small': 'ids-btn--small',
-        },
-        disabled: {
-            1: 'ids-btn--disabled',
-        },
-        is_icon_only: {
-            1: 'ids-btn--icon-only',
-        },
-    }
-) %}
+{% set button_classes =
+    html_cva(
+        base: 'ids-btn',
+        variants: {
+            type: {
+                primary: 'ids-btn--primary',
+                secondary: 'ids-btn--secondary',
+                tertiary: 'ids-btn--tertiary',
+                'black-secondary': 'ids-btn--black-secondary',
+                'black-tertiary': 'ids-btn--black-tertiary'
+            },
+            size: {
+                medium: 'ids-btn--medium',
+                small: 'ids-btn--small'
+            },
+            disabled: {
+                1: 'ids-btn--disabled'
+            },
+            is_icon_only: {
+                1: 'ids-btn--icon-only'
+            }
+        }
+    )
+%}
 
 {% set attr =
     attr|merge({
-        class: button_classes.apply({
-            type,
-            size,
-            disabled: disabled|number_format,
-            is_icon_only: is_icon_only|number_format
-        }, classes),
+        class: button_classes.apply(
+            {
+                type,
+                size,
+                disabled: disabled|number_format,
+                is_icon_only: is_icon_only|number_format
+            },
+            classes
+        ),
         disabled,
         type: 'button'
     })
@@ -56,10 +61,16 @@
         {% if icon %}
             <div class="ids-btn__icon">
                 {% block icon %}
-                    {{ include(ids_get('icon') , {
-                        name: icon,
-                        size: ICON_SIZE_MAPPING[size]|default('small'),
-                    }, with_context: false) }}
+                    {{
+                        include(
+                            ids_get('icon'),
+                            {
+                                name: icon,
+                                size: ICON_SIZE_MAPPING[size]|default('small')
+                            },
+                            with_context: false
+                        )
+                    }}
                 {% endblock %}
             </div>
         {% endif %}
