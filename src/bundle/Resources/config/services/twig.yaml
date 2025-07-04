@@ -7,3 +7,6 @@ services:
     Ibexa\Bundle\DesignSystemTwig\Templating\Twig\TemplateExtension:
         tags:
             - { name: twig.extension }
+
+    Ibexa\DesignSystemTwig\Twig\Components\:
+        resource: '../../../lib/Twig/Components/'

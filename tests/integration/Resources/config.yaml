@@ -1,0 +1,22 @@
+parameters:
+    locale_fallback: en
+
+ibexa_design_engine:
+    design_list:
+        standard:
+            - standard
+    templates_theme_paths:
+        standard:
+            - '%kernel.project_dir%/src/bundle/Resources/views/themes/standard'
+
+webpack_encore:
+    # The path where Encore is building the assets - i.e. Encore.setOutputPath()
+    output_path: '%kernel.project_dir%/var/public/build'
+
+ibexa:
+    system:
+        default:
+            assets:
+                icon_sets:
+                    ids_icons: /bundles/ibexaadminuiassets/vendors/ids-assets/dist/img/all-icons.svg
+                default_icon_set: ids_icons

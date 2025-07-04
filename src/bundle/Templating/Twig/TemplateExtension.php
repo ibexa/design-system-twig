@@ -14,7 +14,9 @@ use Twig\TwigFunction;
 final class TemplateExtension extends AbstractExtension
 {
     private $baseTemplatePath = '@IbexaDesignSystemTwig/themes/standard/design_system/';
+
     private $defaultTemplatePath = 'components/';
+
     private $templatePathMapping = [
         'macros/html' => '',
     ];
