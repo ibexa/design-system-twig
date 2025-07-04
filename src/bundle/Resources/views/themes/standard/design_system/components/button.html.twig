@@ -1,12 +1,20 @@
 {% import ids_get('macros/html') as html %}
 
+{% set ICON_SIZE_MAPPING = {
+    medium: 'small',
+    small: 'tiny-small'
+} %}
+
 {% set type = type|default('primary') %}
-{% set size = size|default('large') %}
+{% set size = size|default('medium') %}
 {% set disabled = disabled|default(false) %}
+{% set icon = icon|default(null) %}
 {% set attr = attr|default({}) %}
 {% set classes = attr.class|default('') %}
 
-{# prettier-ignore-start #}
+{% set has_label = block('label')|trim is not empty %}
+{% set is_icon_only = icon is not null and not has_label %}
+
 {% set button_classes =
     html_cva(
         base: 'ids-btn',
@@ -15,21 +23,22 @@
                 primary: 'ids-btn--primary',
                 secondary: 'ids-btn--secondary',
                 tertiary: 'ids-btn--tertiary',
-                'black-secondary': 'ids-btn--black-secondary',
-                'black-tertiary': 'ids-btn--black-tertiary'
+                'secondary-alt': 'ids-btn--secondary-alt',
+                'tertiary-alt': 'ids-btn--tertiary-alt'
             },
             size: {
-                large: 'ids-btn--large',
-                small: 'ids-btn--small',
-                'extra-small': 'ids-btn--extra-small'
+                medium: 'ids-btn--medium',
+                small: 'ids-btn--small'
             },
             disabled: {
-                'true': 'ids-btn--disabled'
+                1: 'ids-btn--disabled'
+            },
+            is_icon_only: {
+                1: 'ids-btn--icon-only'
             }
         }
     )
 %}
-{# prettier-ignore-end #}
 
 {% set attr =
     attr|merge({
@@ -37,7 +46,8 @@
             {
                 type,
                 size,
-                disabled
+                disabled: disabled|number_format,
+                is_icon_only: is_icon_only|number_format
             },
             classes
         ),
@@ -48,6 +58,28 @@
 
 <button {{ html.attributes(attr) }}>
     {% block content %}
-        {{ content|raw }}
+        {% if icon %}
+            <div class="ids-btn__icon">
+                {% block icon %}
+                    {{
+                        include(
+                            ids_get('icon'),
+                            {
+                                name: icon,
+                                size: ICON_SIZE_MAPPING[size]|default('small')
+                            },
+                            with_context: false
+                        )
+                    }}
+                {% endblock %}
+            </div>
+        {% endif %}
+        {% if has_label %}
+            <div class="ids-btn__label">
+                {% block label %}
+                    {{ label|raw }}
+                {% endblock %}
+            </div>
+        {% endif %}
     {% endblock %}
 </button>
