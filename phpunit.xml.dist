@@ -20,4 +20,7 @@
             <directory>tests/lib</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <env name="KERNEL_CLASS" value="Ibexa\Tests\Integration\DesignSystemTwig\IbexaTestKernel" />
+    </php>
 </phpunit>
