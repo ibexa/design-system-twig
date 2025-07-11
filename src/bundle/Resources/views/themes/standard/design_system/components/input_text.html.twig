@@ -1,5 +1,6 @@
 {% import ids_get('macros/html') as html %}
 
+{% set actions = actions|default([]) %}
 {% set disabled = disabled|default(false) %}
 {% set error = error|default(false) %}
 {% set placeholder = placeholder|default('') %}
@@ -9,13 +10,19 @@
 {% set title = title|default('') %}
 {% set type = type|default('text') %}
 {% set value = value|default('') %}
-{% set attr = attr|default({}) %}
-{% set classes = attr.class|default('') %}
+{% set input_attr = input_attr|default({}) %}
+{% set input_default_classes = input_attr.class|default('') %}
 
-{# prettier-ignore-start #}
 {% set input_classes =
     html_cva(
-        base: 'ids-input',
+        base: html_classes(
+            'ids-input',
+            {
+                'ids-input--disabled': disabled,
+                'ids-input--error': error,
+                'ids-input--required': required
+            }
+        ),
         variants: {
             type: {
                 text: 'ids-input--text',
@@ -29,32 +36,19 @@
             size: {
                 medium: 'ids-input--medium',
                 small: 'ids-input--small'
-            },
-            disabled: {
-                'true': 'ids-input--disabled'
-            },
-            error: {
-                'true': 'ids-input--error'
-            },
-            required: {
-                'true': 'ids-input--required'
             }
         }
     )
 %}
-{# prettier-ignore-end #}
 
-{% set attr =
-    attr|merge({
+{% set input_attr =
+    input_attr|merge({
         class: input_classes.apply(
             {
                 type,
-                size,
-                disabled,
-                error,
-                required
+                size
             },
-            classes
+            input_default_classes
         ),
         disabled,
         placeholder,
@@ -65,4 +59,41 @@
     })
 %}
 
-<input {{ html.attributes(attr) }} />
+{% set clear_action %}
+    {% include ids_get('ui/clear_btn') with {
+        disabled
+    } %}
+{% endset %}
+
+{% set actions =
+    actions|merge(
+        [
+            {
+                id: 'clear',
+                component: clear_action
+            }
+        ]
+    )
+%}
+
+<div class="ids-input-text">
+    <div class="ids-input-text__source">
+        <input {{ html.attributes(input_attr) }} />
+    </div>
+    <div class="ids-input-text__actions">
+        {%- for action in actions -%}
+            {% set action_classes =
+                html_classes(
+                    'ids-input-text__action',
+                    {
+                        'ids-input-text__action--hidden': action.id == 'clear' and value is empty
+                    }
+                )
+            %}
+
+            <div class="{{ action_classes }}">
+                {{- action.component|raw -}}
+            </div>
+        {%- endfor -%}
+    </div>
+</div>
