@@ -77,7 +77,7 @@
         {% if has_label %}
             <div class="ids-btn__label">
                 {% block label %}
-                    {{ label|raw }}
+                    {{ label|default(null)|raw }}
                 {% endblock %}
             </div>
         {% endif %}
