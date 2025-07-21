@@ -10,19 +10,14 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 #[AsTwigComponent(
-    name: 'ibexa:CustomIcon',
-    template: '@ibexadesign/design_system/components/icon.html.twig'
+    name: 'ibexa:Button',
+    template: '@ibexadesign/design_system/components/button.html.twig'
 )]
-final class CustomIcon extends AbstractIcon
+final class Button extends AbstractButton
 {
-    #[ExposeInTemplate(name: 'custom_path')]
-    public string $path;
-
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $resolver->define('path')->required()->allowedTypes('string');
     }
 }
