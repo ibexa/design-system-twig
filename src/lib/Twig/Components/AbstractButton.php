@@ -19,8 +19,6 @@ abstract class AbstractButton
     public bool $disabled = false;
     public string $icon = '';
 
-    public bool $icon_only = false;
-
     private static $iconSizeMap = [
         'small' => 'tiny-small',
         'medium' => 'small',
@@ -42,10 +40,15 @@ abstract class AbstractButton
             ->define('type')
             ->allowedValues('primary', 'secondary', 'tertiary', 'secondary-alt', 'tertiary-alt')
             ->default('primary');
-        $resolver->define('disabled')->allowedTypes('bool')->default(false);
-        $resolver->define('icon')->allowedTypes('string');
+        $resolver
+            ->define('disabled')
+            ->allowedTypes('bool')
+            ->default(false);
+        $resolver
+            ->define('icon')
+            ->allowedTypes('string');
 
-        // $this->configurePropsResolver($resolver);
+        $this->configurePropsResolver($resolver);
 
         return $resolver->resolve($props) + $props;
     }

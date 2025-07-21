@@ -21,17 +21,17 @@ class Accordion extends Base {
         }
 
         this._togglerInstance = getInstance<ExpanderType>(this._togglerElement);
-        this._contentElement = container.querySelector<HTMLElement>('.ibexa-accordion__content');
+        this._contentElement = container.querySelector<HTMLElement>('.ids-accordion__content');
 
         this.onToggleClick = this.onToggleClick.bind(this);
     }
 
     isExpanded(): boolean {
-        return this.container.classList.contains('ibexa-accordion--is-expanded');
+        return this.container.classList.contains('ids-accordion--is-expanded');
     }
 
     toggleIsExpanded(isExpanded: boolean) {
-        const prevIsExpanded = this.container.classList.contains('ibexa-accordion--is-expanded');
+        const prevIsExpanded = this.container.classList.contains('ids-accordion--is-expanded');
 
         if (prevIsExpanded !== isExpanded) {
             this._togglerInstance.toggleIsExpanded(isExpanded);
@@ -47,12 +47,12 @@ class Accordion extends Base {
 
         reflow(this._contentElement);
 
-        this.container.classList.toggle('ibexa-accordion--is-expanded', isExpanded);
-        this.container.classList.toggle('ibexa-accordion--is-animating', true);
+        this.container.classList.toggle('ids-accordion--is-expanded', isExpanded);
+        this.container.classList.toggle('ids-accordion--is-animating', true);
         this._contentElement.addEventListener(
             'transitionend',
             () => {
-                this.container.classList.toggle('ibexa-accordion--is-animating', false);
+                this.container.classList.toggle('ids-accordion--is-animating', false);
 
                 if (this._contentElement) {
                     this._contentElement.style.removeProperty('height');
@@ -81,7 +81,7 @@ class Accordion extends Base {
     }
 }
 
-const accordionContainers = document.querySelectorAll<HTMLElement>('.ibexa-accordion:not([custom-init])');
+const accordionContainers = document.querySelectorAll<HTMLElement>('.ids-accordion:not([custom-init])');
 
 accordionContainers.forEach((accordionContainer: HTMLElement) => {
     const accordionInstance = new Accordion(accordionContainer);

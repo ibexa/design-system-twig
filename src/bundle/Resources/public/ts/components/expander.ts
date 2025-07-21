@@ -11,7 +11,7 @@ export default class Expander extends Base {
     constructor(container: HTMLElement) {
         super(container);
 
-        this._hasLabel = this.container.classList.contains('ibexa-expander--has-label');
+        this._hasLabel = this.container.classList.contains('ids-expander--has-label');
 
         if (this._hasLabel) {
             this._collapseLabel = container.dataset.collapseLabel;
@@ -24,11 +24,11 @@ export default class Expander extends Base {
     }
 
     isExpanded(): boolean {
-        return this.container.classList.contains('ibexa-expander--is-expanded');
+        return this.container.classList.contains('ids-expander--is-expanded');
     }
 
     toggleIsExpanded(isExpanded: boolean) {
-        this.container.classList.toggle('ibexa-expander--is-expanded', isExpanded);
+        this.container.classList.toggle('ids-expander--is-expanded', isExpanded);
 
         if (this._hasLabel) {
             this.container.innerHTML = (isExpanded ? this._collapseLabel : this._expandLabel) ?? '';
@@ -50,7 +50,7 @@ export default class Expander extends Base {
 
 export type ExpanderType = InstanceType<typeof Expander>;
 
-const expanderContainers = document.querySelectorAll<HTMLElement>('.ibexa-expander:not([custom-init])');
+const expanderContainers = document.querySelectorAll<HTMLElement>('.ids-expander:not([custom-init])');
 
 expanderContainers.forEach((expanderContainer: HTMLElement) => {
     const expanderInstance = new Expander(expanderContainer);
