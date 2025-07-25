@@ -7,10 +7,18 @@ export default class Expander extends Base {
     private _hasLabel: boolean;
     private _collapseLabel: string | undefined;
     private _expandLabel: string | undefined;
+    private _labelContainer: HTMLElement;
 
     constructor(container: HTMLElement) {
         super(container);
 
+        const labelContainer = this.container.querySelector<HTMLElement>('.ids-expander__label');
+
+        if (!labelContainer) {
+            throw new Error('No label container found for this expander!');
+        }
+
+        this._labelContainer = labelContainer;
         this._hasLabel = this.container.classList.contains('ids-expander--has-label');
 
         if (this._hasLabel) {
@@ -30,8 +38,8 @@ export default class Expander extends Base {
     toggleIsExpanded(isExpanded: boolean) {
         this.container.classList.toggle('ids-expander--is-expanded', isExpanded);
 
-        if (this._hasLabel) {
-            this.container.innerHTML = (isExpanded ? this._collapseLabel : this._expandLabel) ?? '';
+        if (this._hasLabel && this._collapseLabel && this._expandLabel) {
+            this._labelContainer.innerHTML = isExpanded ? this._collapseLabel : this._expandLabel;
         }
     }
 
@@ -49,11 +57,3 @@ export default class Expander extends Base {
 }
 
 export type ExpanderType = InstanceType<typeof Expander>;
-
-const expanderContainers = document.querySelectorAll<HTMLElement>('.ids-expander:not([custom-init])');
-
-expanderContainers.forEach((expanderContainer: HTMLElement) => {
-    const expanderInstance = new Expander(expanderContainer);
-
-    expanderInstance.init();
-});

@@ -1,3 +1,5 @@
+{% set value = attributes.only('value') %}
+
 {% set input_classes =
     html_cva(
         base: html_classes('ids-input', {
@@ -23,51 +25,32 @@
     )
 %}
 
-{# {% set clear_action %}
-    <twig:ibexa:IconButton :disabled="disabled" />
-    {% include ids_get('ui/clear_btn') with {
-        disabled
-    } %}
-{% endset %} #}
+{% set clear_action %}
+    <twig:ibexa:ui:ClearBtn :disabled="disabled" />
+{% endset %}
 
-<input 
-    class="{{ input_classes.apply({ type, size }, attributes.render('class')) }}"
-    {{ disabled ?? 'disabled' }}
-    {{ required ? 'required' }}
-    {{ attributes }}
-/>
-
-
-
-{# {% set actions =
-    actions|merge(
-        [
-            {
-                id: 'clear',
-                component: clear_action
-            }
-        ]
-    )
+{% set actions =
+    [
+        {
+            id: 'clear',
+            class: value is empty ? 'ids-input-text__action--hidden' : '',
+            component: clear_action
+        }
+    ]
 %}
 
 <div class="ids-input-text">
     <div class="ids-input-text__source">
-        <input {{ html.attributes(input_attr) }} />
+        <input 
+            class="{{ input_classes.apply({ type, size }, attributes.render('class')) }}"
+            {{ attributes.defaults({ disabled, required }) }}
+        />
     </div>
     <div class="ids-input-text__actions">
         {%- for action in actions -%}
-            {% set action_classes =
-                html_classes(
-                    'ids-input-text__action',
-                    {
-                        'ids-input-text__action--hidden': action.id == 'clear' and value is empty
-                    }
-                )
-            %}
-
-            <div class="{{ action_classes }}">
+            <div class="{{ action.class }}">
                 {{- action.component|raw -}}
             </div>
         {%- endfor -%}
     </div>
-</div> #}
+</div>

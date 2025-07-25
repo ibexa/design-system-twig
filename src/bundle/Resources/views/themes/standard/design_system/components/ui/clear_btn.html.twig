@@ -1,15 +1,11 @@
-{% set disabled = disabled|default(false) %}
-
 {% set clear_msg = 'ibexa.clear-btn.label'|trans|desc('Clear') %}
 
-{% include ids_get('button') with {
-    type: 'tertiary-alt',
-    size: 'small',
-    icon: 'discard',
-    disabled,
-    title: clear_msg,
-    attr: {
-        class: 'ids-clear-btn',
-        'aria-label': clear_msg
-    }
-} %}
+<twig:ibexa:IconButton
+    type="tertiary-alt"
+    size="small"
+    icon="discard"
+    class="ids-clear-btn"
+    :disabled="disabled"
+    :title="clear_msg"
+    :aria-label="clear_msg"
+/>

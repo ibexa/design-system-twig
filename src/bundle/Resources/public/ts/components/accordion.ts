@@ -1,12 +1,11 @@
+import Expander, { ExpanderType } from './expander';
 import Base from '../shared/Base';
-import { ExpanderType } from './expander';
 
 import { HTMLElementIDSInstance } from '../shared/types';
 
-import { getInstance } from '../helpers/object.instances';
 import { reflow } from '../helpers/dom';
 
-class Accordion extends Base {
+export default class Accordion extends Base {
     private _togglerElement: HTMLElementIDSInstance<ExpanderType> | null;
     private _togglerInstance: ExpanderType;
     private _contentElement: HTMLElement | null;
@@ -14,13 +13,13 @@ class Accordion extends Base {
     constructor(container: HTMLElement) {
         super(container);
 
-        this._togglerElement = container.querySelector<HTMLElementIDSInstance<ExpanderType>>('.ibexa-expander');
+        this._togglerElement = container.querySelector<HTMLElementIDSInstance<ExpanderType>>('.ids-expander');
 
         if (!this._togglerElement) {
             throw new Error('No toggler element found for this container!');
         }
 
-        this._togglerInstance = getInstance<ExpanderType>(this._togglerElement);
+        this._togglerInstance = new Expander(this._togglerElement);
         this._contentElement = container.querySelector<HTMLElement>('.ids-accordion__content');
 
         this.onToggleClick = this.onToggleClick.bind(this);
@@ -71,6 +70,8 @@ class Accordion extends Base {
     }
 
     initToggler() {
+        this._togglerInstance.init();
+
         this._togglerInstance.expandHandler = this.onToggleClick.bind(this);
     }
 
@@ -81,10 +82,4 @@ class Accordion extends Base {
     }
 }
 
-const accordionContainers = document.querySelectorAll<HTMLElement>('.ids-accordion:not([custom-init])');
-
-accordionContainers.forEach((accordionContainer: HTMLElement) => {
-    const accordionInstance = new Accordion(accordionContainer);
-
-    accordionInstance.init();
-});
+export type AccordionType = InstanceType<typeof Accordion>;

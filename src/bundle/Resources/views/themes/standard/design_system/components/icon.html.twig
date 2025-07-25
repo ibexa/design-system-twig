@@ -17,6 +17,6 @@
     )
 %}
 
-<svg class="{{ icon_classes.apply({ size }, attributes.render('class')) }}" {{ attributes.defaults({}) }}>
+<svg class="{{ icon_classes.apply({ size }, attributes.render('class')) }}" {{ attributes }}>
     <use xlink:href="{{ path }}" />
 </svg>
