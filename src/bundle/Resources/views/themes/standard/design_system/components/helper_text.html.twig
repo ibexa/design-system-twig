@@ -1,40 +1,22 @@
 {% set helper_text_classes =
-    html_cva(
-        base: 'ids-helper-text',
-        variants: {
-            type: {
-                default: 'ids-helper-text--default',
-                error: 'ids-helper-text--error'
-            }
-        }
-    )
+    html_cva(base: 'ids-helper-text', variants: { type: { default: 'ids-helper-text--default', error: 'ids-helper-text--error' } })
 %}
 
-<div
-    class="{{
-    helper_text_classes.apply(
-        {
-            type
-        },
-        attributes.render('class')
-    )
-    }}"
-    {{ attributes.defaults({}) }}
->
+<div class="{{ helper_text_classes.apply({ type }, attributes.render('class')) }}" {{ attributes.defaults({}) }}>
     {% block helper_text_inner %}
         {% block icon_outer %}
             <div class="ids-helper-text__icon-wrapper">
                 {% block icon_inner %}
                     <twig:ibexa:Icon :name="icon_name" size="small" class="ids-helper-text__icon" />
-                {% endblock %}
+                {% endblock icon_inner %}
             </div>
-        {% endblock %}
+        {% endblock icon_outer %}
         {% block content_outer %}
             <div class="ids-helper-text__content-wrapper">
                 {% block content %}
 
-                {% endblock %}
+                {% endblock content %}
             </div>
-        {% endblock %}
-    {% endblock %}
+        {% endblock content_outer %}
+    {% endblock helper_text_inner %}
 </div>

@@ -1,19 +1,11 @@
-{% set classes =
-    html_classes(
-        'ids-accordion',
-        {
-            'ids-accordion--is-expanded': initially_expanded
-        },
-        attributes.render('class') ?? ''
-    )
-%}
+{% set classes = html_classes('ids-accordion', { 'ids-accordion--is-expanded': initially_expanded }, attributes.render('class') ?? '') %}
 
 <div class="{{ classes }}">
     <div class="ids-accordion__header">
         <div class="ids-accordion__header-content">
             {% block header %}
 
-            {% endblock %}
+            {% endblock header %}
         </div>
         <twig:ibexa:Expander
             type="caret"
@@ -26,7 +18,7 @@
     <div class="ids-accordion__content">
         {% block content %}
 
-        {% endblock %}
+        {% endblock content %}
     </div>
 </div>
 

@@ -1,11 +1,6 @@
 {% set button_classes =
     html_cva(
-        base: html_classes(
-            'ids-btn',
-            {
-                'ids-btn--disabled': disabled
-            }
-        ),
+        base: html_classes('ids-btn', { 'ids-btn--disabled': disabled }),
         variants: {
             type: {
                 primary: 'ids-btn--primary',
@@ -14,30 +9,14 @@
                 'secondary-alt': 'ids-btn--secondary-alt',
                 'tertiary-alt': 'ids-btn--tertiary-alt'
             },
-            size: {
-                medium: 'ids-btn--medium',
-                small: 'ids-btn--small'
-            }
+            size: { medium: 'ids-btn--medium', small: 'ids-btn--small' }
         }
     )
 %}
 
 <button
-    class="{{
-    button_classes.apply(
-        {
-            type,
-            size
-        },
-        attributes.render('class')
-    )
-    }}"
-    {{
-    attributes.defaults({
-        type: 'button',
-        disabled
-    })
-    }}
+    class="{{ button_classes.apply({ type, size }, attributes.render('class')) }}"
+    {{ attributes.defaults({ type: 'button', disabled }) }}
 >
     {% block button_inner %}
         {% block icon_outer %}
@@ -45,18 +24,22 @@
                 <div class="ids-btn__icon">
                     {% block icon_inner %}
                         <twig:ibexa:Icon name="{{ icon }}" size="{{ icon_size }}" />
-                    {% endblock %}
+                    {% endblock icon_inner %}
                 </div>
             {% endif %}
-        {% endblock %}
+        {% endblock icon_outer %}
         <div class="ids-btn__label">
             {% block content %}
 
-            {% endblock %}
+            {% endblock content %}
         </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
     {% endblock button_inner %}
 =======
     {% endblock %}
 >>>>>>> 6e94c82 (linter fixes)
+=======
+    {% endblock button_inner %}
+>>>>>>> ffb0728 (changed prettier config)
 </button>
