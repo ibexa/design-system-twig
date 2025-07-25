@@ -1,6 +1,11 @@
 {% set button_classes =
     html_cva(
-        base: html_classes('ids-btn', { 'ids-btn--disabled': disabled }),
+        base: html_classes(
+            'ids-btn',
+            {
+                'ids-btn--disabled': disabled
+            }
+        ),
         variants: {
             type: {
                 primary: 'ids-btn--primary',
@@ -9,14 +14,30 @@
                 'secondary-alt': 'ids-btn--secondary-alt',
                 'tertiary-alt': 'ids-btn--tertiary-alt'
             },
-            size: { medium: 'ids-btn--medium', small: 'ids-btn--small' }
+            size: {
+                medium: 'ids-btn--medium',
+                small: 'ids-btn--small'
+            }
         }
     )
 %}
 
 <button
-    class="{{ button_classes.apply({ type, size }, attributes.render('class')) }}"
-    {{ attributes.defaults({ type: 'button', disabled }) }}
+    class="{{
+    button_classes.apply(
+        {
+            type,
+            size
+        },
+        attributes.render('class')
+    )
+    }}"
+    {{
+    attributes.defaults({
+        type: 'button',
+        disabled
+    })
+    }}
 >
     {% block button_inner %}
         {% block icon_outer %}

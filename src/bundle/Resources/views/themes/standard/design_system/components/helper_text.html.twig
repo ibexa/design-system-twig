@@ -1,8 +1,26 @@
 {% set helper_text_classes =
-    html_cva(base: 'ids-helper-text', variants: { type: { default: 'ids-helper-text--default', error: 'ids-helper-text--error' } })
+    html_cva(
+        base: 'ids-helper-text',
+        variants: {
+            type: {
+                default: 'ids-helper-text--default',
+                error: 'ids-helper-text--error'
+            }
+        }
+    )
 %}
 
-<div class="{{ helper_text_classes.apply({ type }, attributes.render('class')) }}" {{ attributes }}>
+<div
+    class="{{
+    helper_text_classes.apply(
+        {
+            type
+        },
+        attributes.render('class')
+    )
+    }}"
+    {{ attributes }}
+>
     {% block helper_text_inner %}
         {% block icon_outer %}
             <div class="ids-helper-text__icon-wrapper">

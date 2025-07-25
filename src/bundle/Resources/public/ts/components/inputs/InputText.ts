@@ -8,9 +8,17 @@ export default class InpuText extends Base {
     constructor(container: HTMLDivElement) {
         super(container);
 
-        this._actionsElement = container.querySelector('.ids-input-text__actions') as HTMLDivElement;
-        this._inputElement = container.querySelector('.ids-input-text__source .ids-input') as HTMLInputElement;
-        this._clearBtnElement = this._actionsElement.querySelector('.ids-clear-btn') as HTMLButtonElement;
+        const actionsElement = container.querySelector<HTMLDivElement>('.ids-input-text__actions');
+        const inputElement = container.querySelector<HTMLInputElement>('.ids-input-text__source .ids-input');
+        const clearBtnElement = actionsElement?.querySelector<HTMLButtonElement>('.ids-clear-btn');
+
+        if (!actionsElement || !inputElement || !clearBtnElement) {
+            throw new Error('InputText: Required elements are missing in the container.');
+        }
+
+        this._actionsElement = actionsElement;
+        this._inputElement = inputElement;
+        this._clearBtnElement = clearBtnElement;
     }
 
     private _updateInputPadding() {

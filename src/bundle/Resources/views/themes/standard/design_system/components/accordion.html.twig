@@ -1,4 +1,12 @@
-{% set classes = html_classes('ids-accordion', { 'ids-accordion--is-expanded': initially_expanded }, attributes.render('class') ?? '') %}
+{% set classes =
+    html_classes(
+        'ids-accordion',
+        {
+            'ids-accordion--is-expanded': initially_expanded
+        },
+        attributes.render('class') ?? ''
+    )
+%}
 
 <div class="{{ classes }}">
     <div class="ids-accordion__header">
