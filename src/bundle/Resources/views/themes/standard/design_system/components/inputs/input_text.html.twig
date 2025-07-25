@@ -1,0 +1,99 @@
+{% import ids_get('macros/html') as html %}
+
+{% set actions = actions|default([]) %}
+{% set disabled = disabled|default(false) %}
+{% set error = error|default(false) %}
+{% set placeholder = placeholder|default('') %}
+{% set readonly = readonly|default(false) %}
+{% set required = required|default(false) %}
+{% set size = size|default('medium') %}
+{% set title = title|default('') %}
+{% set type = type|default('text') %}
+{% set value = value|default('') %}
+{% set input_attr = input_attr|default({}) %}
+{% set input_default_classes = input_attr.class|default('') %}
+
+{% set input_classes =
+    html_cva(
+        base: html_classes(
+            'ids-input',
+            {
+                'ids-input--disabled': disabled,
+                'ids-input--error': error,
+                'ids-input--required': required
+            }
+        ),
+        variants: {
+            type: {
+                text: 'ids-input--text',
+                password: 'ids-input--password',
+                email: 'ids-input--email',
+                number: 'ids-input--number',
+                tel: 'ids-input--tel',
+                search: 'ids-input--search',
+                url: 'ids-input--url'
+            },
+            size: {
+                medium: 'ids-input--medium',
+                small: 'ids-input--small'
+            }
+        }
+    )
+%}
+
+{% set input_attr =
+    input_attr|merge({
+        class: input_classes.apply(
+            {
+                type,
+                size
+            },
+            input_default_classes
+        ),
+        disabled,
+        placeholder,
+        readonly,
+        title,
+        type,
+        value
+    })
+%}
+
+{% set clear_action %}
+    {% include ids_get('ui/clear_btn') with {
+        disabled
+    } %}
+{% endset %}
+
+{% set actions =
+    actions|merge(
+        [
+            {
+                id: 'clear',
+                component: clear_action
+            }
+        ]
+    )
+%}
+
+<div class="ids-input-text">
+    <div class="ids-input-text__source">
+        <input {{ html.attributes(input_attr) }} />
+    </div>
+    <div class="ids-input-text__actions">
+        {%- for action in actions -%}
+            {% set action_classes =
+                html_classes(
+                    'ids-input-text__action',
+                    {
+                        'ids-input-text__action--hidden': action.id == 'clear' and value is empty
+                    }
+                )
+            %}
+
+            <div class="{{ action_classes }}">
+                {{- action.component|raw -}}
+            </div>
+        {%- endfor -%}
+    </div>
+</div>
