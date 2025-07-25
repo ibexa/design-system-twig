@@ -9,9 +9,8 @@
     )
 %}
 
-<label 
-    class="{{ label_classes }}"
-    {{ attributes.defaults({}) }}
->
-    {% block content %}{% endblock content %}
+<label class="{{ label_classes }}" {{ attributes.defaults({}) }}>
+    {% block content %}
+
+    {% endblock %}
 </label>

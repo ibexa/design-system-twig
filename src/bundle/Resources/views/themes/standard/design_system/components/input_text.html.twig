@@ -1,10 +1,13 @@
 {% set input_classes =
     html_cva(
-        base: html_classes('ids-input', {
-            'ids-input--disabled': disabled,
-            'ids-input--error': error,
-            'ids-input--required': required,
-        }),
+        base: html_classes(
+            'ids-input',
+            {
+                'ids-input--disabled': disabled,
+                'ids-input--error': error,
+                'ids-input--required': required
+            }
+        ),
         variants: {
             type: {
                 text: 'ids-input--text',
@@ -18,14 +21,25 @@
             size: {
                 medium: 'ids-input--medium',
                 small: 'ids-input--small'
-            },
+            }
         }
     )
 %}
 
-<input 
-    class="{{ input_classes.apply({ type, size }, attributes.render('class')) }}"
-    {{ disabled ?? 'disabled' }}
-    {{ required ? 'required' }}
-    {{ attributes }}
+<input
+    class="{{
+    input_classes.apply(
+        {
+            type,
+            size
+        },
+        attributes.render('class')
+    )
+    }}"
+    {{
+    attributes.defaults({
+        disabled,
+        required
+    })
+    }}
 />

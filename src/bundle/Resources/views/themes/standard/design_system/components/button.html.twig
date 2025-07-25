@@ -1,8 +1,11 @@
 {% set button_classes =
     html_cva(
-        base: html_classes('ids-btn', {
-            'ids-btn--disabled': disabled,
-        }),
+        base: html_classes(
+            'ids-btn',
+            {
+                'ids-btn--disabled': disabled
+            }
+        ),
         variants: {
             type: {
                 primary: 'ids-btn--primary',
@@ -14,14 +17,27 @@
             size: {
                 medium: 'ids-btn--medium',
                 small: 'ids-btn--small'
-            },
+            }
         }
     )
 %}
 
-<button 
-    class="{{ button_classes.apply({ type, size }, attributes.render('class')) }}"
-    {{ attributes.defaults({ type: 'button', disabled }) }}
+<button
+    class="{{
+    button_classes.apply(
+        {
+            type,
+            size
+        },
+        attributes.render('class')
+    )
+    }}"
+    {{
+    attributes.defaults({
+        type: 'button',
+        disabled
+    })
+    }}
 >
     {% block button_inner %}
         {% block icon_outer %}
@@ -29,12 +45,18 @@
                 <div class="ids-btn__icon">
                     {% block icon_inner %}
                         <twig:ibexa:Icon name="{{ icon }}" size="{{ icon_size }}" />
-                    {% endblock icon_inner %}
+                    {% endblock %}
                 </div>
             {% endif %}
-        {% endblock icon_outer %}
+        {% endblock %}
         <div class="ids-btn__label">
-            {% block content %}{% endblock content %}
+            {% block content %}
+
+            {% endblock %}
         </div>
+<<<<<<< HEAD
     {% endblock button_inner %}
+=======
+    {% endblock %}
+>>>>>>> 6e94c82 (linter fixes)
 </button>

@@ -11,14 +11,21 @@
                 'medium-large': 'ids-icon--medium-large',
                 large: 'ids-icon--large',
                 'large-huge': 'ids-icon--large-huge',
-                huge: 'ids-icon--huge',
+                huge: 'ids-icon--huge'
             }
         }
     )
 %}
 
-<svg 
-    class="{{ icon_classes.apply({ size }, attributes.render('class')) }}"
+<svg
+    class="{{
+    icon_classes.apply(
+        {
+            size
+        },
+        attributes.render('class')
+    )
+    }}"
     {{ attributes.defaults({}) }}
 >
     <use xlink:href="{{ path }}" />

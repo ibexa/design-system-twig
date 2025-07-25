@@ -11,7 +11,9 @@
 <div class="{{ classes }}">
     <div class="ids-accordion__header">
         <div class="ids-accordion__header-content">
-            {% block header %}{% endblock header %}
+            {% block header %}
+
+            {% endblock %}
         </div>
         <twig:ibexa:Expander
             type="caret"
@@ -22,7 +24,9 @@
         />
     </div>
     <div class="ids-accordion__content">
-        {% block content %}{% endblock content %}
+        {% block content %}
+
+        {% endblock %}
     </div>
 </div>
 
