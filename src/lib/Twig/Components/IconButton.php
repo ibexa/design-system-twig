@@ -13,25 +13,21 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 #[AsTwigComponent(
-    name: 'ibexa:Icon',
-    template: '@ibexadesign/design_system/components/icon.html.twig'
+    name: 'ibexa:IconButton',
+    template: '@ibexadesign/design_system/components/icon_button.html.twig'
 )]
-final class Icon extends AbstractIcon
+final class IconButton extends AbstractButton
 {
-    public string $name;
-
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $resolver->define('name')->required()->allowedTypes('string');
+        $resolver->setRequired('icon');
     }
-
+    
     #[PostMount]
-    public function setIconPath(): void
+    public function setExtraClasses(array $props): array
     {
-        $this->path = sprintf(
-            '/bundles/ibexaadminuiassets/vendors/ids-assets/dist/img/all-icons.svg#%s',
-            $this->name
-        );
-        // TODO: for backend, implement here icon path resolver
+        $props['class'] = ($props['class'] ?? '') . ' ids-btn--icon-only';
+        
+        return $props;
     }
 }

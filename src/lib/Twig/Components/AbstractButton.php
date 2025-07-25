@@ -10,11 +10,19 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 
-abstract class AbstractIcon
+abstract class AbstractButton
 {
     public string $size = 'medium';
-    public string $path = '';
+    public string $type = 'primary';
+    public bool $disabled = false;
+    public string $icon = '';
+
+    private static $iconSizeMap = [
+        'small' => 'tiny-small',
+        'medium' => 'small',
+    ];
 
     /**
      * @param array<string, mixed> $props
@@ -26,12 +34,29 @@ abstract class AbstractIcon
         $resolver->setIgnoreUndefined(true);
         $resolver
             ->define('size')
-            ->allowedValues('tiny', 'tiny-small', 'small', 'small-medium', 'medium', 'medium-large', 'large', 'extra-large', 'large-huge', 'huge')
+            ->allowedValues('small', 'medium')
             ->default('medium');
+        $resolver
+            ->define('type')
+            ->allowedValues('primary', 'secondary', 'tertiary', 'secondary-alt', 'tertiary-alt')
+            ->default('primary');
+        $resolver
+            ->define('disabled')
+            ->allowedTypes('bool')
+            ->default(false);
+        $resolver
+            ->define('icon')
+            ->allowedTypes('string');
 
         $this->configurePropsResolver($resolver);
 
         return $resolver->resolve($props) + $props;
+    }
+
+    #[PostMount]
+    public function setIconSize(): void
+    {
+        $this->icon_size = self::$iconSizeMap[$this->size];
     }
 
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;

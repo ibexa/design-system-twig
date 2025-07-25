@@ -1,3 +1,3 @@
-export interface HTMLElementIbexaInstance<InstanceType> extends HTMLElement {
-    ibexaInstance?: InstanceType;
+export interface HTMLElementIDSInstance<InstanceType> extends HTMLElement {
+    idsInstance?: InstanceType;
 }
