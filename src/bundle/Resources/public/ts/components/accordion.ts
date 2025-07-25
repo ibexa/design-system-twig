@@ -1,20 +1,20 @@
 import Base from '../shared/Base';
 import { ExpanderType } from './expander';
 
-import { HTMLElementIbexaInstance } from '../shared/types';
+import { HTMLElementIDSInstance } from '../shared/types';
 
 import { getInstance } from '../helpers/object.instances';
 import { reflow } from '../helpers/dom';
 
 class Accordion extends Base {
-    private _togglerElement: HTMLElementIbexaInstance<ExpanderType> | null;
+    private _togglerElement: HTMLElementIDSInstance<ExpanderType> | null;
     private _togglerInstance: ExpanderType;
     private _contentElement: HTMLElement | null;
 
     constructor(container: HTMLElement) {
         super(container);
 
-        this._togglerElement = container.querySelector<HTMLElementIbexaInstance<ExpanderType>>('.ibexa-expander');
+        this._togglerElement = container.querySelector<HTMLElementIDSInstance<ExpanderType>>('.ibexa-expander');
 
         if (!this._togglerElement) {
             throw new Error('No toggler element found for this container!');

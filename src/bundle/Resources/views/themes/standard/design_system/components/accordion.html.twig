@@ -1,32 +1,28 @@
-{% set initially_expanded = initially_expanded|default(false) %}
-
 {% set classes =
     html_classes(
         'ids-accordion',
         {
             'ids-accordion--is-expanded': initially_expanded
-        }
+        },
+        attributes.render('class') ?? ''
     )
 %}
 
 <div class="{{ classes }}">
     <div class="ids-accordion__header">
         <div class="ids-accordion__header-content">
-            {% block header %}
-                {{ header }}
-            {% endblock %}
+            {% block header %}{% endblock header %}
         </div>
-        {% include ids_get('expander') with {
-            has_icon: true,
-            is_expanded: initially_expanded,
-            collapse_label: 'ibexa.expander.label.collapse'|trans|desc('Hide'),
-            expand_label: 'ibexa.expander.label.expand'|trans|desc('Show')
-        } only %}
+        <twig:ibexa:Expander
+            type="caret"
+            :has_icon="true"
+            :is_expanded="initially_expanded"
+            :collapse_label="'ibexa.expander.label.collapse'|trans|desc('Hide')"
+            :expand_label="'ibexa.expander.label.expand'|trans|desc('Show')"
+        />
     </div>
     <div class="ids-accordion__content">
-        {% block content %}
-            {{ content }}
-        {% endblock %}
+        {% block content %}{% endblock content %}
     </div>
 </div>
 

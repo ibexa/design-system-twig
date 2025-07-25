@@ -1,28 +1,10 @@
-{% import ids_get('macros/html') as html %}
-
-{% set actions = actions|default([]) %}
-{% set disabled = disabled|default(false) %}
-{% set error = error|default(false) %}
-{% set placeholder = placeholder|default('') %}
-{% set readonly = readonly|default(false) %}
-{% set required = required|default(false) %}
-{% set size = size|default('medium') %}
-{% set title = title|default('') %}
-{% set type = type|default('text') %}
-{% set value = value|default('') %}
-{% set input_attr = input_attr|default({}) %}
-{% set input_default_classes = input_attr.class|default('') %}
-
 {% set input_classes =
     html_cva(
-        base: html_classes(
-            'ids-input',
-            {
-                'ids-input--disabled': disabled,
-                'ids-input--error': error,
-                'ids-input--required': required
-            }
-        ),
+        base: html_classes('ids-input', {
+            'ids-input--disabled': disabled,
+            'ids-input--error': error,
+            'ids-input--required': required,
+        }),
         variants: {
             type: {
                 text: 'ids-input--text',
@@ -36,36 +18,28 @@
             size: {
                 medium: 'ids-input--medium',
                 small: 'ids-input--small'
-            }
+            },
         }
     )
 %}
 
-{% set input_attr =
-    input_attr|merge({
-        class: input_classes.apply(
-            {
-                type,
-                size
-            },
-            input_default_classes
-        ),
-        disabled,
-        placeholder,
-        readonly,
-        title,
-        type,
-        value
-    })
-%}
-
-{% set clear_action %}
+{# {% set clear_action %}
+    <twig:ibexa:IconButton :disabled="disabled" />
     {% include ids_get('ui/clear_btn') with {
         disabled
     } %}
-{% endset %}
+{% endset %} #}
 
-{% set actions =
+<input 
+    class="{{ input_classes.apply({ type, size }, attributes.render('class')) }}"
+    {{ disabled ?? 'disabled' }}
+    {{ required ? 'required' }}
+    {{ attributes }}
+/>
+
+
+
+{# {% set actions =
     actions|merge(
         [
             {
@@ -96,4 +70,4 @@
             </div>
         {%- endfor -%}
     </div>
-</div>
+</div> #}

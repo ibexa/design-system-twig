@@ -1,0 +1,31 @@
+{% set input_classes =
+    html_cva(
+        base: html_classes('ids-input', {
+            'ids-input--disabled': disabled,
+            'ids-input--error': error,
+            'ids-input--required': required,
+        }),
+        variants: {
+            type: {
+                text: 'ids-input--text',
+                password: 'ids-input--password',
+                email: 'ids-input--email',
+                number: 'ids-input--number',
+                tel: 'ids-input--tel',
+                search: 'ids-input--search',
+                url: 'ids-input--url'
+            },
+            size: {
+                medium: 'ids-input--medium',
+                small: 'ids-input--small'
+            },
+        }
+    )
+%}
+
+<input 
+    class="{{ input_classes.apply({ type, size }, attributes.render('class')) }}"
+    {{ disabled ?? 'disabled' }}
+    {{ required ? 'required' }}
+    {{ attributes }}
+/>
