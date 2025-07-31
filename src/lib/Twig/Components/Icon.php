@@ -13,8 +13,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 #[AsTwigComponent(
-    name: 'ibexa:Icon',
-    template: '@ibexadesign/design_system/components/icon.html.twig'
+    template: '@ibexadesign/design_system/components/Icon.html.twig'
 )]
 final class Icon extends AbstractIcon
 {

@@ -13,10 +13,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
-#[AsTwigComponent(
-    name: 'ibexa:HelperText',
-    template: '@ibexadesign/design_system/components/helper_text.html.twig'
-)]
+#[AsTwigComponent]
 final class HelperText
 {
     public string $type = 'default';

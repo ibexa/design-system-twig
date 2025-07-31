@@ -1,0 +1,8 @@
+anonymous_template_directory: 'components/'
+defaults:
+    # Namespace & directory for components
+    App\Twig\Components\: 'components/'
+
+    Ibexa\DesignSystemTwig\Twig\Components\:
+        template_directory: '@ibexadesign/design_system/components/'
+        name_prefix: ibexa

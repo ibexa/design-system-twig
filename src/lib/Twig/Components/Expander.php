@@ -14,10 +14,7 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
-#[AsTwigComponent(
-    name: 'ibexa:Expander',
-    template: '@ibexadesign/design_system/components/expander.html.twig'
-)]
+#[AsTwigComponent]
 final class Expander
 {
     public string $type;

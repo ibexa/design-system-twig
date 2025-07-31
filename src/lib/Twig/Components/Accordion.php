@@ -12,10 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent(
-    name: 'ibexa:Accordion',
-    template: '@ibexadesign/design_system/components/accordion.html.twig'
-)]
+#[AsTwigComponent]
 final class Accordion
 {
     public bool $initially_expanded = false;

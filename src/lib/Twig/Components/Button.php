@@ -11,10 +11,7 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent(
-    name: 'ibexa:Button',
-    template: '@ibexadesign/design_system/components/button.html.twig'
-)]
+#[AsTwigComponent]
 final class Button extends AbstractButton
 {
     protected function configurePropsResolver(OptionsResolver $resolver): void

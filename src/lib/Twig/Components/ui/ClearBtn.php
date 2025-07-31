@@ -6,16 +6,13 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components;
+namespace Ibexa\DesignSystemTwig\Twig\Components\ui;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent(
-    name: 'ibexa:ui:ClearBtn',
-    template: '@ibexadesign/design_system/components/ui/clear_btn.html.twig'
-)]
+#[AsTwigComponent]
 final class ClearBtn
 {
     public bool $disabled = false;

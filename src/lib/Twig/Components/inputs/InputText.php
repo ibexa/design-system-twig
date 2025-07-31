@@ -6,16 +6,13 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components;
+namespace Ibexa\DesignSystemTwig\Twig\Components\inputs;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent(
-    name: 'ibexa:inputs:InputText',
-    template: '@ibexadesign/design_system/components/inputs/input_text.html.twig'
-)]
+#[AsTwigComponent]
 final class InputText
 {
     public string $type = 'text';

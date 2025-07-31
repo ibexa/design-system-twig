@@ -12,10 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent(
-    name: 'ibexa:Label',
-    template: '@ibexadesign/design_system/components/label.html.twig'
-)]
+#[AsTwigComponent]
 final class Label
 {
     public bool $error = false;

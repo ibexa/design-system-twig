@@ -12,10 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
-#[AsTwigComponent(
-    name: 'ibexa:IconButton',
-    template: '@ibexadesign/design_system/components/icon_button.html.twig'
-)]
+#[AsTwigComponent]
 final class IconButton extends AbstractButton
 {
     protected function configurePropsResolver(OptionsResolver $resolver): void
