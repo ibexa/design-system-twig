@@ -1,3 +1,5 @@
-sdsadsadsa
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_form_control.html.twig' %}
 
-{{dump()}}
+{% block content %}
+    <twig:ibexa:inputs:InputText {{ ...input }} />
+{% endblock content %}

@@ -11,12 +11,17 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\formControls;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 #[AsTwigComponent]
 final class InputText
 {
-    // public array $input = [];
+    public string $id;
+    public string $name;
     public array $label_extra = [];
+    public array $helper_text_extra = [];
+    public array $input = [];
+    public string $value = '';
 
     /**
      * @param array<string, mixed> $props
@@ -26,30 +31,45 @@ final class InputText
     {
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined(true);
-        $resolver->setOptions('label_extra', function (OptionsResolver $labelExtraResolver): void {
-            $labelExtraResolver->setIgnoreUndefined(true);
-        });
-        // $resolver
-        //     ->define('type')
-        //     ->allowedValues('text', 'password', 'email', 'number', 'tel', 'search', 'url')
-        //     ->default('text');
-        // $resolver
-        //     ->define('size')
-        //     ->allowedValues('small', 'medium')
-        //     ->default('medium');
-        // $resolver
-        //     ->define('disabled')
-        //     ->allowedTypes('bool')
-        //     ->default(false);
-        // $resolver
-        //     ->define('error')
-        //     ->allowedTypes('bool')
-        //     ->default(false);
-        // $resolver
-        //     ->define('required')
-        //     ->allowedTypes('bool')
-        //     ->default(false);
+        $resolver
+            ->define('name')
+            ->required()
+            ->allowedTypes('string');
+        $resolver
+            ->define('id')
+            ->required()
+            ->allowedTypes('string');
+        $resolver
+            ->define('label_extra')
+            ->allowedTypes('array')
+            ->default([]);
+        $resolver
+            ->define('helper_text_extra')
+            ->allowedTypes('array')
+            ->default([]);
+        $resolver
+            ->setOptions('input', function (OptionsResolver $inputResolver): void {
+                $inputResolver->setIgnoreUndefined(true);
+                $inputResolver
+                    ->define('required')
+                    ->allowedTypes('bool')
+                    ->default(false);
+            });
+        $resolver
+            ->define('value')
+            ->allowedTypes('string')
+            ->default('');
 
-        return $resolver->resolve($props) + $props;
+        return array_replace_recursive($resolver->resolve($props), $props);
+    }
+
+    #[PostMount]
+    public function setSharedProps(): void
+    {
+        $this->label_extra['for'] = $this->id;
+        $this->label_extra['required'] = $this->input['required'];
+        $this->input['id'] = $this->id;
+        $this->input['name'] = $this->name;
+        $this->input['value'] = $this->value;
     }
 }
