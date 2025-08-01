@@ -1,0 +1,11 @@
+{% set classes =
+    html_classes(
+        'ids-form-control',
+        attributes.render('class') ?? ''
+    )
+%}
+
+<div class="{{ classes }}" {{ attributes }}>
+    {% block label %}
+    {% endblock label %}
+</div>
