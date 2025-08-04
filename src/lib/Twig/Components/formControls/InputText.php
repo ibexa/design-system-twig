@@ -22,6 +22,7 @@ final class InputText
     public array $helper_text_extra = [];
     public array $input = [];
     public string $value = '';
+    public string $type = 'input-text';
 
     /**
      * @param array<string, mixed> $props
@@ -63,13 +64,19 @@ final class InputText
         return array_replace_recursive($resolver->resolve($props), $props);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     #[PostMount]
-    public function setSharedProps(): void
+    public function setSharedProps(array $data): array
     {
         $this->label_extra['for'] = $this->id;
         $this->label_extra['required'] = $this->input['required'];
         $this->input['id'] = $this->id;
         $this->input['name'] = $this->name;
         $this->input['value'] = $this->value;
+        $this->input['data-ids-custom-init'] = 'true';
+
+        return $data;
     }
 }

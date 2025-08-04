@@ -1,11 +1,7 @@
-{% set classes =
-    html_classes(
-        'ids-form-control',
-        attributes.render('class') ?? ''
-    )
-%}
+{% set classes = html_classes('ids-form-control', 'ids-form-control--' ~ type, attributes.render('class') ?? '') %}
+{{ dump() }}
 
-<div class="{{ classes }}">
+<div class="{{ classes }}" {{ attributes }}>
     {% if block('label') is defined and block('label') is not empty %}
         <div class="ids-form-control__label-wrapper">
             <twig:ibexa:Label {{ ...label_extra }}>
@@ -15,7 +11,7 @@
     {% endif %}
 
     <div class="ids-form-control__source-wrapper">
-        {{ block('content')}}
+        {{ block('content') }}
     </div>
 
     {% if block('helper_text') is defined %}
