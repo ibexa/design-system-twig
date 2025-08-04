@@ -82,6 +82,12 @@ export default class FormControlInputText extends Base {
         }
     }
 
+    initChildren() {
+        this._labelInstance?.init();
+        this._inputTextInstance.init();
+        this._helperTextInstance?.init();
+    }
+
     initInputListeners() {
         this._inputTextInstance.inputElement.addEventListener('input', ({ currentTarget }) => {
             if (!(currentTarget instanceof HTMLInputElement)) {
@@ -98,12 +104,7 @@ export default class FormControlInputText extends Base {
     init() {
         super.init();
 
-        this._labelInstance?.init();
-        this._inputTextInstance.init();
-        this._helperTextInstance?.init();
-
+        this.initChildren();
         this.initInputListeners();
-        // this.initClearBtn();
-        // this._updateInputPadding();
     }
 }
