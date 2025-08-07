@@ -1,0 +1,70 @@
+{% set value = attributes.only('value') %}
+
+{% set input_classes =
+    html_cva(
+        base: html_classes(
+            'ids-input',
+            {
+                'ids-input--disabled': disabled,
+                'ids-input--error': error,
+                'ids-input--required': required
+            }
+        ),
+        variants: {
+            type: {
+                text: 'ids-input--text',
+                password: 'ids-input--password',
+                email: 'ids-input--email',
+                number: 'ids-input--number',
+                tel: 'ids-input--tel',
+                search: 'ids-input--search',
+                url: 'ids-input--url'
+            },
+            size: {
+                medium: 'ids-input--medium',
+                small: 'ids-input--small'
+            }
+        }
+    )
+%}
+
+{% set clear_action %}
+    <twig:ibexa:ui:ClearBtn :disabled="disabled" />
+{% endset %}
+
+{% set actions = [
+    {
+        id: 'clear',
+        class: value is empty ? 'ids-input-text__action--hidden' : '',
+        component: clear_action
+    }
+] %}
+
+<div class="ids-input-text">
+    <div class="ids-input-text__source">
+        <input
+            class="{{
+            input_classes.apply(
+                {
+                    type,
+                    size
+                },
+                attributes.render('class')
+            )
+            }}"
+            {{
+            attributes.defaults({
+                disabled,
+                required
+            })
+            }}
+        />
+    </div>
+    <div class="ids-input-text__actions">
+        {%- for action in actions -%}
+            <div class="{{ action.class }}">
+                {{- action.component|raw -}}
+            </div>
+        {%- endfor -%}
+    </div>
+</div>

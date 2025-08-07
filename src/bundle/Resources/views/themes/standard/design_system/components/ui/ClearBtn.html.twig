@@ -1,0 +1,11 @@
+{% set clear_msg = 'ibexa.clear-btn.label'|trans|desc('Clear') %}
+
+<twig:ibexa:IconButton
+    type="tertiary-alt"
+    size="small"
+    icon="discard"
+    class="ids-clear-btn"
+    :disabled="disabled"
+    :title="clear_msg"
+    :aria-label="clear_msg"
+/>

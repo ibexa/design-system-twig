@@ -11,13 +11,10 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent(
-    template: '@ibexadesign/design_system/components/Icon.html.twig'
-)]
-final class CustomIcon extends AbstractIcon
+#[AsTwigComponent]
+final class Button extends AbstractButton
 {
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $resolver->define('path')->required()->allowedTypes('string');
     }
 }

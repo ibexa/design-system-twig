@@ -1,0 +1,29 @@
+{% set label = is_expanded ? collapse_label : expand_label %}
+
+{% set button_classes =
+    html_classes(
+        'ids-expander',
+        'ids-expander--has-label',
+        {
+            'ids-expander--has-icon': has_icon,
+            'ids-expander--is-expanded': is_expanded
+        },
+        attributes.render('class') ?? ''
+    )
+%}
+
+<twig:ibexa:Button
+    type="tertiary-alt"
+    size="small"
+    data-expand-label="{{ expand_label }}"
+    data-collapse-label="{{ collapse_label }}"
+    aria-expanded="{{ is_expanded ? 'true' : 'false' }}"
+    class="{{ button_classes }}"
+>
+    <span class="ids-expander__label">{{ label }}</span>
+    {% if has_icon %}
+        <twig:ibexa:Icon name="{{ icon_name }}" size="small" />
+    {% endif %}
+</twig:ibexa:Button>
+
+{{ encore_entry_script_tags('ibexa-design-system-expander-js', null, 'ibexa') }}

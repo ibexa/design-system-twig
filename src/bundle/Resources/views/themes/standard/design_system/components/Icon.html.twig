@@ -1,0 +1,32 @@
+{% set icon_classes =
+    html_cva(
+        base: 'ids-icon',
+        variants: {
+            size: {
+                tiny: 'ids-icon--tiny',
+                'tiny-small': 'ids-icon--tiny-small',
+                small: 'ids-icon--small',
+                'small-medium': 'ids-icon--small-medium',
+                medium: 'ids-icon--medium',
+                'medium-large': 'ids-icon--medium-large',
+                large: 'ids-icon--large',
+                'large-huge': 'ids-icon--large-huge',
+                huge: 'ids-icon--huge'
+            }
+        }
+    )
+%}
+
+<svg
+    class="{{
+    icon_classes.apply(
+        {
+            size
+        },
+        attributes.render('class')
+    )
+    }}"
+    {{ attributes }}
+>
+    <use xlink:href="{{ path }}" />
+</svg>

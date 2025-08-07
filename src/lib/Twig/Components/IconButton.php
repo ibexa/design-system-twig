@@ -10,14 +10,21 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 
-#[AsTwigComponent(
-    template: '@ibexadesign/design_system/components/Icon.html.twig'
-)]
-final class CustomIcon extends AbstractIcon
+#[AsTwigComponent]
+final class IconButton extends AbstractButton
 {
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $resolver->define('path')->required()->allowedTypes('string');
+        $resolver->setRequired('icon');
+    }
+    
+    #[PostMount]
+    public function setExtraClasses(array $props): array
+    {
+        $props['class'] = ($props['class'] ?? '') . ' ids-btn--icon-only';
+        
+        return $props;
     }
 }

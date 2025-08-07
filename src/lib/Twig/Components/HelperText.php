@@ -9,12 +9,20 @@ declare(strict_types=1);
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 
-abstract class AbstractIcon
+#[AsTwigComponent]
+final class HelperText
 {
-    public string $size = 'medium';
-    public string $path = '';
+    public string $type = 'default';
+    public string $icon_name = '';
+
+    private static $iconMap = [
+        'default' => 'info-circle',
+        'error' => 'alert-error',
+    ];
 
     /**
      * @param array<string, mixed> $props
@@ -25,14 +33,16 @@ abstract class AbstractIcon
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined(true);
         $resolver
-            ->define('size')
-            ->allowedValues('tiny', 'tiny-small', 'small', 'small-medium', 'medium', 'medium-large', 'large', 'extra-large', 'large-huge', 'huge')
-            ->default('medium');
-
-        $this->configurePropsResolver($resolver);
+            ->define('type')
+            ->allowedValues('default', 'error')
+            ->default('default');
 
         return $resolver->resolve($props) + $props;
     }
 
-    abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
+    #[PostMount]
+    public function setIconName(): void
+    {
+        $this->icon_name = self::$iconMap[$this->type];
+    }
 }

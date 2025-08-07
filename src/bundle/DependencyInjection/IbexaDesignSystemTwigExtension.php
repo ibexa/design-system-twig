@@ -40,6 +40,7 @@ final class IbexaDesignSystemTwigExtension extends Extension implements PrependE
     public function prepend(ContainerBuilder $container): void
     {
         $this->prependDefaultConfiguration($container);
+        $this->prependTwigComponentConfiguration($container);
         $this->prependJMSTranslation($container);
     }
 
@@ -53,6 +54,13 @@ final class IbexaDesignSystemTwigExtension extends Extension implements PrependE
         foreach ($configs as $name => $config) {
             $container->prependExtensionConfig($name, $config);
         }
+    }
+
+    private function prependTwigComponentConfiguration(ContainerBuilder $container): void
+    {
+        $twigComponentConfigFile = realpath(__DIR__ . '/../Resources/config/ibexa_twig_component.yaml');
+        $container->prependExtensionConfig('twig_component', Yaml::parseFile($twigComponentConfigFile));
+        $container->addResource(new FileResource($twigComponentConfigFile));
     }
 
     private function prependJMSTranslation(ContainerBuilder $container): void

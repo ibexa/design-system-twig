@@ -1,0 +1,16 @@
+{% set label_classes =
+    html_classes(
+        'ids-label',
+        {
+            'ids-label--error': error,
+            'ids-label--required': required
+        },
+        attributes.render('class') ?? ''
+    )
+%}
+
+<label class="{{ label_classes }}" {{ attributes }}>
+    {% block content %}
+
+    {% endblock content %}
+</label>

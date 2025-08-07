@@ -1,0 +1,9 @@
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/components/Button.html.twig' %}
+
+{% block button_inner %}
+    <div class="ids-btn__icon">
+        {% block icon_inner %}
+            <twig:ibexa:Icon name="{{ icon }}" size="{{ icon_size }}" />
+        {% endblock icon_inner %}
+    </div>
+{% endblock button_inner %}

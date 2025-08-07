@@ -6,15 +6,16 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components;
+namespace Ibexa\DesignSystemTwig\Twig\Components\ui;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-abstract class AbstractIcon
+#[AsTwigComponent]
+final class ClearBtn
 {
-    public string $size = 'medium';
-    public string $path = '';
+    public bool $disabled = false;
 
     /**
      * @param array<string, mixed> $props
@@ -25,14 +26,10 @@ abstract class AbstractIcon
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined(true);
         $resolver
-            ->define('size')
-            ->allowedValues('tiny', 'tiny-small', 'small', 'small-medium', 'medium', 'medium-large', 'large', 'extra-large', 'large-huge', 'huge')
-            ->default('medium');
-
-        $this->configurePropsResolver($resolver);
+            ->define('disabled')
+            ->allowedTypes('bool')
+            ->default(false);
 
         return $resolver->resolve($props) + $props;
     }
-
-    abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
 }
