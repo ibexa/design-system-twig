@@ -16,16 +16,19 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 final class Label
 {
     public bool $error = false;
+
     public bool $required = false;
 
     /**
      * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
      */
     #[PreMount]
     public function validate(array $props): array
     {
         $resolver = new OptionsResolver();
-        $resolver->setIgnoreUndefined(true);
+        $resolver->setIgnoreUndefined();
         $resolver
             ->define('error')
             ->allowedTypes('bool')

@@ -9,29 +9,37 @@ declare(strict_types=1);
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
-use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 abstract class AbstractButton
 {
     public string $size = 'medium';
+
     public string $type = 'primary';
+
     public bool $disabled = false;
+
     public string $icon = '';
 
-    private static $iconSizeMap = [
+    /**
+     * @var array{small: string, medium: string}
+     */
+    private static array $iconSizeMap = [
         'small' => 'tiny-small',
         'medium' => 'small',
     ];
 
     /**
      * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
      */
     #[PreMount]
     public function validate(array $props): array
     {
         $resolver = new OptionsResolver();
-        $resolver->setIgnoreUndefined(true);
+        $resolver->setIgnoreUndefined();
         $resolver
             ->define('size')
             ->allowedValues('small', 'medium')
@@ -53,10 +61,10 @@ abstract class AbstractButton
         return $resolver->resolve($props) + $props;
     }
 
-    #[PostMount]
-    public function setIconSize(): void
+    #[ExposeInTemplate('icon_size')]
+    public function iconSize(): string
     {
-        $this->icon_size = self::$iconSizeMap[$this->size];
+        return self::$iconSizeMap[$this->size] ?? 'small';
     }
 
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;

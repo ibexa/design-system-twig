@@ -12,24 +12,32 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
-use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 #[AsTwigComponent]
 final class Expander
 {
     public string $type;
+
     public bool $is_expanded = false;
+
     public string $expand_label = '';
+
     public string $collapse_label = '';
+
     public bool $has_icon = false;
 
-    private static $iconMap = [
+    /**
+     * @var array{caret: string, chevron: string}
+     */
+    private static array $iconMap = [
         'caret' => 'arrow-caret-down',
         'chevron' => 'arrow-chevron-down',
     ];
 
     /**
      * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
      */
     #[PreMount]
     public function validate(array $props): array
@@ -60,9 +68,9 @@ final class Expander
         return $resolver->resolve($props) + $props;
     }
 
-    #[PostMount]
-    public function setIconName(): void
+    #[ExposeInTemplate('icon_name')]
+    public function iconName(): string
     {
-        $this->icon_name = self::$iconMap[$this->type];
+        return self::$iconMap[$this->type] ?? '';
     }
 }
