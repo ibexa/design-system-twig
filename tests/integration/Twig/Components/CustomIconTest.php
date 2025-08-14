@@ -19,7 +19,7 @@ final class CustomIconTest extends KernelTestCase
     public function testMount(): void
     {
         $component = $this->mountTwigComponent(
-            'ibexa:custom-icon',
+            'ibexa:CustomIcon',
             [
                 'path' => '/assets/example.svg',
             ]
@@ -32,7 +32,7 @@ final class CustomIconTest extends KernelTestCase
     public function testDefaultRender(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:custom-icon',
+            'ibexa:CustomIcon',
             [
                 'path' => '/assets/example.svg',
             ]
@@ -40,14 +40,20 @@ final class CustomIconTest extends KernelTestCase
 
         $crawler = $rendered->crawler();
 
+        $class = $crawler->filter('svg')->attr('class');
+
+        self::assertNotNull($class);
         self::assertStringContainsString(
             'ids-icon',
-            $crawler->filter('svg')->attr('class'),
+            $class,
         );
 
+        $href = $crawler->filter('svg use')->first()->attr('xlink:href');
+
+        self::assertNotNull($href);
         self::assertStringEndsWith(
             '/assets/example.svg',
-            $crawler->filter('svg use')->first()->attr('xlink:href')
+            $href
         );
     }
 }

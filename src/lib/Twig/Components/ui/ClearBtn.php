@@ -19,12 +19,14 @@ final class ClearBtn
 
     /**
      * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
      */
     #[PreMount]
     public function validate(array $props): array
     {
         $resolver = new OptionsResolver();
-        $resolver->setIgnoreUndefined(true);
+        $resolver->setIgnoreUndefined();
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')

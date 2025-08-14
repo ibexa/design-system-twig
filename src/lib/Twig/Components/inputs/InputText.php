@@ -16,19 +16,25 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 final class InputText
 {
     public string $type = 'text';
+
     public string $size = 'medium';
+
     public bool $disabled = false;
+
     public bool $error = false;
+
     public bool $required = false;
 
     /**
      * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
      */
     #[PreMount]
     public function validate(array $props): array
     {
         $resolver = new OptionsResolver();
-        $resolver->setIgnoreUndefined(true);
+        $resolver->setIgnoreUndefined();
         $resolver
             ->define('type')
             ->allowedValues('text', 'password', 'email', 'number', 'tel', 'search', 'url')

@@ -58,7 +58,8 @@ final class IbexaDesignSystemTwigExtension extends Extension implements PrependE
 
     private function prependTwigComponentConfiguration(ContainerBuilder $container): void
     {
-        $twigComponentConfigFile = realpath(__DIR__ . '/../Resources/config/ibexa_twig_component.yaml');
+        $twigComponentConfigFile = __DIR__ . '/../Resources/config/ibexa_twig_component.yaml';
+
         $container->prependExtensionConfig('twig_component', Yaml::parseFile($twigComponentConfigFile));
         $container->addResource(new FileResource($twigComponentConfigFile));
     }

@@ -19,7 +19,7 @@ final class IconTest extends KernelTestCase
     public function testMount(): void
     {
         $component = $this->mountTwigComponent(
-            'ibexa:icon',
+            'ibexa:Icon',
             [
                 'name' => 'trash',
             ]
@@ -32,12 +32,18 @@ final class IconTest extends KernelTestCase
     public function testDefaultRender(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:icon',
+            'ibexa:Icon',
             [
                 'name' => 'trash',
             ]
         );
 
-        self::assertStringEndsWith('#trash', $rendered->crawler()->filter('svg use')->first()->attr('xlink:href'));
+        $actual = $rendered->crawler()->filter('svg use')->first()->attr('xlink:href');
+
+        self::assertNotNull($actual);
+        self::assertStringEndsWith(
+            '#trash',
+            $actual
+        );
     }
 }

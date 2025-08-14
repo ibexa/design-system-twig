@@ -10,22 +10,28 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
-use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 #[AsTwigComponent]
 final class HelperText
 {
     public string $type = 'default';
+
     public string $icon_name = '';
 
-    private static $iconMap = [
+    /**
+     * @var array{default: 'info-circle', error: 'alert-error'}
+     */
+    private static array $iconMap = [
         'default' => 'info-circle',
         'error' => 'alert-error',
     ];
 
     /**
      * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
      */
     #[PreMount]
     public function validate(array $props): array
@@ -40,9 +46,9 @@ final class HelperText
         return $resolver->resolve($props) + $props;
     }
 
-    #[PostMount]
-    public function setIconName(): void
+    #[ExposeInTemplate('icon_name')]
+    public function iconName(): string
     {
-        $this->icon_name = self::$iconMap[$this->type];
+        return self::$iconMap[$this->type] ?? '';
     }
 }

@@ -10,23 +10,27 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 #[AsTwigComponent]
 final class Accordion
 {
-    public bool $initially_expanded = false;
+    #[ExposeInTemplate('initially_expanded')]
+    public bool $initiallyExpanded = false;
 
     /**
      * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
      */
     #[PreMount]
     public function validate(array $props): array
     {
         $resolver = new OptionsResolver();
-        $resolver->setIgnoreUndefined(true);
+        $resolver->setIgnoreUndefined();
         $resolver
-            ->define('initially_expanded')
+            ->define('initiallyExpanded')
             ->allowedTypes('bool')
             ->default(false);
 

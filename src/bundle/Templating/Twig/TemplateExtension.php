@@ -13,11 +13,14 @@ use Twig\TwigFunction;
 
 final class TemplateExtension extends AbstractExtension
 {
-    private $baseTemplatePath = '@IbexaDesignSystemTwig/themes/standard/design_system/';
+    private string $baseTemplatePath = '@IbexaDesignSystemTwig/themes/standard/design_system/';
 
-    private $defaultTemplatePath = 'components/';
+    private string $defaultTemplatePath = 'components/';
 
-    private $templatePathMapping = [
+    /**
+     * @var array<string, string>
+     */
+    private array $templatePathMapping = [
         'macros/html' => '',
     ];
 

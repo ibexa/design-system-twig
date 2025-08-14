@@ -14,16 +14,19 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 abstract class AbstractIcon
 {
     public string $size = 'medium';
+
     public string $path = '';
 
     /**
      * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
      */
     #[PreMount]
     public function validate(array $props): array
     {
         $resolver = new OptionsResolver();
-        $resolver->setIgnoreUndefined(true);
+        $resolver->setIgnoreUndefined();
         $resolver
             ->define('size')
             ->allowedValues('tiny', 'tiny-small', 'small', 'small-medium', 'medium', 'medium-large', 'large', 'extra-large', 'large-huge', 'huge')

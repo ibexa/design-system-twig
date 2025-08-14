@@ -19,12 +19,17 @@ final class IconButton extends AbstractButton
     {
         $resolver->setRequired('icon');
     }
-    
+
+    /**
+     * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
+     */
     #[PostMount]
     public function setExtraClasses(array $props): array
     {
         $props['class'] = ($props['class'] ?? '') . ' ids-btn--icon-only';
-        
+
         return $props;
     }
 }
