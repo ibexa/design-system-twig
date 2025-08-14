@@ -64,7 +64,7 @@ abstract class AbstractButton
     #[ExposeInTemplate('icon_size')]
     public function iconSize(): string
     {
-        return self::$iconSizeMap[$this->size] ?? 'small';
+        return self::$iconSizeMap[$this->size];
     }
 
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
