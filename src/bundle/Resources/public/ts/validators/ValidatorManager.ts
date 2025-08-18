@@ -1,27 +1,30 @@
 import BaseValidator from './BaseValidator';
 
-export default class ValidatorManager {
-    private _validators: BaseValidator[];
+export interface ValidateReturnType {
+    isValid: boolean;
+    messages: string[];
+}
 
-    constructor(validators: BaseValidator[] = []) {
+export default class ValidatorManager<T> {
+    private _validators: BaseValidator<T>[];
+
+    constructor(validators: BaseValidator<T>[] = []) {
         this._validators = validators;
     }
 
-    addValidator(validator: BaseValidator): void {
+    addValidator(validator: BaseValidator<T>): void {
         this._validators.push(validator);
     }
 
-    removeValidator(validator: BaseValidator): void {
+    removeValidator(validator: BaseValidator<T>): void {
         this._validators = this._validators.filter((savedValidator) => savedValidator !== validator);
     }
 
-    validate(value: unknown) {
+    validate(value: T): ValidateReturnType {
         const errors = this._validators
-            .filter((validator: BaseValidator) => !validator.validate(value))
-            .map((validator: BaseValidator) => validator.getErrorMessage());
+            .filter((validator: BaseValidator<T>) => !validator.validate(value))
+            .map((validator: BaseValidator<T>) => validator.getErrorMessage());
 
         return { isValid: !errors.length, messages: errors };
     }
 }
-
-export type ValidatorManagerType = InstanceType<typeof ValidatorManager>;
