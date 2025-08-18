@@ -1,4 +1,4 @@
-{% set value = attributes.only('value') %}
+{% set value = attributes.render('value') %}
 
 {% set input_classes =
     html_cva(
@@ -40,7 +40,7 @@
     }
 ] %}
 
-<div class="ids-input-text">
+<div class="ids-input-text" {{ attributes.only('data-ids-custom-init') }}>
     <div class="ids-input-text__source">
         <input
             class="{{
