@@ -1,15 +1,23 @@
 import { setInstance } from '../helpers/object.instances';
 
+export const BASE_EVENTS = {
+    INITIALIZED: 'ids:component:initialized',
+} as const;
+
 export default abstract class Base {
-    container: HTMLElement;
+    private _container: HTMLElement;
 
     constructor(container: HTMLElement) {
-        this.container = container;
+        this._container = container;
 
         setInstance(container, this);
     }
 
+    get container(): HTMLElement {
+        return this._container;
+    }
+
     init() {
-        this.container.dispatchEvent(new CustomEvent('ids:component:initialized', { detail: { component: this } }));
+        this._container.dispatchEvent(new CustomEvent(BASE_EVENTS.INITIALIZED, { detail: { component: this } }));
     }
 }

@@ -18,8 +18,6 @@ final class HelperText
 {
     public string $type = 'default';
 
-    public string $icon_name = '';
-
     /**
      * @var array{default: 'info-circle', error: 'alert-error'}
      */
