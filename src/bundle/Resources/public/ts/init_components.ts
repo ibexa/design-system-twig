@@ -27,7 +27,7 @@ inputTextContainers.forEach((inputTextContainer: HTMLDivElement) => {
     inputTextInstance.init();
 });
 
-const threeStateCheckboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-checkbox.ids-checkbox--three-state:not([custom-init])');
+const threeStateCheckboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-three-state-checkbox:not([custom-init])');
 
 threeStateCheckboxContainers.forEach((threeStateCheckboxContainer: HTMLDivElement) => {
     const threeStateCheckboxInstance = new ThreeStateCheckbox(threeStateCheckboxContainer);
