@@ -1,6 +1,6 @@
 import Base from '../../shared/Base';
 
-export default class InpuText extends Base {
+export default class InputText extends Base {
     private _inputElement: HTMLInputElement;
     private _actionsElement: HTMLDivElement;
     private _clearBtnElement: HTMLButtonElement;
