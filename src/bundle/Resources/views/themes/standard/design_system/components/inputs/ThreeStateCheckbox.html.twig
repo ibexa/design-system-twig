@@ -1,24 +1,25 @@
-{% set input_classes = html_classes(
-    'ids-input ids-input--checkbox ids-input--medium',
-    {
-        'ids-input--disabled': disabled,
-        'ids-input--error': error,
-        'ids-input--required': required
-    },
-    attributes.render('class') ?? ''
-) %}
+{% set input_classes =
+    html_classes(
+        'ids-input ids-input--checkbox ids-input--medium',
+        {
+            'ids-input--disabled': disabled,
+            'ids-input--error': error,
+            'ids-input--required': required,
+            'ids-input--indeterminate': indeterminate
+        },
+        attributes.render('class') ?? ''
+    )
+%}
 
-{{dump()}}
-
-<div class="ids-checkbox ids-checkbox--three-state">
+<div class="ids-three-state-checkbox">
     <input
         class="{{ input_classes }}"
         type="checkbox"
         {{
-            attributes.defaults({
-                disabled,
-                required
-            })
+        attributes.defaults({
+            disabled,
+            required
+        })
         }}
     />
 </div>
