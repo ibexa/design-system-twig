@@ -1,0 +1,26 @@
+{% set badge_classes =
+    html_cva(
+        base: html_classes(
+            'ids-badge',
+            {
+                'ids-badge--expanded': is_expanded
+            }
+        ),
+        variants: {
+            size: {
+                small: 'ids-badge--small'
+            }
+        }
+    )
+%}
+
+<div class="{{
+    badge_classes.apply(
+        {
+            size
+        },
+        attributes.render('class')
+    ) }}" {{ attributes }}
+>
+    {{ formatted_value }}
+</div>
