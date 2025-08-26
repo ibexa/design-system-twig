@@ -12,6 +12,9 @@ ibexa_design_engine:
 webpack_encore:
     # The path where Encore is building the assets - i.e. Encore.setOutputPath()
     output_path: '%kernel.project_dir%/var/public/build'
+    strict_mode: false
+    builds:
+        ibexa: '%kernel.project_dir%/public/build/ibexa'
 
 ibexa:
     system:
