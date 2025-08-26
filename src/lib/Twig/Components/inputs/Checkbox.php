@@ -10,7 +10,6 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\inputs;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 #[AsTwigComponent]
 final class Checkbox extends AbstractCheckbox
