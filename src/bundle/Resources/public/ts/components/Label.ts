@@ -12,5 +12,3 @@ export default class Label extends Base {
         return this._error;
     }
 }
-
-export type LabelType = InstanceType<typeof Label>;

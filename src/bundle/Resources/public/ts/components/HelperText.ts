@@ -81,5 +81,3 @@ export default class HelperText extends Base {
         this.message = this._defaultMessage;
     }
 }
-
-export type HelperTextType = InstanceType<typeof HelperText>;

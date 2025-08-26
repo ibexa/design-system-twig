@@ -5,7 +5,7 @@ export const BASE_EVENTS = {
 } as const;
 
 export default abstract class Base {
-    private _container: HTMLElement;
+    protected _container: HTMLElement;
 
     constructor(container: HTMLElement) {
         this._container = container;
