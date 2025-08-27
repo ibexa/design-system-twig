@@ -1,16 +1,13 @@
 import BaseCheckbox from '../../shared/BaseCheckbox';
 
 export default class ThreeStateCheckbox extends BaseCheckbox {
-    private _indeterminate = false;
-
     constructor(container: HTMLDivElement) {
         super(container);
 
-        this.indeterminate = this._inputElement.classList.contains('ids-input--indeterminate');
+        this.setIndeterminate(this._inputElement.classList.contains('ids-input--indeterminate'));
     }
 
-    set indeterminate(value: boolean) {
-        this._indeterminate = value;
+    setIndeterminate(value: boolean) {
         this._inputElement.indeterminate = value;
         this._inputElement.classList.toggle('ids-input--indeterminate', value);
 
