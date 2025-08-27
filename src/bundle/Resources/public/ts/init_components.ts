@@ -20,7 +20,9 @@ checkboxContainers.forEach((checkboxContainer: HTMLDivElement) => {
     checkboxInstance.init();
 });
 
-const formControlInputTextContainers = document.querySelectorAll<HTMLDivElement>('.ids-form-control--input-text:not([data-ids-custom-init])');
+const formControlInputTextContainers = document.querySelectorAll<HTMLDivElement>(
+    '.ids-form-control--input-text:not([data-ids-custom-init])',
+);
 
 formControlInputTextContainers.forEach((formControlInputTextContainer: HTMLDivElement) => {
     const formControlInputTextInstance = new FormControlInputText(formControlInputTextContainer);

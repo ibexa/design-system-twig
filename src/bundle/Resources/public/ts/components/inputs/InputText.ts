@@ -21,11 +21,15 @@ export default class InputText extends Base {
         this._clearBtnElement = clearBtnElement;
     }
 
+    setError(value: boolean): void {
+        this._inputElement.classList.toggle('ids-input--error', value);
+    }
+
     getInputElement(): HTMLInputElement {
         return this._inputElement;
     }
 
-    getRequired(): boolean {
+    getIsRequired(): boolean {
         return this._inputElement.required;
     }
 

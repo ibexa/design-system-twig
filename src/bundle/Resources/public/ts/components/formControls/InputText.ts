@@ -13,11 +13,11 @@ export default class FormControlInputText extends Base {
     private _inputTextInstance: InputText;
     private _helperTextInstance: HelperText | null = null;
     private _validatorManager: ValidatorManager<string | number>;
-    private _error = false;
+    private _hasError = false;
     private _errorMessage = '';
     private _translator: TranslatorType = {
         trans: (key: string): string => key,
-    }
+    };
 
     constructor(container: HTMLDivElement) {
         super(container);
@@ -43,64 +43,42 @@ export default class FormControlInputText extends Base {
         this._inputTextInstance = new InputText(inputTextContainer);
         this._validatorManager = new ValidatorManager();
 
-// console.log(new IsEmptyStringValidator(this._translator));
-
-//         if (this._inputTextInstance.getRequired()) {
-//             this._validatorManager.addValidator(new IsEmptyStringValidator(this._translator));
-//         }
+        if (this._inputTextInstance.getIsRequired()) {
+            this._validatorManager.addValidator(new IsEmptyStringValidator(this._translator));
+        }
     }
 
     setError(validationResult: ValidationResult) {
         const { isValid, messages } = validationResult;
+        const errorMessage = messages.join(', ');
         const isError = !isValid;
 
-        if (this._error !== isError) {
-            this._error = isError;
+        if (this._hasError !== isError) {
+            this._hasError = isError;
+
+            this._inputTextInstance.setError(isError);
         }
 
-
         if (this._labelInstance) {
-            this._labelInstance.error = isError;
+            this._labelInstance.setHasError(isError);
         }
 
         if (this._helperTextInstance) {
-            this._helperTextInstance.error = isError;
+            this._helperTextInstance.setHasError(isError);
         }
-    //     if (this._error === value) {
-    //         return;
-    //     }
 
-    //     this._error = value;
-    //     this._inputTextInstance.error = value;
+        if (this._errorMessage !== errorMessage) {
+            this._errorMessage = errorMessage;
 
-    //     if (this._labelInstance) {
-    //         this._labelInstance.error = value;
-    //     }
-
-    //     if (this._helperTextInstance) {
-    //         this._helperTextInstance.error = value;
-    //     }
+            if (this._helperTextInstance) {
+                if (isError) {
+                    this._helperTextInstance.setMessage(errorMessage);
+                } else {
+                    this._helperTextInstance.changeToDefaultMessage();
+                }
+            }
+        }
     }
-
-    // get error(): boolean {
-    //     return this._error;
-    // }
-
-    // set errorMessage(value: string) {
-    //     if (this._errorMessage === value) {
-    //         return;
-    //     }
-
-    //     this._errorMessage = value;
-
-    //     if (this._error && this._helperTextInstance) {
-    //         this._helperTextInstance.message = value;
-    //     }
-
-    //     if (!this._error && this._helperTextInstance) {
-    //         this._helperTextInstance.changeToDefaultMessage();
-    //     }
-    // }
 
     initChildren() {
         this._labelInstance?.init();
@@ -114,11 +92,10 @@ export default class FormControlInputText extends Base {
                 throw new Error('FormControlInputText: Current target is not an HTMLInputElement.');
             }
 
-            const validatorData = this._validatorManager.validate(currentTarget.value);
+            const validationResult = this._validatorManager.validate(currentTarget.value);
 
-            this.error = !validatorData.isValid;
-            this.errorMessage = validatorData.messages.join(', ');
-        // });
+            this.setError(validationResult);
+        });
     }
 
     init() {

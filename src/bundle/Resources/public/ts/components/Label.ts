@@ -3,7 +3,7 @@ import Base from '../shared/Base';
 export default class Label extends Base {
     private _hasError = false;
 
-    setHasError(value: boolean) {
+    setHasError(value: boolean): void {
         this._hasError = value;
         this._container.classList.toggle('ids-label--error', value);
     }
