@@ -48,7 +48,7 @@ export default class FormControlInputText extends Base {
         }
     }
 
-    setError(validationResult: ValidationResult) {
+    setError(validationResult: ValidationResult): void {
         const { isValid, messages } = validationResult;
         const errorMessage = messages.join(', ');
         const isError = !isValid;
@@ -80,13 +80,13 @@ export default class FormControlInputText extends Base {
         }
     }
 
-    initChildren() {
+    initChildren(): void {
         this._labelInstance?.init();
         this._inputTextInstance.init();
         this._helperTextInstance?.init();
     }
 
-    initInputListeners() {
+    initInputListeners(): void {
         this._inputTextInstance.getInputElement().addEventListener('input', ({ currentTarget }) => {
             if (!(currentTarget instanceof HTMLInputElement)) {
                 throw new Error('FormControlInputText: Current target is not an HTMLInputElement.');
@@ -98,7 +98,7 @@ export default class FormControlInputText extends Base {
         });
     }
 
-    init() {
+    init(): void {
         super.init();
 
         this.initChildren();
