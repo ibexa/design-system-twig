@@ -1,19 +1,19 @@
-import Expander, { ExpanderType } from './expander';
 import Base from '../shared/Base';
+import Expander from './expander';
 
 import { HTMLElementIDSInstance } from '../shared/types';
 
 import { reflow } from '../helpers/dom';
 
 export default class Accordion extends Base {
-    private _togglerElement: HTMLElementIDSInstance<ExpanderType> | null;
-    private _togglerInstance: ExpanderType;
+    private _togglerElement: HTMLElementIDSInstance<Expander> | null;
+    private _togglerInstance: Expander;
     private _contentElement: HTMLElement | null;
 
     constructor(container: HTMLElement) {
         super(container);
 
-        this._togglerElement = this._container.querySelector<HTMLElementIDSInstance<ExpanderType>>('.ids-expander');
+        this._togglerElement = this._container.querySelector<HTMLElementIDSInstance<Expander>>('.ids-expander');
 
         if (!this._togglerElement) {
             throw new Error('No toggler element found for this container!');
