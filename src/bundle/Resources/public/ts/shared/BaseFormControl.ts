@@ -12,19 +12,19 @@ export default abstract class BaseFormControl<T> extends Base {
     protected _labelInstance: Label | null = null;
     protected _helperTextInstance: HelperText | null = null;
     protected _validatorManager: ValidatorManager<T>;
-    protected _error = false;
+    protected _hasError = false;
     protected _errorMessage = '';
 
     constructor(container: HTMLDivElement) {
         super(container);
 
-        const labelContainer = container.querySelector<HTMLDivElement>('.ids-label');
+        const labelContainer = this._container.querySelector<HTMLDivElement>('.ids-label');
 
         if (labelContainer) {
             this._labelInstance = new Label(labelContainer);
         }
 
-        const helperTextContainer = container.querySelector<HTMLDivElement>('.ids-helper-text');
+        const helperTextContainer = this._container.querySelector<HTMLDivElement>('.ids-helper-text');
 
         if (helperTextContainer) {
             this._helperTextInstance = new HelperText(helperTextContainer);
@@ -33,27 +33,27 @@ export default abstract class BaseFormControl<T> extends Base {
         this._validatorManager = new ValidatorManager();
     }
 
-    set error(value: boolean) {
-        if (this._error === value) {
+    setHasError(value: boolean) {
+        if (this._hasError === value) {
             return;
         }
 
-        this._error = value;
+        this._hasError = value;
 
         if (this._labelInstance) {
-            this._labelInstance.error = value;
+            this._labelInstance.setHasError(value);
         }
 
         if (this._helperTextInstance) {
-            this._helperTextInstance.error = value;
+            this._helperTextInstance.setHasError(value);
         }
     }
 
-    get error(): boolean {
-        return this._error;
+    getHasError(): boolean {
+        return this._hasError;
     }
 
-    set errorMessage(value: string) {
+    setErrorMessage(value: string) {
         if (this._errorMessage === value) {
             return;
         }
@@ -61,8 +61,8 @@ export default abstract class BaseFormControl<T> extends Base {
         this._errorMessage = value;
 
         if (this._helperTextInstance) {
-            if (this._error) {
-                this._helperTextInstance.message = value;
+            if (this._hasError) {
+                this._helperTextInstance.setMessage(value);
             } else {
                 this._helperTextInstance.changeToDefaultMessage();
             }

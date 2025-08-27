@@ -12,18 +12,18 @@ export default class Expander extends Base {
     constructor(container: HTMLElement) {
         super(container);
 
-        const labelContainer = this.container.querySelector<HTMLElement>('.ids-expander__label');
+        const labelContainer = this._container.querySelector<HTMLElement>('.ids-expander__label');
 
         if (!labelContainer) {
             throw new Error('No label container found for this expander!');
         }
 
         this._labelContainer = labelContainer;
-        this._hasLabel = this.container.classList.contains('ids-expander--has-label');
+        this._hasLabel = this._container.classList.contains('ids-expander--has-label');
 
         if (this._hasLabel) {
-            this._collapseLabel = container.dataset.collapseLabel;
-            this._expandLabel = container.dataset.expandLabel;
+            this._collapseLabel = this._container.dataset.collapseLabel;
+            this._expandLabel = this._container.dataset.expandLabel;
         }
     }
 
@@ -32,11 +32,11 @@ export default class Expander extends Base {
     }
 
     isExpanded(): boolean {
-        return this.container.classList.contains('ids-expander--is-expanded');
+        return this._container.classList.contains('ids-expander--is-expanded');
     }
 
     toggleIsExpanded(isExpanded: boolean) {
-        this.container.classList.toggle('ids-expander--is-expanded', isExpanded);
+        this._container.classList.toggle('ids-expander--is-expanded', isExpanded);
 
         if (this._hasLabel && this._collapseLabel && this._expandLabel) {
             this._labelContainer.innerHTML = isExpanded ? this._collapseLabel : this._expandLabel;
@@ -44,7 +44,7 @@ export default class Expander extends Base {
     }
 
     init() {
-        this.container.addEventListener('click', () => {
+        this._container.addEventListener('click', () => {
             if (typeof this._expandHandler !== 'function') {
                 throw new Error('No expandHandler method provided!');
             }
@@ -55,5 +55,3 @@ export default class Expander extends Base {
         super.init();
     }
 }
-
-export type ExpanderType = InstanceType<typeof Expander>;

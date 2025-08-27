@@ -1,19 +1,19 @@
-import Expander, { ExpanderType } from './expander';
 import Base from '../shared/Base';
+import Expander from './expander';
 
 import { HTMLElementIDSInstance } from '../shared/types';
 
 import { reflow } from '../helpers/dom';
 
 export default class Accordion extends Base {
-    private _togglerElement: HTMLElementIDSInstance<ExpanderType> | null;
-    private _togglerInstance: ExpanderType;
+    private _togglerElement: HTMLElementIDSInstance<Expander> | null;
+    private _togglerInstance: Expander;
     private _contentElement: HTMLElement | null;
 
     constructor(container: HTMLElement) {
         super(container);
 
-        this._togglerElement = container.querySelector<HTMLElementIDSInstance<ExpanderType>>('.ids-expander');
+        this._togglerElement = this._container.querySelector<HTMLElementIDSInstance<Expander>>('.ids-expander');
 
         if (!this._togglerElement) {
             throw new Error('No toggler element found for this container!');
@@ -26,11 +26,11 @@ export default class Accordion extends Base {
     }
 
     isExpanded(): boolean {
-        return this.container.classList.contains('ids-accordion--is-expanded');
+        return this._container.classList.contains('ids-accordion--is-expanded');
     }
 
     toggleIsExpanded(isExpanded: boolean) {
-        const prevIsExpanded = this.container.classList.contains('ids-accordion--is-expanded');
+        const prevIsExpanded = this._container.classList.contains('ids-accordion--is-expanded');
 
         if (prevIsExpanded !== isExpanded) {
             this._togglerInstance.toggleIsExpanded(isExpanded);
@@ -46,12 +46,12 @@ export default class Accordion extends Base {
 
         reflow(this._contentElement);
 
-        this.container.classList.toggle('ids-accordion--is-expanded', isExpanded);
-        this.container.classList.toggle('ids-accordion--is-animating', true);
+        this._container.classList.toggle('ids-accordion--is-expanded', isExpanded);
+        this._container.classList.toggle('ids-accordion--is-animating', true);
         this._contentElement.addEventListener(
             'transitionend',
             () => {
-                this.container.classList.toggle('ids-accordion--is-animating', false);
+                this._container.classList.toggle('ids-accordion--is-animating', false);
 
                 if (this._contentElement) {
                     this._contentElement.style.removeProperty('height');
@@ -81,5 +81,3 @@ export default class Accordion extends Base {
         super.init();
     }
 }
-
-export type AccordionType = InstanceType<typeof Accordion>;

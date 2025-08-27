@@ -10,15 +10,15 @@ export default class HelperText extends Base {
         error: null,
     };
 
-    private _error = false;
+    private _hasError = false;
     private _message = '';
     private _defaultMessage: string;
 
     constructor(container: HTMLElement) {
         super(container);
 
-        const iconWrapper = container.querySelector<HTMLDivElement>('.ids-helper-text__icon-wrapper');
-        const contentWrapper = container.querySelector<HTMLDivElement>('.ids-helper-text__content-wrapper');
+        const iconWrapper = this._container.querySelector<HTMLDivElement>('.ids-helper-text__icon-wrapper');
+        const contentWrapper = this._container.querySelector<HTMLDivElement>('.ids-helper-text__content-wrapper');
 
         if (!iconWrapper || !contentWrapper) {
             throw new Error('HelperText: Required elements are missing in the container.');
@@ -39,18 +39,18 @@ export default class HelperText extends Base {
         };
     }
 
-    set defaultMessage(value: string) {
+    setDefaultMessage(value: string) {
         this._defaultMessage = value;
     }
 
-    set error(value: boolean) {
-        if (this._error === value) {
+    setHasError(value: boolean) {
+        if (this._hasError === value) {
             return;
         }
 
-        this._error = value;
+        this._hasError = value;
 
-        this.container.classList.toggle('ids-helper-text--error', value);
+        this._container.classList.toggle('ids-helper-text--error', value);
 
         const iconElement = this._iconWrapper.querySelector('.ids-helper-text__icon');
 
@@ -67,7 +67,7 @@ export default class HelperText extends Base {
         iconElement.replaceWith(replacementIcon.cloneNode(true));
     }
 
-    set message(value: string) {
+    setMessage(value: string) {
         if (this._message === value) {
             return;
         }
@@ -78,6 +78,6 @@ export default class HelperText extends Base {
     }
 
     changeToDefaultMessage() {
-        this.message = this._defaultMessage;
+        this.setMessage(this._defaultMessage);
     }
 }
