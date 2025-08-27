@@ -12,7 +12,7 @@ export default abstract class BaseFormControl<T> extends Base {
     protected _labelInstance: Label | null = null;
     protected _helperTextInstance: HelperText | null = null;
     protected _validatorManager: ValidatorManager<T>;
-    protected _error = false;
+    protected _hasError = false;
     protected _errorMessage = '';
 
     constructor(container: HTMLDivElement) {
@@ -33,24 +33,24 @@ export default abstract class BaseFormControl<T> extends Base {
         this._validatorManager = new ValidatorManager();
     }
 
-    setError(value: boolean) {
-        if (this._error === value) {
+    setHasError(value: boolean) {
+        if (this._hasError === value) {
             return;
         }
 
-        this._error = value;
+        this._hasError = value;
 
         if (this._labelInstance) {
-            this._labelInstance.setError(value);
+            this._labelInstance.setHasError(value);
         }
 
         if (this._helperTextInstance) {
-            this._helperTextInstance.setError(value);
+            this._helperTextInstance.setHasError(value);
         }
     }
 
-    getError(): boolean {
-        return this._error;
+    getHasError(): boolean {
+        return this._hasError;
     }
 
     setErrorMessage(value: string) {
@@ -61,7 +61,7 @@ export default abstract class BaseFormControl<T> extends Base {
         this._errorMessage = value;
 
         if (this._helperTextInstance) {
-            if (this._error) {
+            if (this._hasError) {
                 this._helperTextInstance.setMessage(value);
             } else {
                 this._helperTextInstance.changeToDefaultMessage();

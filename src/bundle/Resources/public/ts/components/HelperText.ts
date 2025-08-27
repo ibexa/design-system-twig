@@ -10,7 +10,7 @@ export default class HelperText extends Base {
         error: null,
     };
 
-    private _error = false;
+    private _hasError = false;
     private _message = '';
     private _defaultMessage: string;
 
@@ -43,12 +43,12 @@ export default class HelperText extends Base {
         this._defaultMessage = value;
     }
 
-    setError(value: boolean) {
-        if (this._error === value) {
+    setHasError(value: boolean) {
+        if (this._hasError === value) {
             return;
         }
 
-        this._error = value;
+        this._hasError = value;
 
         this._container.classList.toggle('ids-helper-text--error', value);
 

@@ -1,14 +1,14 @@
 import Base from '../shared/Base';
 
 export default class Label extends Base {
-    private _error = false;
+    private _hasError = false;
 
-    setError(value: boolean) {
-        this._error = value;
+    setHasError(value: boolean) {
+        this._hasError = value;
         this._container.classList.toggle('ids-label--error', value);
     }
 
-    getError(): boolean {
-        return this._error;
+    getHasError(): boolean {
+        return this._hasError;
     }
 }
