@@ -4,10 +4,6 @@ import Label from '../components/Label';
 
 import ValidatorManager from '../validators/ValidatorManager';
 
-export const BASE_EVENTS = {
-    INITIALIZED: 'ids:component:initialized',
-} as const;
-
 export default abstract class BaseFormControl<T> extends Base {
     protected _labelInstance: Label | null = null;
     protected _helperTextInstance: HelperText | null = null;
