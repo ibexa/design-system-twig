@@ -18,6 +18,8 @@ export default abstract class Base {
     }
 
     init() {
+        this._container.setAttribute('data-ids-initialized', 'true');
+
         this._container.dispatchEvent(new CustomEvent(Base.EVENTS.INITIALIZED, { detail: { component: this } }));
     }
 }
