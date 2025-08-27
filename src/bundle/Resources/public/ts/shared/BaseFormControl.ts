@@ -33,7 +33,7 @@ export default abstract class BaseFormControl<T> extends Base {
         this._validatorManager = new ValidatorManager();
     }
 
-    set error(value: boolean) {
+    setError(value: boolean) {
         if (this._error === value) {
             return;
         }
@@ -41,19 +41,19 @@ export default abstract class BaseFormControl<T> extends Base {
         this._error = value;
 
         if (this._labelInstance) {
-            this._labelInstance.error = value;
+            this._labelInstance.setError(value);
         }
 
         if (this._helperTextInstance) {
-            this._helperTextInstance.error = value;
+            this._helperTextInstance.setError(value);
         }
     }
 
-    get error(): boolean {
+    getError(): boolean {
         return this._error;
     }
 
-    set errorMessage(value: string) {
+    setErrorMessage(value: string) {
         if (this._errorMessage === value) {
             return;
         }
@@ -62,7 +62,7 @@ export default abstract class BaseFormControl<T> extends Base {
 
         if (this._helperTextInstance) {
             if (this._error) {
-                this._helperTextInstance.message = value;
+                this._helperTextInstance.setMessage(value);
             } else {
                 this._helperTextInstance.changeToDefaultMessage();
             }

@@ -13,7 +13,7 @@ export default abstract class Base {
         setInstance(container, this);
     }
 
-    get container(): HTMLElement {
+    getContainer(): HTMLElement {
         return this._container;
     }
 

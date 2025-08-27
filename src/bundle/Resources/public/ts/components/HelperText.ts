@@ -39,18 +39,18 @@ export default class HelperText extends Base {
         };
     }
 
-    set defaultMessage(value: string) {
+    setDefaultMessage(value: string) {
         this._defaultMessage = value;
     }
 
-    set error(value: boolean) {
+    setError(value: boolean) {
         if (this._error === value) {
             return;
         }
 
         this._error = value;
 
-        this.container.classList.toggle('ids-helper-text--error', value);
+        this._container.classList.toggle('ids-helper-text--error', value);
 
         const iconElement = this._iconWrapper.querySelector('.ids-helper-text__icon');
 
@@ -67,7 +67,7 @@ export default class HelperText extends Base {
         iconElement.replaceWith(replacementIcon.cloneNode(true));
     }
 
-    set message(value: string) {
+    setMessage(value: string) {
         if (this._message === value) {
             return;
         }
@@ -78,6 +78,6 @@ export default class HelperText extends Base {
     }
 
     changeToDefaultMessage() {
-        this.message = this._defaultMessage;
+        this.setMessage(this._defaultMessage);
     }
 }
