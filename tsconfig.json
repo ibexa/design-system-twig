@@ -3,5 +3,18 @@
     "include": [
         "src/bundle/**/*.ts",
         "src/bundle/**/*.tsx"
-    ]
+    ],
+    "compilerOptions": {
+        "paths": {
+            "@ids-assets/*": [
+                "/home/val/ibexa/bundles/design-system/packages/assets/src/*"
+            ],
+            "@ids-components/*": [
+                "/home/val/ibexa/bundles/design-system/packages/components/src/*"
+            ],
+            "@ids-core/*": [
+                "/home/val/ibexa/bundles/design-system/packages/core/src/*"
+            ]
+        }
+    }
 }

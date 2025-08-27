@@ -21,6 +21,14 @@ export default class InputText extends Base {
         this._clearBtnElement = clearBtnElement;
     }
 
+    getInputElement(): HTMLInputElement {
+        return this._inputElement;
+    }
+
+    getRequired(): boolean {
+        return this._inputElement.required;
+    }
+
     private _updateInputPadding() {
         const actionsWidth = this._actionsElement.offsetWidth;
 
