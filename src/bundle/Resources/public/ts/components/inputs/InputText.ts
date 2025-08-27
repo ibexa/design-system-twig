@@ -8,8 +8,8 @@ export default class InpuText extends Base {
     constructor(container: HTMLDivElement) {
         super(container);
 
-        const actionsElement = container.querySelector<HTMLDivElement>('.ids-input-text__actions');
-        const inputElement = container.querySelector<HTMLInputElement>('.ids-input-text__source .ids-input');
+        const actionsElement = this._container.querySelector<HTMLDivElement>('.ids-input-text__actions');
+        const inputElement = this._container.querySelector<HTMLInputElement>('.ids-input-text__source .ids-input');
         const clearBtnElement = actionsElement?.querySelector<HTMLButtonElement>('.ids-clear-btn');
 
         if (!actionsElement || !inputElement || !clearBtnElement) {

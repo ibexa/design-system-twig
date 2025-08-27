@@ -13,7 +13,7 @@ export default class Accordion extends Base {
     constructor(container: HTMLElement) {
         super(container);
 
-        this._togglerElement = container.querySelector<HTMLElementIDSInstance<ExpanderType>>('.ids-expander');
+        this._togglerElement = this._container.querySelector<HTMLElementIDSInstance<ExpanderType>>('.ids-expander');
 
         if (!this._togglerElement) {
             throw new Error('No toggler element found for this container!');

@@ -18,13 +18,13 @@ export default abstract class BaseFormControl<T> extends Base {
     constructor(container: HTMLDivElement) {
         super(container);
 
-        const labelContainer = container.querySelector<HTMLDivElement>('.ids-label');
+        const labelContainer = this._container.querySelector<HTMLDivElement>('.ids-label');
 
         if (labelContainer) {
             this._labelInstance = new Label(labelContainer);
         }
 
-        const helperTextContainer = container.querySelector<HTMLDivElement>('.ids-helper-text');
+        const helperTextContainer = this._container.querySelector<HTMLDivElement>('.ids-helper-text');
 
         if (helperTextContainer) {
             this._helperTextInstance = new HelperText(helperTextContainer);

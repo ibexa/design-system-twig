@@ -12,18 +12,18 @@ export default class Expander extends Base {
     constructor(container: HTMLElement) {
         super(container);
 
-        const labelContainer = container.querySelector<HTMLElement>('.ids-expander__label');
+        const labelContainer = this._container.querySelector<HTMLElement>('.ids-expander__label');
 
         if (!labelContainer) {
             throw new Error('No label container found for this expander!');
         }
 
         this._labelContainer = labelContainer;
-        this._hasLabel = container.classList.contains('ids-expander--has-label');
+        this._hasLabel = this._container.classList.contains('ids-expander--has-label');
 
         if (this._hasLabel) {
-            this._collapseLabel = container.dataset.collapseLabel;
-            this._expandLabel = container.dataset.expandLabel;
+            this._collapseLabel = this._container.dataset.collapseLabel;
+            this._expandLabel = this._container.dataset.expandLabel;
         }
     }
 

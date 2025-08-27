@@ -17,8 +17,8 @@ export default class HelperText extends Base {
     constructor(container: HTMLElement) {
         super(container);
 
-        const iconWrapper = container.querySelector<HTMLDivElement>('.ids-helper-text__icon-wrapper');
-        const contentWrapper = container.querySelector<HTMLDivElement>('.ids-helper-text__content-wrapper');
+        const iconWrapper = this._container.querySelector<HTMLDivElement>('.ids-helper-text__icon-wrapper');
+        const contentWrapper = this._container.querySelector<HTMLDivElement>('.ids-helper-text__content-wrapper');
 
         if (!iconWrapper || !contentWrapper) {
             throw new Error('HelperText: Required elements are missing in the container.');
