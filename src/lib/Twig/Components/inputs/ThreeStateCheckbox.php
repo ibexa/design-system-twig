@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
-final class ThreeStateCheckbox extends AbstractCheckbox
+final class ThreeStateCheckbox extends AbstractChoiceInput
 {
     public bool $indeterminate = false;
 
