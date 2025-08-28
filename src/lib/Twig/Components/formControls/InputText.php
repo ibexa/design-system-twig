@@ -30,6 +30,8 @@ final class InputText
     #[ExposeInTemplate(name: 'input', getter: 'getInput')]
     public array $input = [];
 
+    public bool $required = false;
+
     public string $value = '';
 
     public string $type = 'input-text';
@@ -59,13 +61,13 @@ final class InputText
             ->allowedTypes('array')
             ->default([]);
         $resolver
-            ->setOptions('input', function (OptionsResolver $inputResolver): void {
-                $inputResolver->setIgnoreUndefined(true);
-                $inputResolver
-                    ->define('required')
-                    ->allowedTypes('bool')
-                    ->default(false);
-            });
+            ->define('input')
+            ->allowedTypes('array')
+            ->default([]);
+        $resolver
+            ->define('required')
+            ->allowedTypes('bool')
+            ->default(false);
         $resolver
             ->define('value')
             ->allowedTypes('string')
@@ -76,7 +78,7 @@ final class InputText
 
     public function getLabelExtra(): array
     {
-        return $this->labelExtra + ['for' => $this->id, 'required' => $this->input['required']];
+        return $this->labelExtra + ['for' => $this->id, 'required' => $this->required];
     }
 
     public function getInput(): array
@@ -84,6 +86,7 @@ final class InputText
         return $this->input + [
             'id' => $this->id,
             'name' => $this->name,
+            'required' => $this->required,
             'value' => $this->value,
             'data-ids-custom-init' => 'true',
         ];
