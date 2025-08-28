@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
-final class Checkbox extends AbstractChoiceInput
+final class RadioButton extends AbstractChoiceInput
 {
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {

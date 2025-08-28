@@ -5,7 +5,7 @@ export default abstract class Base {
 
     static EVENTS = {
         INITIALIZED: 'ids:component:initialized',
-    }
+    };
 
     constructor(container: HTMLElement) {
         this._container = container;
