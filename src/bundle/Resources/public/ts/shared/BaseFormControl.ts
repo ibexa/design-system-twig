@@ -29,7 +29,7 @@ export default abstract class BaseFormControl<T> extends Base {
         this._validatorManager = new ValidatorManager();
     }
 
-    setHasError(value: boolean) {
+    setHasError(value: boolean): void {
         if (this._hasError === value) {
             return;
         }
@@ -49,7 +49,7 @@ export default abstract class BaseFormControl<T> extends Base {
         return this._hasError;
     }
 
-    setErrorMessage(value: string) {
+    setErrorMessage(value: string): void {
         if (this._errorMessage === value) {
             return;
         }

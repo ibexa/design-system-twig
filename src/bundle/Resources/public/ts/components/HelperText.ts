@@ -39,11 +39,11 @@ export default class HelperText extends Base {
         };
     }
 
-    setDefaultMessage(value: string) {
+    setDefaultMessage(value: string): void {
         this._defaultMessage = value;
     }
 
-    setHasError(value: boolean) {
+    setHasError(value: boolean): void {
         if (this._hasError === value) {
             return;
         }
@@ -67,7 +67,7 @@ export default class HelperText extends Base {
         iconElement.replaceWith(replacementIcon.cloneNode(true));
     }
 
-    setMessage(value: string) {
+    setMessage(value: string): void {
         if (this._message === value) {
             return;
         }
@@ -77,7 +77,7 @@ export default class HelperText extends Base {
         this._contentWrapper.textContent = value;
     }
 
-    changeToDefaultMessage() {
+    changeToDefaultMessage(): void {
         this.setMessage(this._defaultMessage);
     }
 }
