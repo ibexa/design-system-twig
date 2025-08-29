@@ -86,6 +86,7 @@ final class HelperTextTest extends KernelTestCase
      * @dataProvider iconByTypeProvider
      *
      * @param array<string,mixed> $props
+     * @param non-empty-string $expectedIconId
      */
     public function testIconIsRenderedForType(array $props, string $expectedIconId): void
     {
@@ -104,7 +105,7 @@ final class HelperTextTest extends KernelTestCase
     }
 
     /**
-     * @return Generator<string, array{0: array<string, mixed>, 1: string}>
+     * @return Generator<string, array{0: array<string, mixed>, 1: non-empty-string}>
      */
     public static function iconByTypeProvider(): Generator
     {
