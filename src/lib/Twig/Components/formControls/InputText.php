@@ -112,6 +112,7 @@ final class InputText
      * @param array<string, scalar> $attributes
      * @param list<string> $forbidden
      * @param non-empty-string $optionName
+     *
      * @return array<string, scalar>
      *
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
