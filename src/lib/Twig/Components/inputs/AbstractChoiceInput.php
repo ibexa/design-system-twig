@@ -11,7 +11,7 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\inputs;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-abstract class AbstractCheckbox
+abstract class AbstractChoiceInput
 {
     public bool $disabled = false;
 

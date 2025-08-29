@@ -1,6 +1,6 @@
-import BaseCheckbox from '../../shared/BaseCheckbox';
+import BaseChoiceInput from '../../shared/BaseChoiceInput';
 
-export default class ThreeStateCheckbox extends BaseCheckbox {
+export default class ThreeStateCheckbox extends BaseChoiceInput {
     constructor(container: HTMLDivElement) {
         super(container);
 
