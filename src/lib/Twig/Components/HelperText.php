@@ -35,10 +35,10 @@ final class HelperText
     public function validate(array $props): array
     {
         $resolver = new OptionsResolver();
-        $resolver->setIgnoreUndefined(true);
+        $resolver->setIgnoreUndefined();
         $resolver
             ->define('type')
-            ->allowedValues('default', 'error')
+            ->allowedValues(...array_keys(self::$iconMap))
             ->default('default');
 
         return $resolver->resolve($props) + $props;

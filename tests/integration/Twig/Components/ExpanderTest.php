@@ -23,20 +23,20 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'is_expanded' => true,
-                'expand_label' => 'Show',
-                'collapse_label' => 'Hide',
-                'has_icon' => true,
+                'expanded' => true,
+                'expandLabel' => 'Show',
+                'collapseLabel' => 'Hide',
+                'hasIcon' => true,
                 'message' => 'Toggle section',
             ]
         );
 
         self::assertInstanceOf(Expander::class, $component, 'Component should be instance of Expander');
         self::assertSame('caret', $component->type, 'Type should be "caret"');
-        self::assertTrue($component->is_expanded, 'is_expanded should be true');
-        self::assertSame('Show', $component->expand_label, 'Expand label should be passed through');
-        self::assertSame('Hide', $component->collapse_label, 'Collapse label should be passed through');
-        self::assertTrue($component->has_icon, 'has_icon should be true');
+        self::assertTrue($component->expanded, 'expanded should be true');
+        self::assertSame('Show', $component->expandLabel, 'Expand label should be passed through');
+        self::assertSame('Hide', $component->collapseLabel, 'Collapse label should be passed through');
+        self::assertTrue($component->hasIcon, 'has_icon should be true');
         self::assertSame('arrow-caret-down', $component->iconName(), 'caret type should map to arrow-caret-down');
     }
 
@@ -46,10 +46,10 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'is_expanded' => true,
-                'expand_label' => 'Show',
-                'collapse_label' => 'Hide',
-                'has_icon' => true,
+                'expanded' => true,
+                'expandLabel' => 'Show',
+                'collapseLabel' => 'Hide',
+                'hasIcon' => true,
                 'message' => 'Click to hide section',
             ]
         );
@@ -82,10 +82,10 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'is_expanded' => false,
-                'expand_label' => 'Show',
-                'collapse_label' => 'Hide',
-                'has_icon' => true,
+                'expanded' => false,
+                'expandLabel' => 'Show',
+                'collapseLabel' => 'Hide',
+                'hasIcon' => true,
                 'message' => 'Click to expand',
             ]
         );
@@ -106,10 +106,10 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'chevron',
-                'is_expanded' => false,
-                'expand_label' => 'More',
-                'collapse_label' => 'Less',
-                'has_icon' => true,
+                'expanded' => false,
+                'expandLabel' => 'More',
+                'collapseLabel' => 'Less',
+                'hasIcon' => true,
                 'message' => 'Toggle more info',
             ]
         );
@@ -129,10 +129,10 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'is_expanded' => false,
-                'expand_label' => 'Show',
-                'collapse_label' => 'Hide',
-                'has_icon' => false,
+                'expanded' => false,
+                'expandLabel' => 'Show',
+                'collapseLabel' => 'Hide',
+                'hasIcon' => false,
                 'message' => 'Just text',
             ]
         );
@@ -151,10 +151,10 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'is_expanded' => true,
-                'expand_label' => 'Open more',
-                'collapse_label' => 'Close',
-                'has_icon' => true,
+                'expanded' => true,
+                'expandLabel' => 'Open more',
+                'collapseLabel' => 'Close',
+                'hasIcon' => true,
                 'message' => 'open-close',
             ]
         );
