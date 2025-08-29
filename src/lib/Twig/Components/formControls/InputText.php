@@ -76,11 +76,11 @@ final class InputText
         $resolver->setAllowedTypes('value', 'string');
 
         $resolver->setNormalizer('labelExtra', static function (Options $options, array $attributes) {
-            return self::assertForbidden($attributes, ['id', 'required'], 'labelExtra');
+            return self::assertForbidden($attributes, ['for', 'required'], 'labelExtra');
         });
 
         $resolver->setNormalizer('input', static function (Options $options, array $attributes) {
-            return self::assertForbidden($attributes, ['id', 'required'], 'input');
+            return self::assertForbidden($attributes, ['id', 'name', 'required', 'value'], 'input');
         });
 
         return array_replace_recursive($resolver->resolve($props), $props);
