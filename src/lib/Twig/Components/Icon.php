@@ -12,9 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
-#[AsTwigComponent(
-    template: '@ibexadesign/design_system/components/Icon.html.twig'
-)]
+#[AsTwigComponent]
 final class Icon extends AbstractIcon
 {
     public string $name;
