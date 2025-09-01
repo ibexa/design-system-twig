@@ -1,0 +1,24 @@
+{% set input_classes =
+    html_classes(
+        'ids-input ids-input--radio ids-input--medium',
+        {
+            'ids-input--disabled': disabled,
+            'ids-input--error': error,
+            'ids-input--required': required
+        },
+        attributes.render('class') ?? ''
+    )
+%}
+
+<div class="ids-radio-button">
+    <input
+        class="{{ input_classes }}"
+        type="radio"
+        {{
+        attributes.defaults({
+            disabled,
+            required
+        })
+        }}
+    />
+</div>
