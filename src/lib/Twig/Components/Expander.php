@@ -19,7 +19,7 @@ final class Expander
     public string $type;
 
     #[ExposeInTemplate('is_expanded')]
-    public bool $expanded = false;
+    public bool $isExpanded = false;
 
     #[ExposeInTemplate('expand_label')]
     public string $expandLabel = '';
@@ -53,7 +53,7 @@ final class Expander
             ->required()
             ->allowedValues('caret', 'chevron');
         $resolver
-            ->define('expanded')
+            ->define('is_expanded')
             ->allowedTypes('bool')
             ->default(false);
         $resolver

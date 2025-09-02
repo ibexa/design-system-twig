@@ -23,7 +23,7 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'expanded' => true,
+                'isExpanded' => true,
                 'expandLabel' => 'Show',
                 'collapseLabel' => 'Hide',
                 'hasIcon' => true,
@@ -33,10 +33,10 @@ final class ExpanderTest extends KernelTestCase
 
         self::assertInstanceOf(Expander::class, $component, 'Component should be instance of Expander');
         self::assertSame('caret', $component->type, 'Type should be "caret"');
-        self::assertTrue($component->expanded, 'expanded should be true');
+        self::assertTrue($component->isExpanded, 'isExpanded should be true');
         self::assertSame('Show', $component->expandLabel, 'Expand label should be passed through');
         self::assertSame('Hide', $component->collapseLabel, 'Collapse label should be passed through');
-        self::assertTrue($component->hasIcon, 'has_icon should be true');
+        self::assertTrue($component->hasIcon, 'hasIcon should be true');
         self::assertSame('arrow-caret-down', $component->iconName(), 'caret type should map to arrow-caret-down');
     }
 
@@ -46,7 +46,7 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'expanded' => true,
+                'isExpanded' => true,
                 'expandLabel' => 'Show',
                 'collapseLabel' => 'Hide',
                 'hasIcon' => true,
@@ -82,7 +82,7 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'expanded' => false,
+                'isExpanded' => false,
                 'expandLabel' => 'Show',
                 'collapseLabel' => 'Hide',
                 'hasIcon' => true,
@@ -106,7 +106,7 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'chevron',
-                'expanded' => false,
+                'isExpanded' => false,
                 'expandLabel' => 'More',
                 'collapseLabel' => 'Less',
                 'hasIcon' => true,
@@ -129,7 +129,7 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'expanded' => false,
+                'isExpanded' => false,
                 'expandLabel' => 'Show',
                 'collapseLabel' => 'Hide',
                 'hasIcon' => false,
@@ -151,7 +151,7 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'expanded' => true,
+                'isExpanded' => true,
                 'expandLabel' => 'Open more',
                 'collapseLabel' => 'Close',
                 'hasIcon' => true,
@@ -170,10 +170,10 @@ final class ExpanderTest extends KernelTestCase
             'ibexa:Expander',
             [
                 'type' => 'caret',
-                'is_expanded' => false,
-                'expand_label' => 'Show',
-                'collapse_label' => 'Hide',
-                'has_icon' => false,
+                'isExpanded' => false,
+                'expandLabel' => 'Show',
+                'collapseLabel' => 'Hide',
+                'hasIcon' => false,
                 'message' => 'msg',
                 'attributes' => [
                     'class' => 'u-mt-2 custom-hook',
