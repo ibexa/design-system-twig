@@ -1,0 +1,25 @@
+{% set component_classes = html_classes('ids-alt-radio', attributes.render('class') ?? '') %}
+{% set tile_classes =
+    html_classes(
+        'ids-alt-radio__tile',
+        {
+            'ids-alt-radio__tile--checked': input_props.checked,
+            'ids-alt-radio__tile--disabled': input_props.disabled,
+            'ids-alt-radio__tile--error': input_props.error
+        }
+    )
+%}
+
+<div class="{{ component_classes }}">
+    <div class="ids-alt-radio__source">
+        <input
+            class="ids-input ids-input--radio"
+            type="radio"
+            {# here should be taken attributes->input_props but as it's not working in php, there are no attributes... #}
+            {{ attributes.defaults(input_props) }}
+        />
+    </div>
+    <div class="{{ tile_classes }}" role="button">
+        {{ label }}
+    </div>
+</div>
