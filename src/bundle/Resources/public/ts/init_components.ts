@@ -1,4 +1,5 @@
 import Accordion from './components/accordion';
+import AltRadio from './components/inputs/AltRadio';
 import Checkbox from './components/inputs/Checkbox';
 import FormControlInputText from './components/formControls/InputText';
 import InputText from './components/inputs/InputText';
@@ -10,6 +11,14 @@ accordionContainers.forEach((accordionContainer: HTMLDivElement) => {
     const accordionInstance = new Accordion(accordionContainer);
 
     accordionInstance.init();
+});
+
+const altRadioContainers = document.querySelectorAll<HTMLDivElement>('.ids-alt-radio:not([data-ids-custom-init])');
+
+altRadioContainers.forEach((altRadioContainer: HTMLDivElement) => {
+    const altRadioInstance = new AltRadio(altRadioContainer);
+
+    altRadioInstance.init();
 });
 
 const checkboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-checkbox:not([data-ids-custom-init])');
