@@ -10,7 +10,7 @@ export default class AltRadio extends Base {
         super(container);
 
         const inputElement = this._container.querySelector<HTMLInputElement>('.ids-alt-radio__source .ids-input');
-        const tileElement = this._container.querySelector<HTMLInputElement>('.ids-alt-radio__tile');
+        const tileElement = this._container.querySelector<HTMLDivElement>('.ids-alt-radio__tile');
 
         if (!inputElement || !tileElement) {
             throw new Error('AltRadio: Required elements are missing in the container.');
