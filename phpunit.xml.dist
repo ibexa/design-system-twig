@@ -1,14 +1,13 @@
+<?xml version="1.0"?>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
         backupGlobals="false"
-        backupStaticAttributes="false"
+        backupStaticProperties="false"
         bootstrap="vendor/autoload.php"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
         failOnWarning="true"
-        colors="true">
+        colors="true"
+        cacheDirectory=".phpunit.cache">
     <testsuites>
         <testsuite name="bundle">
             <directory>tests/bundle</directory>
@@ -21,6 +20,6 @@
         </testsuite>
     </testsuites>
     <php>
-        <env name="KERNEL_CLASS" value="Ibexa\Tests\Integration\DesignSystemTwig\IbexaTestKernel" />
+        <env name="KERNEL_CLASS" value="Ibexa\Tests\Integration\DesignSystemTwig\IbexaTestKernel"/>
     </php>
 </phpunit>
