@@ -9,15 +9,11 @@ declare(strict_types=1);
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent]
-final class ChoiceInputLabel
+abstract class AbstractChoiceInputField
 {
-    public string $content = '';
-
-    public string $for;
+    public string $id;
 
     /**
      * @param array<string, mixed> $props
@@ -30,14 +26,14 @@ final class ChoiceInputLabel
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined();
         $resolver
-            ->define('content')
-            ->allowedTypes('string')
-            ->default('');
-        $resolver
-            ->define('for')
+            ->define('id')
             ->required()
             ->allowedTypes('string');
 
+        $this->configurePropsResolver($resolver);
+
         return $resolver->resolve($props) + $props;
     }
+
+    abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
 }
