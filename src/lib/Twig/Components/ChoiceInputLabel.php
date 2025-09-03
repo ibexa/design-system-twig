@@ -17,6 +17,8 @@ final class ChoiceInputLabel
 {
     public string $content = '';
 
+    public string $for = '';
+
     /**
      * @param array<string, mixed> $props
      *
@@ -31,6 +33,10 @@ final class ChoiceInputLabel
             ->define('content')
             ->allowedTypes('string')
             ->default('');
+        $resolver
+            ->define('for')
+            ->required()
+            ->allowedTypes('string');
 
         return $resolver->resolve($props) + $props;
     }
