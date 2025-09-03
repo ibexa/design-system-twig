@@ -12,7 +12,7 @@ accordionContainers.forEach((accordionContainer: HTMLDivElement) => {
     accordionInstance.init();
 });
 
-const checkboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-checkbox:not([data-ids-custom-init]])');
+const checkboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-checkbox:not([data-ids-custom-init])');
 
 checkboxContainers.forEach((checkboxContainer: HTMLDivElement) => {
     const checkboxInstance = new Checkbox(checkboxContainer);
@@ -38,7 +38,7 @@ inputTextContainers.forEach((inputTextContainer: HTMLDivElement) => {
     inputTextInstance.init();
 });
 
-const threeStateCheckboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-three-state-checkbox:not([data-ids-custom-init]])');
+const threeStateCheckboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-three-state-checkbox:not([data-ids-custom-init])');
 
 threeStateCheckboxContainers.forEach((threeStateCheckboxContainer: HTMLDivElement) => {
     const threeStateCheckboxInstance = new ThreeStateCheckbox(threeStateCheckboxContainer);
