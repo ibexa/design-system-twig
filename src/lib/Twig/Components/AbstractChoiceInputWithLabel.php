@@ -26,7 +26,7 @@ abstract class AbstractChoiceInputWithLabel
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined();
         $resolver
-            ->define('for')
+            ->define('id')
             ->required()
             ->allowedTypes('string');
 
