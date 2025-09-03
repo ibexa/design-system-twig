@@ -11,7 +11,7 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-abstract class AbstractChoiceInputWithLabel
+abstract class AbstractChoiceInputField
 {
     public string $id;
 
