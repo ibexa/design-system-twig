@@ -1,0 +1,13 @@
+{% set component_classes = html_classes('ids-choice-input-with-label', attributes.render('class') ?? '') %}
+{% set component_input_wrapper_class_name = html_classes('ids-choice-input-with-label__input-wrapper', attributes.render('inputWrapperClass') ?? '') %}
+{% set component_label_class_name = html_classes('ids-choice-input-with-label__label', attributes.render('labelClass') ?? '') %}
+
+
+<div class="{{ component_classes }}" {{ attributes }}>
+    <div class="{{ component_input_wrapper_class_name }}">
+        {{ block('input') }}
+    </div>
+    <ChoiceInputLabel class="{{ component_label_class_name }}" for="{{ id }}">
+        {{ block('label') }}
+    </ChoiceInputLabel>
+</div>
