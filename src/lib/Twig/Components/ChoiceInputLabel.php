@@ -17,7 +17,7 @@ final class ChoiceInputLabel
 {
     public string $content = '';
 
-    public string $for = '';
+    public string $for;
 
     /**
      * @param array<string, mixed> $props
