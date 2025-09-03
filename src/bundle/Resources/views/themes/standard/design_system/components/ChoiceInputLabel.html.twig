@@ -1,0 +1,7 @@
+{% set label_classes = html_classes('ids-choice-input-label', attributes.render('class') ?? '') %}
+
+<label class="{{ label_classes }}" {{ attributes.defaults({ for }) }}>
+    {%- block content %}
+        {{ content }}
+    {% endblock content -%}
+</label>
