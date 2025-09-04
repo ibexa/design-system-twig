@@ -14,13 +14,16 @@
     )
 %}
 
-<div class="{{
+<div
+    class="{{
     badge_classes.apply(
         {
             size
         },
         attributes.render('class')
-    ) }}" {{ attributes }}
+    )
+    }}"
+    {{ attributes }}
 >
     {{ formatted_value }}
 </div>
