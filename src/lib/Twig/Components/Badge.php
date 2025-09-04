@@ -16,11 +16,18 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 #[AsTwigComponent]
 final class Badge
 {
-    private const MAX_BADGE_VALUE = 99;
-
+    private const DEFAULT_MAX_BADGE_VALUE = 99;
     public string $size = 'medium';
 
     public int $value = 1;
+
+    #[ExposeInTemplate('max_value')]
+    public int $maxBadgeValue;
+
+    public function __construct()
+    {
+        $this->maxBadgeValue = self::DEFAULT_MAX_BADGE_VALUE;
+    }
 
     /**
      * @param array<string, mixed> $props
@@ -40,21 +47,25 @@ final class Badge
             ->define('value')
             ->allowedTypes('int')
             ->required();
+        $resolver
+            ->define('maxBadgeValue')
+            ->allowedTypes('int')
+            ->default(self::DEFAULT_MAX_BADGE_VALUE);
 
         return $resolver->resolve($props);
     }
 
-    #[ExposeInTemplate('is_expanded')]
-    public function isExpanded(): bool
+    #[ExposeInTemplate('is_wide')]
+    public function isWide(): bool
     {
-        return $this->value > self::MAX_BADGE_VALUE;
+        return $this->value > $this->maxBadgeValue;
     }
 
     #[ExposeInTemplate('formatted_value')]
     public function getFormattedValue(): string
     {
-        if ($this->value > self::MAX_BADGE_VALUE) {
-            return '99+';
+        if ($this->value > $this->maxBadgeValue) {
+            return $this->maxBadgeValue . '+';
         }
 
         return (string)$this->value;
