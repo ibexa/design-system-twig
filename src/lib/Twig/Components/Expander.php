@@ -18,13 +18,17 @@ final class Expander
 {
     public string $type;
 
-    public bool $is_expanded = false;
+    #[ExposeInTemplate('is_expanded')]
+    public bool $isExpanded = false;
 
-    public string $expand_label = '';
+    #[ExposeInTemplate('expand_label')]
+    public string $expandLabel = '';
 
-    public string $collapse_label = '';
+    #[ExposeInTemplate('collapse_label')]
+    public string $collapseLabel = '';
 
-    public bool $has_icon = false;
+    #[ExposeInTemplate('has_icon')]
+    public bool $hasIcon = false;
 
     /**
      * @var array{caret: string, chevron: string}
