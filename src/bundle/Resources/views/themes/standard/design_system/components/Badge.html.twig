@@ -3,7 +3,7 @@
         base: html_classes(
             'ids-badge',
             {
-                'ids-badge--expanded': is_expanded
+                'ids-badge--wide': is_wide
             }
         ),
         variants: {
@@ -15,14 +15,8 @@
 %}
 
 <div
-    class="{{
-    badge_classes.apply(
-        {
-            size
-        },
-        attributes.render('class')
-    )
-    }}"
+    class="{{ badge_classes.apply({ size }, attributes.render('class')) }}"
+    data-ids-max-badge-value="{{ max_value }}"
     {{ attributes }}
 >
     {{ formatted_value }}
