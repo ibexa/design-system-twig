@@ -11,50 +11,24 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\Inputs;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 #[AsTwigComponent]
-final class AltRadio
+final class AltRadio extends AbstractChoiceInput
 {
-    public string $label = '';
-    
-    #[ExposeInTemplate('input_props')]
-    public array $inputProps = [];
+    public string $label;
 
-    #[PreMount]
-    public function validate(array $props): array
+    #[ExposeInTemplate('tile_class')]
+    public string $tileClass = '';
+
+    protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $resolver = new OptionsResolver();
-        $resolver->setIgnoreUndefined();
         $resolver
             ->define('label')
             ->required()
+            ->allowedTypes('string');
+        $resolver
+            ->define('tileClass')
             ->allowedTypes('string')
             ->default('');
-        $resolver->setOptions('inputProps', function (OptionsResolver $inputPropsResolver): void {
-            $inputPropsResolver->setIgnoreUndefined();
-            $inputPropsResolver
-                ->define('name')
-                ->required()
-                ->allowedTypes('string')
-                ->default('');
-            $inputPropsResolver
-                ->define('checked')
-                ->allowedTypes('bool')
-                ->default(false);
-            $inputPropsResolver
-                ->define('disabled')
-                ->allowedTypes('bool')
-                ->default(false);
-            $inputPropsResolver
-                ->define('error')
-                ->allowedTypes('bool')
-                ->default(false);
-        });
-
-        // for Mikołaj - not sure how to do it, but extra props in inputProps aren't there in attributes
-        // I tried to concat recursively with array_replace_recursive($resolver->resolve($props), $props);
-        // but then extra props are in input_props array instead of attributes->input_props :/
-        return $resolver->resolve($props);
     }
 }
