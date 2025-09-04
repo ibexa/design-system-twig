@@ -19,9 +19,13 @@ final class Badge
     private const MAX_BADGE_VALUE = 99;
 
     public string $size = 'medium';
+
     public int $value = 1;
+
     /**
      * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
      */
     #[PreMount]
     public function validate(array $props): array
@@ -52,7 +56,7 @@ final class Badge
         if ($this->value > self::MAX_BADGE_VALUE) {
             return '99+';
         }
-        
+
         return (string)$this->value;
     }
 }
