@@ -3,10 +3,11 @@
     html_classes(
         'ids-alt-radio__tile',
         {
-            'ids-alt-radio__tile--checked': input_props.checked,
-            'ids-alt-radio__tile--disabled': input_props.disabled,
-            'ids-alt-radio__tile--error': input_props.error
-        }
+            'ids-alt-radio__tile--checked': checked,
+            'ids-alt-radio__tile--disabled': disabled,
+            'ids-alt-radio__tile--error': error
+        },
+        tile_class,
     )
 %}
 
@@ -15,8 +16,7 @@
         <input
             class="ids-input ids-input--radio"
             type="radio"
-            {# here should be taken attributes->input_props but as it's not working in php, there are no attributes... #}
-            {{ attributes.defaults(input_props) }}
+            {{ attributes.defaults({ checked, disabled, required }) }}
         />
     </div>
     <div class="{{ tile_classes }}" role="button">
