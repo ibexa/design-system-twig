@@ -19,7 +19,7 @@ final class IconTest extends KernelTestCase
     public function testMount(): void
     {
         $component = $this->mountTwigComponent(
-            'ibexa:Icon',
+            'ibexa:icon',
             [
                 'name' => 'trash',
             ]
@@ -32,7 +32,7 @@ final class IconTest extends KernelTestCase
     public function testDefaultRender(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:Icon',
+            'ibexa:icon',
             [
                 'name' => 'trash',
             ]

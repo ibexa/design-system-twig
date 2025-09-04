@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(
-    template: '@ibexadesign/design_system/components/Icon.html.twig'
+    template: '@ibexadesign/design_system/components/icon.html.twig'
 )]
 final class CustomIcon extends AbstractIcon
 {

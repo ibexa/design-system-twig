@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
-#[AsTwigComponent]
+#[AsTwigComponent('ibexa:icon')]
 final class Icon extends AbstractIcon
 {
     public string $name;
