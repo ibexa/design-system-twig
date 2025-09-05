@@ -1,5 +1,10 @@
 import Base from '../shared/Base';
 
+const THRESHOLD = {
+    medium: 100,
+    small: 10,
+};
+
 export default class BaseBadge extends Base {
     private _value = '';
     private _maxBadgeValue: number;
@@ -36,7 +41,7 @@ export default class BaseBadge extends Base {
     }
 
     private _formatValue(value: number): string {
-        return value > this._maxBadgeValue ? `${this._maxBadgeValue}+` : value.toString();
+        return value > this._maxBadgeValue ? `${this._maxBadgeValue.toString()}+` : value.toString();
     }
 
     setValue(value: number | null): void {
@@ -49,7 +54,8 @@ export default class BaseBadge extends Base {
 
         this._value = this._formatValue(value);
         this._container.textContent = this._value;
-        this._container.classList.toggle('ids-badge--wide', value > this._maxBadgeValue);
+        const size = this._container.classList.contains('.ids-badge--small') ? 'small' : 'medium';
+        this._container.classList.toggle('ids-badge--wide', value >= THRESHOLD[size]);
     }
 
     getValue(): number | null {
