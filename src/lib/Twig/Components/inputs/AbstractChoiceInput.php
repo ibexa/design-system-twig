@@ -13,6 +13,8 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 abstract class AbstractChoiceInput
 {
+    public bool $checked = false;
+
     public bool $disabled = false;
 
     public bool $error = false;
@@ -29,6 +31,10 @@ abstract class AbstractChoiceInput
     {
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined();
+        $resolver
+            ->define('checked')
+            ->allowedTypes('bool')
+            ->default(false);
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')
