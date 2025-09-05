@@ -17,6 +17,10 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 final class Badge
 {
     private const DEFAULT_MAX_BADGE_VALUE = 99;
+    private const THRESHOLD = [
+        'medium' => 100,
+        'small' => 10,
+    ];
     public string $size = 'medium';
 
     public int $value = 1;
@@ -58,7 +62,7 @@ final class Badge
     #[ExposeInTemplate('is_wide')]
     public function isWide(): bool
     {
-        return $this->value > $this->maxBadgeValue;
+        return $this->value >= self::THRESHOLD[$this->size];
     }
 
     #[ExposeInTemplate('formatted_value')]
