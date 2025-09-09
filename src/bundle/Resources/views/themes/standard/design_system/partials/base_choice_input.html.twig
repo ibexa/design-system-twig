@@ -1,0 +1,18 @@
+{% set component_classes = html_classes('ids-choice-input', class) %}
+{% set input_classes =
+    html_classes(
+        'ids-input',
+        'ids-input--' ~ type,
+        'ids-input--' ~ size,
+        {
+            'ids-input--disabled': disabled,
+            'ids-input--error': error,
+            'ids-input--required': required
+        },
+        input_class
+    )
+%}
+
+<div class="{{ component_classes }}">
+    {{ block('content')}}
+</div>

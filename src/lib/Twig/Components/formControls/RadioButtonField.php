@@ -6,28 +6,20 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components\inputs;
+namespace Ibexa\DesignSystemTwig\Twig\Components\formControls;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+use Ibexa\DesignSystemTwig\Twig\Components\inputs\RadioButton;
 
 #[AsTwigComponent]
-class RadioButton extends AbstractChoiceInput
+final class RadioButtonField extends RadioButton
 {
-    public string $value;
+    use LabelledChoiceInputTrait;
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $resolver
-            ->define('value')
-            ->required()
-            ->allowedTypes('string');
-    }
-
-    #[ExposeInTemplate('type')]
-    public function getType(): string
-    {
-        return 'radio';
+        parent::configurePropsResolver($resolver);
+        $this->validateLabelledProps($resolver);
     }
 }

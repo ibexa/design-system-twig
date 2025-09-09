@@ -1,24 +1,20 @@
-{% set input_classes =
-    html_classes(
-        'ids-input ids-input--radio ids-input--medium',
-        {
-            'ids-input--disabled': disabled,
-            'ids-input--error': error,
-            'ids-input--required': required
-        },
-        attributes.render('class') ?? ''
-    )
-%}
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_choice_input.html.twig' %}
 
-<div class="ids-radio-button">
-    <input
-        class="{{ input_classes }}"
-        type="radio"
-        {{
-        attributes.defaults({
-            disabled,
-            required
-        })
-        }}
-    />
-</div>
+{% set class = html_classes('ids-radio-button-field', attributes.render('class') ?? '') %}
+
+{% block content %}
+    <div class="ids-radio-button">
+        <input
+            class="{{ input_classes }}"
+            {{
+                attributes.defaults({
+                    disabled,
+                    name,
+                    required,
+                    type,
+                    value,
+                })
+            }}
+        />
+    </div>
+{% endblock content %}
