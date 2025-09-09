@@ -10,11 +10,24 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\Inputs;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 #[AsTwigComponent('ibexa:inputs:radio_button')]
-final class RadioButton extends AbstractChoiceInput
+class RadioButton extends AbstractChoiceInput
 {
+    public string $value;
+
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
+        $resolver
+            ->define('value')
+            ->required()
+            ->allowedTypes('string');
+    }
+
+    #[ExposeInTemplate('type')]
+    public function getType(): string
+    {
+        return 'radio';
     }
 }
