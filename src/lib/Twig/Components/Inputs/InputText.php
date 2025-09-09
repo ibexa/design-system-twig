@@ -6,13 +6,19 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components\inputs;
+namespace Ibexa\DesignSystemTwig\Twig\Components\Inputs;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-abstract class AbstractChoiceInput
+#[AsTwigComponent('ibexa:inputs:input_text')]
+final class InputText
 {
+    public string $type = 'text';
+
+    public string $size = 'medium';
+
     public bool $disabled = false;
 
     public bool $error = false;
@@ -30,6 +36,14 @@ abstract class AbstractChoiceInput
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined();
         $resolver
+            ->define('type')
+            ->allowedValues('text', 'password', 'email', 'number', 'tel', 'search', 'url')
+            ->default('text');
+        $resolver
+            ->define('size')
+            ->allowedValues('small', 'medium')
+            ->default('medium');
+        $resolver
             ->define('disabled')
             ->allowedTypes('bool')
             ->default(false);
@@ -42,10 +56,6 @@ abstract class AbstractChoiceInput
             ->allowedTypes('bool')
             ->default(false);
 
-        $this->configurePropsResolver($resolver);
-
         return $resolver->resolve($props) + $props;
     }
-
-    abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
 }

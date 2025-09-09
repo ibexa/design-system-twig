@@ -44,19 +44,19 @@
     <div class="ids-input-text__source">
         <input
             class="{{
-            input_classes.apply(
-                {
-                    type,
-                    size
-                },
-                attributes.render('class')
-            )
+                input_classes.apply(
+                    {
+                        type,
+                        size
+                    },
+                    attributes.render('class')
+                )
             }}"
             {{
-            attributes.defaults({
-                disabled,
-                required
-            })
+                attributes.defaults({
+                    disabled,
+                    required
+                })
             }}
             value="{{ value }}"
         />

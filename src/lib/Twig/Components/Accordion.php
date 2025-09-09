@@ -13,7 +13,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent]
+#[AsTwigComponent('ibexa:accordion')]
 final class Accordion
 {
     #[ExposeInTemplate('initially_expanded')]

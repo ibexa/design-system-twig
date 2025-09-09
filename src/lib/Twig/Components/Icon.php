@@ -10,7 +10,7 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\PostMount;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 #[AsTwigComponent('ibexa:icon')]
 final class Icon extends AbstractIcon
@@ -22,13 +22,13 @@ final class Icon extends AbstractIcon
         $resolver->define('name')->required()->allowedTypes('string');
     }
 
-    #[PostMount]
-    public function setIconPath(): void
+    #[ExposeInTemplate('path')]
+    public function getPath(): string
     {
-        $this->path = sprintf(
+        // TODO: for backend, implement here icon path resolver
+        return sprintf(
             '/bundles/ibexaadminuiassets/vendors/ids-assets/dist/img/all-icons.svg#%s',
             $this->name
         );
-        // TODO: for backend, implement here icon path resolver
     }
 }

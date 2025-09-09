@@ -4,22 +4,21 @@
         {
             'ids-input--disabled': disabled,
             'ids-input--error': error,
-            'ids-input--required': required,
-            'ids-input--indeterminate': indeterminate
+            'ids-input--required': required
         },
         attributes.render('class') ?? ''
     )
 %}
 
-<div class="ids-three-state-checkbox">
+<div class="ids-checkbox">
     <input
         class="{{ input_classes }}"
         type="checkbox"
         {{
-        attributes.defaults({
-            disabled,
-            required
-        })
+            attributes.defaults({
+                disabled,
+                required
+            })
         }}
     />
 </div>

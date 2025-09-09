@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent]
+#[AsTwigComponent('ibexa:choice_input_label')]
 final class ChoiceInputLabel
 {
     public string $content = '';
