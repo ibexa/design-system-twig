@@ -25,12 +25,12 @@
         {% block icon_outer %}
             <div class="ids-helper-text__icon-wrapper">
                 {% block icon_inner %}
-                    <twig:ibexa:Icon :name="icon_name" size="small" class="ids-helper-text__icon" />
+                    <twig:ibexa:icon :name="icon_name" size="small" class="ids-helper-text__icon" />
                     <template class="ids-helper-text__icon-template" data-ids-type="default">
-                        <twig:ibexa:Icon name="info-circle" size="small" class="ids-helper-text__icon" />
+                        <twig:ibexa:icon name="info-circle" size="small" class="ids-helper-text__icon" />
                     </template>
                     <template class="ids-helper-text__icon-template" data-ids-type="error">
-                        <twig:ibexa:Icon name="alert-error" size="small" class="ids-helper-text__icon" />
+                        <twig:ibexa:icon name="alert-error" size="small" class="ids-helper-text__icon" />
                     </template>
                 {% endblock icon_inner %}
             </div>

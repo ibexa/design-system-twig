@@ -20,7 +20,7 @@ final class IconButtonTest extends KernelTestCase
 
     public function testMount(): void
     {
-        $component = $this->mountTwigComponent('ibexa:IconButton', [
+        $component = $this->mountTwigComponent('ibexa:icon_button', [
             'type' => 'secondary',
             'size' => 'small',
             'icon' => 'arrow-right',
@@ -38,7 +38,7 @@ final class IconButtonTest extends KernelTestCase
      */
     public function testRenderAppliesVariantAndSizeClasses(array $props, array $expectedClasses): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:IconButton', $props + ['icon' => 'arrow-right']);
+        $rendered = $this->renderTwigComponent('ibexa:icon_button', $props + ['icon' => 'arrow-right']);
         $crawler = $rendered->crawler();
 
         $button = $this->getButton($crawler);
@@ -63,7 +63,7 @@ final class IconButtonTest extends KernelTestCase
 
     public function testDisabledState(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:IconButton', [
+        $rendered = $this->renderTwigComponent('ibexa:icon_button', [
             'icon' => 'arrow-right',
             'disabled' => true,
         ]);
@@ -76,7 +76,7 @@ final class IconButtonTest extends KernelTestCase
 
     public function testMergesCustomClassesAndAttributes(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:IconButton', [
+        $rendered = $this->renderTwigComponent('ibexa:icon_button', [
             'icon' => 'arrow-right',
             'class' => 'u-ml-2 custom-hook',
             'attributes' => [
