@@ -1,23 +1,23 @@
 import Base from '../shared/Base';
 
-const THRESHOLD = {
-    medium: 100,
-    small: 10,
-};
-
 enum BadgeSize {
     Medium = 'medium',
     Small = 'small',
 }
 
-export default class BaseBadge extends Base {
-    private _value = '';
+const THRESHOLD = {
+    [BadgeSize.Medium]: 100,
+    [BadgeSize.Small]: 10,
+};
+
+export default class Badge extends Base {
+    private _value = 0;
     private _maxBadgeValue: number;
 
     constructor(container: HTMLDivElement) {
         super(container);
 
-        const _maxBadgeValue = this._container.dataset.ids_MaxBadgeValue ?? '';
+        const _maxBadgeValue = this._container.dataset.idsMaxBadgeValue ?? '';
         const parsedMax = parseInt(_maxBadgeValue, 10);
 
         if (!_maxBadgeValue || isNaN(parsedMax)) {
@@ -45,28 +45,28 @@ export default class BaseBadge extends Base {
         return isNaN(numericValue) ? null : numericValue;
     }
 
-    private _formatValue(value: number): string {
-        return value > this._maxBadgeValue ? `${this._maxBadgeValue.toString()}+` : value.toString();
+    setValue(value: number): void {
+        this._value = value;
     }
 
-    setValue(value: number | null): void {
-        if (value === null) {
-            this._value = '';
-            this._container.textContent = '';
+    renderContent(): void {
+        const content = this.getValueRestrictedByMaxValue();
+        const size = this.getSize();
 
-            return;
-        }
+        this._container.textContent = content;
+        this._container.classList.toggle('ids-badge--stretched', this._value >= THRESHOLD[size]);
+    }
 
-        this._value = this._formatValue(value);
-        this._container.textContent = this._value;
-
-        const size = this._container.classList.contains('.ids-badge--small') ? BadgeSize.Small : BadgeSize.Medium;
-
-        this._container.classList.toggle('ids-badge--wide', value >= THRESHOLD[size]);
+    getValueRestrictedByMaxValue(): string {
+        return this._value > this._maxBadgeValue ? `${this._maxBadgeValue.toString()}+` : this._value.toString();
     }
 
     getValue(): number | null {
-        return this._parseValue(this._value);
+        return this._value;
+    }
+
+    getSize(): BadgeSize {
+        return this._container.classList.contains('.ids-badge--small') ? BadgeSize.Small : BadgeSize.Medium;
     }
 
     setMaxValue(max: number): void {

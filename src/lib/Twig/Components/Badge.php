@@ -13,7 +13,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent]
+#[AsTwigComponent('ibexa:badge')]
 final class Badge
 {
     private const DEFAULT_MAX_BADGE_VALUE = 99;
@@ -60,8 +60,8 @@ final class Badge
         return $resolver->resolve($props);
     }
 
-    #[ExposeInTemplate('is_wide')]
-    public function isWide(): bool
+    #[ExposeInTemplate('is_stretched')]
+    public function isStretched(): bool
     {
         return $this->value >= self::THRESHOLD[$this->size];
     }
