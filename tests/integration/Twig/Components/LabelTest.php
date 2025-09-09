@@ -19,7 +19,7 @@ final class LabelTest extends KernelTestCase
 
     public function testMount(): void
     {
-        $component = $this->mountTwigComponent('ibexa:Label', [
+        $component = $this->mountTwigComponent('ibexa:label', [
             'error' => true,
             'required' => true,
         ]);
@@ -31,7 +31,7 @@ final class LabelTest extends KernelTestCase
 
     public function testDefaultRender(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:Label', []);
+        $rendered = $this->renderTwigComponent('ibexa:label', []);
         $crawler = $rendered->crawler();
 
         $label = $this->getLabel($crawler);
@@ -51,7 +51,7 @@ final class LabelTest extends KernelTestCase
      */
     public function testVariantClasses(array $props, array $expectedPresent): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:Label', $props);
+        $rendered = $this->renderTwigComponent('ibexa:label', $props);
         $label = $this->getLabel($rendered->crawler());
         $classStr = (string) $label->attr('class');
 
@@ -63,7 +63,7 @@ final class LabelTest extends KernelTestCase
 
     public function testMergesCustomClassesAndAttributes(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:Label', [
+        $rendered = $this->renderTwigComponent('ibexa:label', [
             'attributes' => [
                 'class' => 'u-mb-1 custom-hook',
                 'for' => 'field_id',
