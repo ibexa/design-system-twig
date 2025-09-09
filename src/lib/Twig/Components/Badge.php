@@ -21,6 +21,7 @@ final class Badge
         'medium' => 100,
         'small' => 10,
     ];
+
     public string $size = 'medium';
 
     public int $value = 1;
