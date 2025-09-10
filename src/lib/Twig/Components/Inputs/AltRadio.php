@@ -9,10 +9,10 @@ declare(strict_types=1);
 namespace Ibexa\DesignSystemTwig\Twig\Components\Inputs;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsTwigComponent]
+#[AsTwigComponent('ibexa:inputs:alt_radio')]
 final class AltRadio extends AbstractChoiceInput
 {
     public string $label;
