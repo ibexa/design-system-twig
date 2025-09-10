@@ -12,7 +12,7 @@
     )
 %}
 
-<twig:ibexa:Button
+<twig:ibexa:button
     type="tertiary-alt"
     size="small"
     data-expand-label="{{ expand_label }}"
@@ -24,6 +24,6 @@
     {% if has_icon %}
         <twig:ibexa:icon name="{{ icon_name }}" size="small" />
     {% endif %}
-</twig:ibexa:Button>
+</twig:ibexa:button>
 
 {{ encore_entry_script_tags('ibexa-design-system-expander-js', null, 'ibexa') }}

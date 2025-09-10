@@ -13,7 +13,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent]
+#[AsTwigComponent('ibexa:expander')]
 final class Expander
 {
     public string $type;
@@ -28,7 +28,7 @@ final class Expander
     public string $collapseLabel = '';
 
     #[ExposeInTemplate('has_icon')]
-    public bool $hasIcon = false;
+    public bool $hasIcon = true;
 
     /**
      * @var array{caret: string, chevron: string}

@@ -24,19 +24,19 @@
 
 <button
     class="{{
-    button_classes.apply(
-        {
-            type,
-            size
-        },
-        attributes.render('class')
-    )
+        button_classes.apply(
+            {
+                type,
+                size
+            },
+            attributes.render('class')
+        )
     }}"
     {{
-    attributes.defaults({
-        type: 'button',
-        disabled
-    })
+        attributes.defaults({
+            type: 'button',
+            disabled
+        })
     }}
 >
     {% block button_inner %}

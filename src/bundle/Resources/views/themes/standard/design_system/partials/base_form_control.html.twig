@@ -3,9 +3,9 @@
 <div class="{{ classes }}" {{ attributes }}>
     {% if block('label') is defined and block('label') is not empty %}
         <div class="ids-form-control__label-wrapper">
-            <twig:ibexa:Label {{ ...label_extra }}>
+            <twig:ibexa:label {{ ...label_extra }}>
                 {{ block(outerBlocks.label) }}
-            </twig:ibexa:Label>
+            </twig:ibexa:label>
         </div>
     {% endif %}
 
@@ -15,9 +15,9 @@
 
     {% if block('helper_text') is defined %}
         <div class="ids-form-control__helper-text-wrapper">
-            <twig:ibexa:HelperText {{ ...helper_text_extra }}>
+            <twig:ibexa:helper_text {{ ...helper_text_extra }}>
                 {{ block(outerBlocks.helper_text) }}
-            </twig:ibexa:HelperText>
+            </twig:ibexa:helper_text>
         </div>
     {% endif %}
 </div>

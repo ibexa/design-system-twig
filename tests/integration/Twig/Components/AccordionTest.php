@@ -20,7 +20,7 @@ final class AccordionTest extends KernelTestCase
     public function testMount(): void
     {
         $component = $this->mountTwigComponent(
-            'ibexa:Accordion',
+            'ibexa:accordion',
             [
                 'initiallyExpanded' => true,
             ]
@@ -33,7 +33,7 @@ final class AccordionTest extends KernelTestCase
     public function testDefaultRender(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:Accordion',
+            'ibexa:accordion',
             [
                 'initiallyExpanded' => true,
             ]

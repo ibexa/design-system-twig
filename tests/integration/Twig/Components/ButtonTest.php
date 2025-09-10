@@ -20,7 +20,7 @@ final class ButtonTest extends KernelTestCase
     public function testMount(): void
     {
         $component = $this->mountTwigComponent(
-            'ibexa:Button',
+            'ibexa:button',
             [
                 'size' => 'small',
                 'type' => 'secondary',
@@ -39,7 +39,7 @@ final class ButtonTest extends KernelTestCase
 
     public function testDefaultRender(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:Button', []);
+        $rendered = $this->renderTwigComponent('ibexa:button', []);
         $crawler = $rendered->crawler();
 
         $button = $this->getButton($crawler);
@@ -60,7 +60,7 @@ final class ButtonTest extends KernelTestCase
 
     public function testDisabledStateRender(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:Button', [
+        $rendered = $this->renderTwigComponent('ibexa:button', [
             'disabled' => true,
         ]);
         $crawler = $rendered->crawler();
@@ -74,7 +74,7 @@ final class ButtonTest extends KernelTestCase
 
     public function testVariantAndSizeClasses(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:Button', [
+        $rendered = $this->renderTwigComponent('ibexa:button', [
             'type' => 'secondary-alt',
             'size' => 'small',
         ]);
@@ -89,7 +89,7 @@ final class ButtonTest extends KernelTestCase
 
     public function testMergesCustomClassesFromAttributes(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:Button', [
+        $rendered = $this->renderTwigComponent('ibexa:button', [
             'attributes' => [
                 'class' => 'u-ml-2 custom-hook',
                 'data-test' => 'button-x',
@@ -109,7 +109,7 @@ final class ButtonTest extends KernelTestCase
 
     public function testIconRenderingIsConditional(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:Button', [
+        $rendered = $this->renderTwigComponent('ibexa:button', [
             'icon' => 'arrow-right',
         ]);
         $crawler = $rendered->crawler();

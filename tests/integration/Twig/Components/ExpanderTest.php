@@ -20,7 +20,7 @@ final class ExpanderTest extends KernelTestCase
     public function testMount(): void
     {
         $component = $this->mountTwigComponent(
-            'ibexa:Expander',
+            'ibexa:expander',
             [
                 'type' => 'caret',
                 'isExpanded' => true,
@@ -43,7 +43,7 @@ final class ExpanderTest extends KernelTestCase
     public function testRenderExpandedState(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:Expander',
+            'ibexa:expander',
             [
                 'type' => 'caret',
                 'isExpanded' => true,
@@ -79,7 +79,7 @@ final class ExpanderTest extends KernelTestCase
     public function testRenderCollapsedState(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:Expander',
+            'ibexa:expander',
             [
                 'type' => 'caret',
                 'isExpanded' => false,
@@ -103,7 +103,7 @@ final class ExpanderTest extends KernelTestCase
     public function testChevronVariantRendersChevronIcon(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:Expander',
+            'ibexa:expander',
             [
                 'type' => 'chevron',
                 'isExpanded' => false,
@@ -126,7 +126,7 @@ final class ExpanderTest extends KernelTestCase
     public function testNoIconWhenHasIconIsFalse(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:Expander',
+            'ibexa:expander',
             [
                 'type' => 'caret',
                 'isExpanded' => false,
@@ -148,7 +148,7 @@ final class ExpanderTest extends KernelTestCase
     public function testDataAttributesReflectLabels(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:Expander',
+            'ibexa:expander',
             [
                 'type' => 'caret',
                 'isExpanded' => true,
@@ -167,7 +167,7 @@ final class ExpanderTest extends KernelTestCase
     public function testMergesCustomClassesFromAttributesIntoButton(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:Expander',
+            'ibexa:expander',
             [
                 'type' => 'caret',
                 'isExpanded' => false,

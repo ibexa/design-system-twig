@@ -6,21 +6,15 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components\inputs;
+namespace Ibexa\DesignSystemTwig\Twig\Components\Inputs;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent]
-final class ThreeStateCheckbox extends AbstractChoiceInput
+#[AsTwigComponent('ibexa:inputs:checkbox')]
+final class Checkbox extends AbstractChoiceInput
 {
-    public bool $indeterminate = false;
-
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $resolver
-            ->define('indeterminate')
-            ->allowedTypes('bool')
-            ->default(false);
     }
 }

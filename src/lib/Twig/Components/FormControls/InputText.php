@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components\formControls;
+namespace Ibexa\DesignSystemTwig\Twig\Components\FormControls;
 
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
@@ -18,7 +18,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 /**
  * @phpstan-type AttrMap array<string, scalar>
  */
-#[AsTwigComponent]
+#[AsTwigComponent('ibexa:form_controls:input_text')]
 final class InputText
 {
     /** @var non-empty-string */

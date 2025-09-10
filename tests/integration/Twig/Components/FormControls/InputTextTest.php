@@ -6,9 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\formControls;
+namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\FormControls;
 
-use Ibexa\DesignSystemTwig\Twig\Components\formControls\InputText;
+use Ibexa\DesignSystemTwig\Twig\Components\FormControls\InputText;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;

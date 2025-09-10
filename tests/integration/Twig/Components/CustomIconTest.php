@@ -19,7 +19,7 @@ final class CustomIconTest extends KernelTestCase
     public function testMount(): void
     {
         $component = $this->mountTwigComponent(
-            'ibexa:CustomIcon',
+            'ibexa:custom_icon',
             [
                 'path' => '/assets/example.svg',
             ]
@@ -32,7 +32,7 @@ final class CustomIconTest extends KernelTestCase
     public function testDefaultRender(): void
     {
         $rendered = $this->renderTwigComponent(
-            'ibexa:CustomIcon',
+            'ibexa:custom_icon',
             [
                 'path' => '/assets/example.svg',
             ]
