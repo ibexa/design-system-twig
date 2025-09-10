@@ -1,12 +1,12 @@
-{% set component_classes = html_classes('ids-choice-input-field', attributes.render('class') ?? '') %}
-{% set component_input_wrapper_class_name = html_classes('ids-choice-input-field__input-wrapper', attributes.render('inputWrapperClass') ?? '') %}
-{% set component_label_class_name = html_classes('ids-choice-input-field__label', attributes.render('labelClass') ?? '') %}
+{% set component_classes = html_classes('ids-choice-input-field', class) %}
+{% set input_wrapper_classes = html_classes('ids-choice-input-field__input-wrapper', input_wrapper_class) %}
+{% set label_classes = html_classes('ids-choice-input-field__label', label_class) %}
 
 <div class="{{ component_classes }}" {{ attributes }}>
-    <div class="{{ component_input_wrapper_class_name }}">
+    <div class="{{ input_wrapper_classes }}">
         {{ block('input') }}
     </div>
-    <ChoiceInputLabel class="{{ component_label_class_name }}" for="{{ id }}">
-        {{ block('label') }}
-    </ChoiceInputLabel>
+    <twig:ibexa:choice_input_label :class="label_classes" :for="id">
+        {{ block(outerBlocks.label) }}
+    </twig:ibexa:choice_input_label>
 </div>

@@ -9,19 +9,28 @@ declare(strict_types=1);
 namespace Ibexa\DesignSystemTwig\Twig\Components\Inputs;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsTwigComponent('ibexa:inputs:checkbox')]
-final class Checkbox extends AbstractChoiceInput
+abstract class AbstractRadioButton extends AbstractChoiceInput
 {
+    public ?string $value = null;
+
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
+        $resolver
+            ->define('value')
+            ->required()
+            ->allowedTypes('string');
+    }
+
+    protected function getValue(): ?string
+    {
+        return $this->value;
     }
 
     #[ExposeInTemplate('type')]
     public function getType(): string
     {
-        return 'checkbox';
+        return 'radio';
     }
 }
