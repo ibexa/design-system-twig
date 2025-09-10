@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components\FormControls;
 
+use Ibexa\DesignSystemTwig\Twig\Components\Inputs\RadioButton;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Ibexa\DesignSystemTwig\Twig\Components\Inputs\RadioButton;
 
 #[AsTwigComponent('ibexa:form_controls:radio_button_field')]
 final class RadioButtonField extends RadioButton

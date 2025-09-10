@@ -15,7 +15,7 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 #[AsTwigComponent('ibexa:inputs:radio_button')]
 class RadioButton extends AbstractChoiceInput
 {
-    public string $value;
+    public ?string $value = null;
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
@@ -23,6 +23,11 @@ class RadioButton extends AbstractChoiceInput
             ->define('value')
             ->required()
             ->allowedTypes('string');
+    }
+
+    protected function getValue(): ?string
+    {
+        return $this->value;
     }
 
     #[ExposeInTemplate('type')]

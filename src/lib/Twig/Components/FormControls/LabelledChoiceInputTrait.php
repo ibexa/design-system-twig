@@ -37,6 +37,16 @@ trait LabelledChoiceInputTrait
             ->default('');
     }
 
+    /**
+     * @return array{
+     *     id: string,
+     *     name: string,
+     *     disabled: bool,
+     *     error: bool,
+     *     required: bool,
+     *     value: ?string
+     * }
+     */
     #[ExposeInTemplate('input')]
     public function getInput(): array
     {
@@ -46,7 +56,9 @@ trait LabelledChoiceInputTrait
             'disabled' => $this->disabled,
             'error' => $this->error,
             'required' => $this->required,
-            'value' => $this->value,
+            'value' => $this->getValue(),
         ];
     }
+
+    abstract protected function getValue(): ?string;
 }
