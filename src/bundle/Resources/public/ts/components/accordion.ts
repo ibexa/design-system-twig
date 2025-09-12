@@ -1,11 +1,11 @@
-import Base from '../shared/Base';
-import Expander from './expander';
+import { Base } from '../partials';
+import { Expander } from './expander';
 
 import { HTMLElementIDSInstance } from '../shared/types';
 
 import { reflow } from '../helpers/dom';
 
-export default class Accordion extends Base {
+export class Accordion extends Base {
     private _togglerElement: HTMLElementIDSInstance<Expander> | null;
     private _togglerInstance: Expander;
     private _contentElement: HTMLElement | null;

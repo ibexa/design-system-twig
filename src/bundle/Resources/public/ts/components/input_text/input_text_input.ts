@@ -1,6 +1,6 @@
-import Base from '../../shared/Base';
+import { Base } from '../../partials';
 
-export default class InputText extends Base {
+export class InputTextInput extends Base {
     private _inputElement: HTMLInputElement;
     private _actionsElement: HTMLDivElement;
     private _clearBtnElement: HTMLButtonElement;
@@ -13,7 +13,7 @@ export default class InputText extends Base {
         const clearBtnElement = actionsElement?.querySelector<HTMLButtonElement>('.ids-clear-btn');
 
         if (!actionsElement || !inputElement || !clearBtnElement) {
-            throw new Error('InputText: Required elements are missing in the container.');
+            throw new Error('InputTextInput: Required elements are missing in the container.');
         }
 
         this._actionsElement = actionsElement;

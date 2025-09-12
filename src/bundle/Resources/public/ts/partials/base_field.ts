@@ -1,10 +1,10 @@
-import Base from './Base';
-import HelperText from '../components/HelperText';
-import Label from '../components/Label';
+import { Base } from './base';
+import { HelperText } from '../components/helper_text';
+import { Label } from '../components/Label';
 
 import ValidatorManager from '../validators/ValidatorManager';
 
-export default abstract class BaseFormControl<T> extends Base {
+export abstract class BaseFormControl<T> extends Base {
     protected _labelInstance: Label | null = null;
     protected _helperTextInstance: HelperText | null = null;
     protected _validatorManager: ValidatorManager<T>;
