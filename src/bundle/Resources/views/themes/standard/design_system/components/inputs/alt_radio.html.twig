@@ -1,0 +1,25 @@
+{% set component_classes = html_classes('ids-alt-radio', attributes.render('class') ?? '') %}
+{% set tile_classes =
+    html_classes(
+        'ids-alt-radio__tile',
+        {
+            'ids-alt-radio__tile--checked': checked,
+            'ids-alt-radio__tile--disabled': disabled,
+            'ids-alt-radio__tile--error': error,
+        },
+        tile_class,
+    )
+%}
+
+<div class="{{ component_classes }}">
+    <div class="ids-alt-radio__source">
+        <input
+            class="ids-input ids-input--radio"
+            type="radio"
+            {{ attributes.defaults({ checked, disabled, required }) }}
+        />
+    </div>
+    <div class="{{ tile_classes }}" role="button">
+        {{ label }}
+    </div>
+</div>
