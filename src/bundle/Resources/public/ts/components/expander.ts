@@ -1,8 +1,8 @@
-import Base from '../shared/Base';
+import { Base } from '../partials';
 
 type ExpandHandlerType = (isExpanded: boolean) => void;
 
-export default class Expander extends Base {
+export class Expander extends Base {
     private _expandHandler: ExpandHandlerType | undefined;
     private _hasLabel: boolean;
     private _collapseLabel: string | undefined;

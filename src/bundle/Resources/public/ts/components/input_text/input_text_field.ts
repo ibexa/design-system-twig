@@ -1,16 +1,16 @@
-import Base from '../../shared/Base';
-import HelperText from '../HelperText';
-import InputText from '../inputs/InputText';
-import Label from '../Label';
+import { Base } from '../../partials';
+import { HelperText } from '../helper_text';
+import { InputTextInput } from './input_text_input';
+import { Label } from '../Label';
 
 import IsEmptyStringValidator from '@ids-core/validators/IsEmptyStringValidator';
 import type { TranslatorType } from '@ids-core/types/translator';
 import type { ValidationResult } from '@ids-core/types/validation';
 import ValidatorManager from '../../validators/ValidatorManager';
 
-export default class FormControlInputText extends Base {
+export class InputTextField extends Base {
     private _labelInstance: Label | null = null;
-    private _inputTextInstance: InputText;
+    private _inputTextInstance: InputTextInput;
     private _helperTextInstance: HelperText | null = null;
     private _validatorManager: ValidatorManager<string | number>;
     private _hasError = false;
@@ -25,7 +25,7 @@ export default class FormControlInputText extends Base {
         const inputTextContainer = container.querySelector<HTMLDivElement>('.ids-input-text');
 
         if (!inputTextContainer) {
-            throw new Error('FormControlInputText: Required elements are missing in the container.');
+            throw new Error('InputTextField: Required elements are missing in the container.');
         }
 
         const labelContainer = container.querySelector<HTMLDivElement>('.ids-label');
@@ -40,7 +40,7 @@ export default class FormControlInputText extends Base {
             this._helperTextInstance = new HelperText(helperTextContainer);
         }
 
-        this._inputTextInstance = new InputText(inputTextContainer);
+        this._inputTextInstance = new InputTextInput(inputTextContainer);
         this._validatorManager = new ValidatorManager();
 
         if (this._inputTextInstance.getIsRequired()) {
@@ -89,7 +89,7 @@ export default class FormControlInputText extends Base {
     initInputListeners(): void {
         this._inputTextInstance.getInputElement().addEventListener('input', ({ currentTarget }) => {
             if (!(currentTarget instanceof HTMLInputElement)) {
-                throw new Error('FormControlInputText: Current target is not an HTMLInputElement.');
+                throw new Error('InputTextField: Current target is not an HTMLInputElement.');
             }
 
             const validationResult = this._validatorManager.validate(currentTarget.value);
