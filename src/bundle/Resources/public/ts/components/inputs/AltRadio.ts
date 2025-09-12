@@ -20,20 +20,23 @@ export default class AltRadio extends Base {
         this._tileElement = tileElement;
     }
 
-    setFocus(value: boolean): void {
-        if (this._isFocused === value) {
+    setFocus(nextIsFocused: boolean) {
+        if (this._isFocused === nextIsFocused) {
             return;
         }
 
-        this._isFocused = value;
+        this._isFocused = nextIsFocused;
 
-        const methodName = value ? 'focus' : 'blur';
+        this._tileElement.classList.toggle('ids-alt-radio__tile--focused', nextIsFocused);
 
-        this._tileElement.classList.toggle('ids-alt-radio__tile--focused', value);
-        this._inputElement[methodName]();
+        if (nextIsFocused) {
+            this._inputElement.focus();
+        } else {
+            this._inputElement.blur();
+        }
     }
 
-    setError(value: boolean): void {
+    setError(value: boolean) {
         this._tileElement.classList.toggle('ids-alt-radio__tile--error', value);
     }
 
