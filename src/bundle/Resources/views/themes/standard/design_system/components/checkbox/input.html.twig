@@ -14,11 +14,6 @@
     <input
         class="{{ input_classes }}"
         type="checkbox"
-        {{
-            attributes.defaults({
-                disabled,
-                required
-            })
-        }}
+        {{ attributes.defaults({ checked, disabled, required }) }}
     />
 </div>
