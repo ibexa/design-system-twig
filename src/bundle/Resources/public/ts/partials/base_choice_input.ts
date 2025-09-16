@@ -1,6 +1,6 @@
-import Base from './Base';
+import { Base } from './base';
 
-export default abstract class BaseChoiceInput extends Base {
+export abstract class BaseChoiceInput extends Base {
     protected _inputElement: HTMLInputElement;
 
     constructor(container: HTMLDivElement) {

@@ -6,13 +6,14 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components\Inputs;
+namespace Ibexa\DesignSystemTwig\Twig\Components\RadioButton;
 
+use Ibexa\DesignSystemTwig\Twig\Components\AbstractChoiceInput;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('ibexa:inputs:checkbox')]
-final class Checkbox extends AbstractChoiceInput
+#[AsTwigComponent('ibexa:radio_button:input')]
+final class Input extends AbstractChoiceInput
 {
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {

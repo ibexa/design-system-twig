@@ -1,8 +1,8 @@
-import Base from '../shared/Base';
+import { Base } from '../partials';
 
 type IconsTypes = 'default' | 'error';
 
-export default class HelperText extends Base {
+export class HelperText extends Base {
     private _iconWrapper: HTMLDivElement;
     private _contentWrapper: HTMLDivElement;
     private _iconsTemplates: Record<IconsTypes, Node | null> = {

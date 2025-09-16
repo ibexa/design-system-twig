@@ -1,6 +1,6 @@
 import { setInstance } from '../helpers/object.instances';
 
-export default abstract class Base {
+export abstract class Base {
     protected _container: HTMLElement;
 
     static EVENTS = {

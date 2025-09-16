@@ -1,6 +1,6 @@
-import Base from '../shared/Base';
+import { Base } from '../partials';
 
-export default class Label extends Base {
+export class Label extends Base {
     private _hasError = false;
 
     setHasError(value: boolean): void {

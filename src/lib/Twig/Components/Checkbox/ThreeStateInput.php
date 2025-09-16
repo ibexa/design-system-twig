@@ -6,15 +6,22 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components\Inputs;
+namespace Ibexa\DesignSystemTwig\Twig\Components\Checkbox;
 
+use Ibexa\DesignSystemTwig\Twig\Components\AbstractChoiceInput;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('ibexa:inputs:radio_button')]
-final class RadioButton extends AbstractChoiceInput
+#[AsTwigComponent('ibexa:checkbox:three_state_input')]
+final class ThreeStateInput extends AbstractChoiceInput
 {
+    public bool $indeterminate = false;
+
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
+        $resolver
+            ->define('indeterminate')
+            ->allowedTypes('bool')
+            ->default(false);
     }
 }

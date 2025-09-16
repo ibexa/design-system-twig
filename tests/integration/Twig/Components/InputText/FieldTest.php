@@ -6,9 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\FormControls;
+namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\InputText;
 
-use Ibexa\DesignSystemTwig\Twig\Components\FormControls\InputText;
+use Ibexa\DesignSystemTwig\Twig\Components\InputText\Field;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
@@ -16,14 +16,14 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\PropertyAccess\Exception\InvalidTypeException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
 
-final class InputTextTest extends KernelTestCase
+final class FieldTest extends KernelTestCase
 {
     use InteractsWithTwigComponents;
 
     public function testMount(): void
     {
         $component = $this->mountTwigComponent(
-            InputText::class,
+            Field::class,
             [
                 'name' => 'title',
                 'id' => 'title',
@@ -35,7 +35,7 @@ final class InputTextTest extends KernelTestCase
             ]
         );
 
-        self::assertInstanceOf(InputText::class, $component, 'Component should mount as InputText.');
+        self::assertInstanceOf(Field::class, $component, 'Component should mount as InputText.');
 
         self::assertSame('title', $component->name, 'Prop "name" should be set on the component.');
         self::assertSame('title', $component->id, 'Prop "id" should be set on the component.');
@@ -62,7 +62,7 @@ final class InputTextTest extends KernelTestCase
     public function testDefaultRenderProducesInputWithCoreAttributes(): void
     {
         $rendered = $this->renderTwigComponent(
-            InputText::class,
+            Field::class,
             [
                 'name' => 'email',
                 'id' => 'email',
@@ -81,7 +81,7 @@ final class InputTextTest extends KernelTestCase
     public function testRequiredAddsRequiredAttribute(): void
     {
         $rendered = $this->renderTwigComponent(
-            InputText::class,
+            Field::class,
             [
                 'name' => 'username',
                 'id' => 'username',
@@ -96,7 +96,7 @@ final class InputTextTest extends KernelTestCase
     public function testMergesCustomInputAttributes(): void
     {
         $rendered = $this->renderTwigComponent(
-            InputText::class,
+            Field::class,
             [
                 'name' => 'slug',
                 'id' => 'slug',
@@ -125,7 +125,7 @@ final class InputTextTest extends KernelTestCase
         $this->expectException(InvalidOptionsException::class);
 
         $this->mountTwigComponent(
-            InputText::class,
+            Field::class,
             [
                 'name' => 'foo',
                 'id' => 'bar',
@@ -150,13 +150,13 @@ final class InputTextTest extends KernelTestCase
     public function testMissingRequiredPropsCauseResolverError(): void
     {
         $this->expectException(InvalidTypeException::class);
-        $this->mountTwigComponent(InputText::class, ['name' => 'only_name']);
+        $this->mountTwigComponent(Field::class, ['name' => 'only_name']);
     }
 
     public function testInvalidTypesCauseResolverError(): void
     {
         $this->expectException(InvalidOptionsException::class);
-        $this->mountTwigComponent(InputText::class, [
+        $this->mountTwigComponent(Field::class, [
             'name' => 'foo',
             'id' => 'bar',
             'required' => 'yes',
