@@ -1,0 +1,23 @@
+{% set badge_classes =
+    html_cva(
+        base: html_classes(
+            'ids-badge',
+            {
+                'ids-badge--stretched': is_stretched
+            }
+        ),
+        variants: {
+            size: {
+                small: 'ids-badge--small'
+            }
+        }
+    )
+%}
+
+<div
+    class="{{ badge_classes.apply({ size }, attributes.render('class')) }}"
+    data-ids-max-badge-value="{{ max_value }}"
+    {{ attributes }}
+>
+    {{ formatted_value }}
+</div>
