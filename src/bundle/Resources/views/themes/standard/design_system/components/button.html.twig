@@ -1,10 +1,13 @@
+{% set content_block = block('content')|trim %}
+{% set icon_only = content_block == '' and icon is not empty %}
 {% set button_classes =
     html_cva(
         base: html_classes(
             'ids-btn',
             {
-                'ids-btn--disabled': disabled
-            }
+                'ids-btn--disabled': disabled,
+                'ids-btn--icon-only': icon_only,
+            },
         ),
         variants: {
             type: {
@@ -12,17 +15,18 @@
                 secondary: 'ids-btn--secondary',
                 tertiary: 'ids-btn--tertiary',
                 'secondary-alt': 'ids-btn--secondary-alt',
-                'tertiary-alt': 'ids-btn--tertiary-alt'
+                'tertiary-alt': 'ids-btn--tertiary-alt',
             },
             size: {
                 medium: 'ids-btn--medium',
-                small: 'ids-btn--small'
-            }
-        }
+                small: 'ids-btn--small',
+            },
+        },
     )
 %}
 
 <button
+    type="button"
     class="{{
         button_classes.apply(
             {
@@ -32,12 +36,7 @@
             attributes.render('class')
         )
     }}"
-    {{
-        attributes.defaults({
-            type: 'button',
-            disabled
-        })
-    }}
+    {{ attributes.defaults({ disabled }) }}
 >
     {% block button_inner %}
         {% block icon_outer %}
@@ -49,10 +48,10 @@
                 </div>
             {% endif %}
         {% endblock icon_outer %}
-        <div class="ids-btn__label">
-            {% block content %}
-
-            {% endblock content %}
-        </div>
+        {% if not icon_only %}
+            <div class="ids-btn__label">
+                {{ content_block|raw }}
+            </div>
+        {% endif %}
     {% endblock button_inner %}
 </button>
