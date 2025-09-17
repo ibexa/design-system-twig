@@ -1,4 +1,4 @@
-{% set content_block = block('content')|trim %}
+{% set content_block = block('content') is defined ? block('content')|trim : '' %}
 {% set icon_only = content_block == '' and icon is not empty %}
 {% set button_classes =
     html_cva(
