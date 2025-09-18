@@ -9,17 +9,27 @@ declare(strict_types=1);
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 abstract class AbstractChoiceInput
 {
+    public string $name;
+
     public bool $checked = false;
 
     public bool $disabled = false;
 
     public bool $error = false;
 
+    #[ExposeInTemplate('input_class')]
+    public string $inputClass = '';
+
     public bool $required = false;
+
+    public string $size = 'medium';
+
+    protected ?string $value = null;
 
     /**
      * @param array<string, mixed> $props
@@ -31,6 +41,10 @@ abstract class AbstractChoiceInput
     {
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined();
+        $resolver
+            ->define('name')
+            ->required()
+            ->allowedTypes('string');
         $resolver
             ->define('checked')
             ->allowedTypes('bool')
@@ -44,14 +58,34 @@ abstract class AbstractChoiceInput
             ->allowedTypes('bool')
             ->default(false);
         $resolver
+            ->define('inputClass')
+            ->allowedTypes('string')
+            ->default('');
+        $resolver
             ->define('required')
             ->allowedTypes('bool')
             ->default(false);
+        $resolver
+            ->define('size')
+            ->allowedValues('small', 'medium')
+            ->default('medium');
+        $resolver
+            ->define('value')
+            ->allowedTypes('null', 'string')
+            ->default(null);
 
         $this->configurePropsResolver($resolver);
 
         return $resolver->resolve($props) + $props;
     }
 
+    #[ExposeInTemplate('value')]
+    protected function getValue(): ?string
+    {
+        return null;
+    }
+
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
+
+    abstract public function getType(): string;
 }

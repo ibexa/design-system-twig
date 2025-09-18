@@ -32,4 +32,10 @@ final class Input extends AbstractChoiceInput
             ->allowedTypes('string')
             ->default('');
     }
+
+    #[ExposeInTemplate('type')]
+    public function getType(): string
+    {
+        return 'radio';
+    }
 }
