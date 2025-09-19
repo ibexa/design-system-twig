@@ -8,21 +8,9 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components\Checkbox;
 
-use Ibexa\DesignSystemTwig\Twig\Components\AbstractChoiceInput;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 #[AsTwigComponent('ibexa:checkbox:input')]
-final class Input extends AbstractChoiceInput
+final class Input extends AbstractCheckbox
 {
-    protected function configurePropsResolver(OptionsResolver $resolver): void
-    {
-    }
-
-    #[ExposeInTemplate('type')]
-    public function getType(): string
-    {
-        return 'checkbox';
-    }
 }
