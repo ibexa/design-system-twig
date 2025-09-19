@@ -8,83 +8,23 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components\InputText;
 
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Ibexa\DesignSystemTwig\Twig\Components\AbstractField;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
-use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
  * @phpstan-type AttrMap array<string, scalar>
  */
 #[AsTwigComponent('ibexa:input_text:field')]
-final class Field
+final class Field extends AbstractField
 {
-    /** @var non-empty-string */
-    public string $id;
-
-    /** @var non-empty-string */
-    public string $name;
-
-    /** @var AttrMap */
-    #[ExposeInTemplate(name: 'label_extra', getter: 'getLabelExtra')]
-    public array $labelExtra = [];
-
-    /** @var AttrMap */
-    #[ExposeInTemplate('helper_text_extra')]
-    public array $helperTextExtra = [];
-
     /** @var AttrMap */
     #[ExposeInTemplate(name: 'input', getter: 'getInput')]
     public array $input = [];
 
-    public bool $required = false;
-
-    public string $value = '';
-
     public string $type = 'input-text';
-
-    /**
-     * @param array<string, mixed> $props
-     *
-     * @return array<string, mixed>
-     */
-    #[PreMount]
-    public function validate(array $props): array
-    {
-        $resolver = new OptionsResolver();
-        $resolver->setIgnoreUndefined();
-
-        $resolver->setDefaults([
-            'id' => null,
-            'labelExtra' => [],
-            'helperTextExtra' => [],
-            'input' => [],
-            'required' => false,
-            'value' => '',
-        ]);
-
-        $resolver->setRequired(['name', 'id']);
-
-        $resolver->setAllowedTypes('name', 'string');
-        $resolver->setAllowedTypes('id', ['null', 'string']);
-        $resolver->setAllowedTypes('labelExtra', 'array');
-        $resolver->setAllowedTypes('helperTextExtra', 'array');
-        $resolver->setAllowedTypes('input', 'array');
-        $resolver->setAllowedTypes('required', 'bool');
-        $resolver->setAllowedTypes('value', 'string');
-
-        $resolver->setNormalizer('labelExtra', static function (Options $options, array $attributes) {
-            return self::assertForbidden($attributes, ['for', 'required'], 'labelExtra');
-        });
-
-        $resolver->setNormalizer('input', static function (Options $options, array $attributes) {
-            return self::assertForbidden($attributes, ['id', 'name', 'required', 'value'], 'input');
-        });
-
-        return array_replace_recursive($resolver->resolve($props), $props);
-    }
 
     /**
      * @return AttrMap
@@ -108,26 +48,14 @@ final class Field
         ];
     }
 
-    /**
-     * @param array<string, scalar> $attributes
-     * @param list<string> $forbidden
-     * @param non-empty-string $optionName
-     *
-     * @return array<string, scalar>
-     *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
-     */
-    private static function assertForbidden(array $attributes, array $forbidden, string $optionName): array
+    protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $disallowedKeys = array_intersect(array_keys($attributes), $forbidden);
-        if ($disallowedKeys) {
-            throw new InvalidOptionsException(sprintf(
-                'Option "%s" cannot contain the following keys: %s.',
-                $optionName,
-                implode(', ', $disallowedKeys)
-            ));
-        }
-
-        return $attributes;
+        $resolver->setDefaults([
+            'input' => [],
+        ]);
+        $resolver->setAllowedTypes('input', 'array');
+        $resolver->setNormalizer('input', static function (Options $options, array $attributes) {
+            return self::assertForbidden($attributes, ['id', 'name', 'required', 'value'], 'input');
+        });
     }
 }
