@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -32,20 +34,26 @@ final class Icon
     {
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined();
-        $resolver->define('name')->allowedTypes('string')->default('');
         $resolver
             ->define('size')
             ->allowedValues('tiny', 'tiny-small', 'small', 'small-medium', 'medium', 'medium-large', 'large', 'extra-large', 'large-huge', 'huge')
             ->default('medium');
         $resolver->define('path')->allowedTypes('string')->default('');
 
-        if (empty($props['name'])) {
-            $resolver->setRequired(['path']);
-        }
+        $resolver
+            ->define('name')
+            ->allowedTypes('string')
+            ->default('')
+            ->normalize(static function (Options $options, $value) {
+                $name = trim($value);
+                $path = trim($options['path'] ?? '');
 
-        if (empty($props['path'])) {
-            $resolver->setRequired(['name']);
-        }
+                if ($path === '' && $name === '') {
+                    throw new InvalidOptionsException("When 'path' is empty or not submitted, 'name' is required and cannot be empty.");
+                }
+
+                return $name;
+            });
 
         return $resolver->resolve($props) + $props;
     }
