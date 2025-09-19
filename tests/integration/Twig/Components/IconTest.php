@@ -46,4 +46,61 @@ final class IconTest extends KernelTestCase
             $actual
         );
     }
+
+    public function testCustomPathRender(): void
+    {
+        $rendered = $this->renderTwigComponent(
+            'ibexa:icon',
+            [
+                'path' => '/assets/example.svg',
+            ]
+        );
+
+        $crawler = $rendered->crawler();
+
+        $class = $crawler->filter('svg')->attr('class');
+
+        self::assertNotNull($class);
+        self::assertStringContainsString(
+            'ids-icon',
+            $class,
+        );
+
+        $href = $crawler->filter('svg use')->first()->attr('xlink:href');
+
+        self::assertNotNull($href);
+        self::assertStringEndsWith(
+            '/assets/example.svg',
+            $href
+        );
+    }
+
+    public function testCustomPathWithNameRender(): void
+    {
+        $rendered = $this->renderTwigComponent(
+            'ibexa:icon',
+            [
+                'name' => 'trash',
+                'path' => '/assets/example.svg',
+            ]
+        );
+
+        $crawler = $rendered->crawler();
+
+        $class = $crawler->filter('svg')->attr('class');
+
+        self::assertNotNull($class);
+        self::assertStringContainsString(
+            'ids-icon',
+            $class,
+        );
+
+        $href = $crawler->filter('svg use')->first()->attr('xlink:href');
+
+        self::assertNotNull($href);
+        self::assertStringEndsWith(
+            '/assets/example.svg',
+            $href
+        );
+    }
 }
