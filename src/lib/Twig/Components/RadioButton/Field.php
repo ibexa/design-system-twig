@@ -6,23 +6,21 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components\Checkbox;
+namespace Ibexa\DesignSystemTwig\Twig\Components\RadioButton;
 
-use Ibexa\DesignSystemTwig\Twig\Components\AbstractChoiceInput;
+use Ibexa\DesignSystemTwig\Twig\Components\LabelledChoiceInputTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsTwigComponent('ibexa:checkbox:input')]
-final class Input extends AbstractChoiceInput
+#[AsTwigComponent('ibexa:radio_button:field')]
+final class Field extends AbstractRadioButton
 {
+    use LabelledChoiceInputTrait;
+
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-    }
+        parent::configurePropsResolver($resolver);
 
-    #[ExposeInTemplate('type')]
-    public function getType(): string
-    {
-        return 'checkbox';
+        $this->validateLabelledProps($resolver);
     }
 }

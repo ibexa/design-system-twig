@@ -1,19 +1,17 @@
-{% set input_classes =
-    html_classes(
-        'ids-input ids-input--checkbox ids-input--medium',
-        {
-            'ids-input--disabled': disabled,
-            'ids-input--error': error,
-            'ids-input--required': required
-        },
-        attributes.render('class') ?? ''
-    )
-%}
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_choice_input.html.twig' %}
 
-<div class="ids-checkbox">
+{% set class = html_classes('ids-checkbox', attributes.render('class') ?? '') %}
+
+{% block content %}
     <input
         class="{{ input_classes }}"
-        type="checkbox"
-        {{ attributes.defaults({ checked, disabled, required }) }}
+        {{
+            attributes.defaults({
+                disabled,
+                name,
+                required,
+                type,
+            })
+        }}
     />
-</div>
+{% endblock content %}

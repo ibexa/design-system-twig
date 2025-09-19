@@ -1,0 +1,14 @@
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_choice_input_field.html.twig' %}
+
+{% set class = html_classes('ids-radio-button-field', attributes.render('class') ?? '') %}
+{% set label_content %}
+    {{ block('content') }}
+{% endset %}
+
+{% block input %}
+    <twig:ibexa:radio_button:input {{ ...input }} />
+{% endblock input %}
+
+{% block label %}
+    {{ label_content }}
+{% endblock label %}
