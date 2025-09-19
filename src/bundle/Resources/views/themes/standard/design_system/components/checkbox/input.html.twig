@@ -3,6 +3,15 @@
 {% set class = html_classes('ids-checkbox', attributes.render('class') ?? '') %}
 
 {% block content %}
+    {% set input_classes =
+        html_classes(
+            input_classes,
+            {
+                'ids-input--indeterminate': indeterminate
+            },
+        )
+    %}
+
     <input
         class="{{ input_classes }}"
         {{

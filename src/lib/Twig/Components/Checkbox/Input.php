@@ -16,8 +16,14 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 #[AsTwigComponent('ibexa:checkbox:input')]
 final class Input extends AbstractChoiceInput
 {
+    public bool $indeterminate = false;
+
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
+        $resolver
+            ->define('indeterminate')
+            ->allowedTypes('bool')
+            ->default(false);
     }
 
     #[ExposeInTemplate('type')]

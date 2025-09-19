@@ -1,7 +1,7 @@
-import { CheckboxInput, ThreeStateCheckboxInput } from './components/checkbox';
 import { InputTextField, InputTextInput } from './components/input_text';
 import { Accordion } from './components/accordion';
 import { AltRadioInput } from './components/alt_radio/alt_radio_input';
+import { CheckboxInput } from './components/checkbox';
 
 const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
 
@@ -41,12 +41,4 @@ inputTextContainers.forEach((inputTextContainer: HTMLDivElement) => {
     const inputTextInstance = new InputTextInput(inputTextContainer);
 
     inputTextInstance.init();
-});
-
-const threeStateCheckboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-three-state-checkbox:not([data-ids-custom-init])');
-
-threeStateCheckboxContainers.forEach((threeStateCheckboxContainer: HTMLDivElement) => {
-    const threeStateCheckboxInstance = new ThreeStateCheckboxInput(threeStateCheckboxContainer);
-
-    threeStateCheckboxInstance.init();
 });
