@@ -1,4 +1,4 @@
-import Base from '../shared/Base';
+import { Base } from '../partials';
 
 enum BadgeSize {
     Medium = 'medium',
