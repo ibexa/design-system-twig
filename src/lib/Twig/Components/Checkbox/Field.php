@@ -8,24 +8,19 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components\Checkbox;
 
+use Ibexa\DesignSystemTwig\Twig\Components\LabelledChoiceInputTrait;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('ibexa:checkbox:input')]
-final class Input extends AbstractCheckbox
+#[AsTwigComponent('ibexa:checkbox:field')]
+final class Field extends AbstractCheckbox
 {
-    public bool $indeterminate = false;
+    use LabelledChoiceInputTrait;
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $resolver
-            ->define('indeterminate')
-            ->allowedTypes('bool')
-            ->default(false);
-    }
+        parent::configurePropsResolver($resolver);
 
-    #[ExposeInTemplate('type')]
-    public function getType(): string
-    {
-        return 'checkbox';
+        $this->validateLabelledProps($resolver);
     }
 }
