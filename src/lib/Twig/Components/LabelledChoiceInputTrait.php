@@ -53,6 +53,7 @@ trait LabelledChoiceInputTrait
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'checked' => $this->checked,
             'disabled' => $this->disabled,
             'error' => $this->error,
             'required' => $this->required,

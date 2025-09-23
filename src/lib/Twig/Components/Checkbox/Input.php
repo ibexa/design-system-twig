@@ -13,19 +13,4 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent('ibexa:checkbox:input')]
 final class Input extends AbstractCheckbox
 {
-    public bool $indeterminate = false;
-
-    protected function configurePropsResolver(OptionsResolver $resolver): void
-    {
-        $resolver
-            ->define('indeterminate')
-            ->allowedTypes('bool')
-            ->default(false);
-    }
-
-    #[ExposeInTemplate('type')]
-    public function getType(): string
-    {
-        return 'checkbox';
-    }
 }

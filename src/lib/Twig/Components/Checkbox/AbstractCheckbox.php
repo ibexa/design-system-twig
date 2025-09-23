@@ -12,10 +12,16 @@ use Ibexa\DesignSystemTwig\Twig\Components\AbstractChoiceInput;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-class AbstractCheckbox extends AbstractChoiceInput
+abstract class AbstractCheckbox extends AbstractChoiceInput
 {
+    public bool $indeterminate = false;
+
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
+        $resolver
+            ->define('indeterminate')
+            ->allowedTypes('bool')
+            ->default(false);
     }
 
     #[ExposeInTemplate('type')]
