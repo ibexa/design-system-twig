@@ -1,5 +1,4 @@
-{% set content_block = block('content') is defined ? block('content')|trim : '' %}
-{% set has_content = content_block != '' %}
+{% set has_content = block('content')|trim != '' %}
 
 {% if has_content %}
     {% set helper_text_classes =
