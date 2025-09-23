@@ -1,0 +1,7 @@
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_inputs_list.html.twig' %}
+
+{% block item %}
+    <twig:ibexa:radio_button:field {{ ...item }}>
+        {{ item.label }}
+    </twig:ibexa:radio_button:field>
+{% endblock item %}

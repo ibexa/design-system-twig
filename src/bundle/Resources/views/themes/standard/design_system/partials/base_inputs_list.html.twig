@@ -1,0 +1,27 @@
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_field.html.twig' %}
+
+{% set base_inputs_list_classes =
+    html_cva(
+        base: html_classes('ids-choice-inputs-list', attributes.render('class') ?? ''),
+        variants: {
+            direction: {
+                horizontal: 'ids-choice-inputs-list--horizontal',
+                vertical: 'ids-choice-inputs-list--vertical',
+            }
+        }
+    )
+%}
+
+{% set class = base_inputs_list_classes.apply({ direction: direction }) %}
+
+{% set type = 'list' %}
+
+{% block content %}
+    <div class="ids-choice-inputs-list__items">
+        {% for item in items %}
+            {% with { item } only %}
+                {{ block('item') }}
+            {% endwith %}
+        {% endfor %}
+    </div>
+{% endblock content %}
