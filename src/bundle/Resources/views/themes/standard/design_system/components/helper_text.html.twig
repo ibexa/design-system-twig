@@ -1,46 +1,50 @@
-{% set helper_text_classes =
-    html_cva(
-        base: 'ids-helper-text',
-        variants: {
-            type: {
-                default: 'ids-helper-text--default',
-                error: 'ids-helper-text--error'
+{% set has_content = block('content')|trim != '' %}
+
+{% if has_content %}
+    {% set helper_text_classes =
+        html_cva(
+            base: 'ids-helper-text',
+            variants: {
+                type: {
+                    default: 'ids-helper-text--default',
+                    error: 'ids-helper-text--error'
+                }
             }
-        }
-    )
-%}
-
-<div
-    class="{{
-        helper_text_classes.apply(
-            {
-                type
-            },
-            attributes.render('class')
         )
-    }}"
-    {{ attributes }}
->
-    {% block helper_text_inner %}
-        {% block icon_outer %}
-            <div class="ids-helper-text__icon-wrapper">
-                {% block icon_inner %}
-                    <twig:ibexa:icon :name="icon_name" size="small" class="ids-helper-text__icon" />
-                    <template class="ids-helper-text__icon-template" data-ids-type="default">
-                        <twig:ibexa:icon name="info-circle" size="small" class="ids-helper-text__icon" />
-                    </template>
-                    <template class="ids-helper-text__icon-template" data-ids-type="error">
-                        <twig:ibexa:icon name="alert-error" size="small" class="ids-helper-text__icon" />
-                    </template>
-                {% endblock icon_inner %}
-            </div>
-        {% endblock icon_outer %}
-        {% block content_outer %}
-            <div class="ids-helper-text__content-wrapper">
-                {% block content %}
+    %}
 
-                {% endblock content %}
-            </div>
-        {% endblock content_outer %}
-    {% endblock helper_text_inner %}
-</div>
+    <div
+        class="{{
+            helper_text_classes.apply(
+                {
+                    type
+                },
+                attributes.render('class')
+            )
+        }}"
+        {{ attributes }}
+    >
+        {% block helper_text_inner %}
+            {% block icon_outer %}
+                <div class="ids-helper-text__icon-wrapper">
+                    {% block icon_inner %}
+                        <twig:ibexa:icon :name="icon_name" size="small" class="ids-helper-text__icon" />
+                        <template class="ids-helper-text__icon-template" data-ids-type="default">
+                            <twig:ibexa:icon name="info-circle" size="small" class="ids-helper-text__icon" />
+                        </template>
+                        <template class="ids-helper-text__icon-template" data-ids-type="error">
+                            <twig:ibexa:icon name="alert-error" size="small" class="ids-helper-text__icon" />
+                        </template>
+                    {% endblock icon_inner %}
+                </div>
+            {% endblock icon_outer %}
+            {% block content_outer %}
+                <div class="ids-helper-text__content-wrapper">
+                    {% block content %}
+
+                    {% endblock content %}
+                </div>
+            {% endblock content_outer %}
+        {% endblock helper_text_inner %}
+    </div>
+{% endif %}

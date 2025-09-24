@@ -34,7 +34,10 @@ final class HelperTextTest extends KernelTestCase
 
     public function testDefaultRender(): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:helper_text');
+        $rendered = $this->renderTwigComponent(
+            name: 'ibexa:helper_text',
+            content: 'This is some helper text'
+        );
         $crawler = $rendered->crawler();
 
         $container = $this->getHelperText($crawler);
@@ -53,7 +56,7 @@ final class HelperTextTest extends KernelTestCase
     {
         $rendered = $this->renderTwigComponent('ibexa:helper_text', [
             'type' => 'error',
-        ]);
+        ], 'This is some helper text');
         $crawler = $rendered->crawler();
 
         $container = $this->getHelperText($crawler);
@@ -70,7 +73,7 @@ final class HelperTextTest extends KernelTestCase
                 'class' => 'u-mb-2 custom-class',
                 'data-test' => 'helper-text-x',
             ],
-        ]);
+        ], 'This is some helper text');
         $crawler = $rendered->crawler();
 
         $container = $this->getHelperText($crawler);
@@ -90,7 +93,7 @@ final class HelperTextTest extends KernelTestCase
      */
     public function testIconIsRenderedForType(array $props, string $expectedIconId): void
     {
-        $rendered = $this->renderTwigComponent('ibexa:helper_text', $props);
+        $rendered = $this->renderTwigComponent('ibexa:helper_text', $props, 'This is some helper text');
 
         $iconUse = $rendered->crawler()->filter('.ids-helper-text__icon use')->first();
         self::assertSame(1, $iconUse->count(), 'Icon <use> element should be rendered');
