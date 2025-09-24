@@ -10,11 +10,9 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\Checkbox;
 
 use Ibexa\DesignSystemTwig\Twig\Components\AbstractChoiceInput;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsTwigComponent('ibexa:checkbox:three_state_input')]
-final class ThreeStateInput extends AbstractChoiceInput
+abstract class AbstractCheckbox extends AbstractChoiceInput
 {
     public bool $indeterminate = false;
 
