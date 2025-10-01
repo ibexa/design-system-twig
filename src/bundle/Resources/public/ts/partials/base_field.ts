@@ -4,7 +4,7 @@ import { Label } from '../components/Label';
 
 import ValidatorManager from '../validators/ValidatorManager';
 
-export abstract class BaseFormControl<T> extends Base {
+export abstract class BaseField<T> extends Base {
     protected _labelInstance: Label | null = null;
     protected _helperTextInstance: HelperText | null = null;
     protected _validatorManager: ValidatorManager<T>;

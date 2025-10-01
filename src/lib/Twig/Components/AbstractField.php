@@ -20,9 +20,6 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 abstract class AbstractField
 {
     /** @var non-empty-string */
-    public string $id;
-
-    /** @var non-empty-string */
     public string $name;
 
     /** @var AttrMap */
@@ -49,17 +46,15 @@ abstract class AbstractField
         $resolver->setIgnoreUndefined();
 
         $resolver->setDefaults([
-            'id' => null,
             'labelExtra' => [],
             'helperTextExtra' => [],
             'required' => false,
             'value' => '',
         ]);
 
-        $resolver->setRequired(['name', 'id']);
+        $resolver->setRequired(['name']);
 
         $resolver->setAllowedTypes('name', 'string');
-        $resolver->setAllowedTypes('id', ['null', 'string']);
         $resolver->setAllowedTypes('labelExtra', 'array');
         $resolver->setAllowedTypes('helperTextExtra', 'array');
         $resolver->setAllowedTypes('required', 'bool');
@@ -79,7 +74,7 @@ abstract class AbstractField
      */
     public function getLabelExtra(): array
     {
-        return $this->labelExtra + ['for' => $this->id, 'required' => $this->required];
+        return $this->labelExtra + ['required' => $this->required];
     }
 
     /**

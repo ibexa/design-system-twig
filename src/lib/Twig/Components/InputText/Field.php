@@ -20,6 +20,9 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 #[AsTwigComponent('ibexa:input_text:field')]
 final class Field extends AbstractField
 {
+    /** @var non-empty-string */
+    public string $id;
+
     /** @var AttrMap */
     #[ExposeInTemplate(name: 'input', getter: 'getInput')]
     public array $input = [];
@@ -51,11 +54,14 @@ final class Field extends AbstractField
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'id' => null,
             'input' => [],
         ]);
         $resolver->setAllowedTypes('input', 'array');
         $resolver->setNormalizer('input', static function (Options $options, array $attributes) {
             return self::assertForbidden($attributes, ['id', 'name', 'required', 'value'], 'input');
         });
+        $resolver->setRequired(['name']);
+        $resolver->setAllowedTypes('id', ['null', 'string']);
     }
 }
