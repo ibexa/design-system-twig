@@ -1,4 +1,5 @@
-{% set has_content = block('content')|trim != '' %}
+{% set _content %}{% block content %}{% endblock %}{% endset %}
+{% set has_content = _content|striptags|trim is not empty %}
 
 {% if has_content %}
     {% set helper_text_classes =
@@ -40,9 +41,7 @@
             {% endblock icon_outer %}
             {% block content_outer %}
                 <div class="ids-helper-text__content-wrapper">
-                    {% block content %}
-
-                    {% endblock content %}
+                    {{ _content }}
                 </div>
             {% endblock content_outer %}
         {% endblock helper_text_inner %}
