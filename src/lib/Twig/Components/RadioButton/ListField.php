@@ -13,14 +13,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
+/**
+ * @phpstan-type RadioButtonItem array{
+ *     value: string|int,
+ *     label: string,
+ *     disabled?: bool
+ * }
+ * @phpstan-type RadioButtonItems list<RadioButtonItem>
+ */
 #[AsTwigComponent('ibexa:radio_button:list_field')]
 final class ListField extends AbstractField
 {
     public string $direction = 'vertical';
 
+    /** @var RadioButtonItems */
     #[ExposeInTemplate(name: 'items', getter: 'getItems')]
     public array $items = [];
 
+    /** @return RadioButtonItems */
     public function getItems(): array
     {
         return array_map(function ($item) {
