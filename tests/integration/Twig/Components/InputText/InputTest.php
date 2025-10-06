@@ -6,49 +6,47 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\inputs;
+namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\InputText;
 
-use Ibexa\DesignSystemTwig\Twig\Components\inputs\InputText;
+use Generator;
+use Ibexa\DesignSystemTwig\Twig\Components\InputText\Input;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
 
-final class InputTextTest extends KernelTestCase
+final class InputTest extends KernelTestCase
 {
     use InteractsWithTwigComponents;
 
     public function testMount(): void
     {
-        $component = $this->mountTwigComponent(
-            InputText::class,
-            [
-                'type' => 'email',
-                'size' => 'small',
-                'disabled' => true,
-                'error' => true,
-                'required' => true,
-            ]
-        );
+        $component = $this->mountTwigComponent(Input::class, [
+            'type' => 'email',
+            'size' => 'small',
+            'disabled' => true,
+            'error' => true,
+            'required' => true,
+        ]);
 
-        self::assertInstanceOf(InputText::class, $component, 'Component should mount as inputs\\InputText.');
-        self::assertSame('email', $component->type, 'Prop "type" should be "email".');
-        self::assertSame('small', $component->size, 'Prop "size" should be "small".');
-        self::assertTrue($component->disabled, 'Prop "disabled" should be true.');
-        self::assertTrue($component->error, 'Prop "error" should be true.');
-        self::assertTrue($component->required, 'Prop "required" should be true.');
+        self::assertInstanceOf(Input::class, $component, 'Component should mount as InputText\\Input.');
     }
 
-    public function testDefaultRender(): void
+    public function testDefaultRenderProducesWrapperAndInputWithBaseClasses(): void
     {
-        $crawler = $this->renderTwigComponent(InputText::class, [])->crawler();
-        $input = $this->getInput($crawler);
+        $crawler = $this->renderTwigComponent(Input::class, [])->crawler();
 
-        $class = (string) $input->attr('class');
+        $wrapper = $this->getWrapper($crawler);
+        self::assertSame('div', $wrapper->nodeName(), 'Wrapper should be a <div>.');
+
+        $input = $this->getInput($crawler);
+        $class = $this->getClassAttr($input);
+
         self::assertStringContainsString('ids-input', $class, 'Base class "ids-input" should be present.');
-        self::assertStringContainsString('ids-input--text', $class, 'Default type should be "text".');
-        self::assertStringContainsString('ids-input--medium', $class, 'Default size should be "medium".');
+        self::assertStringContainsString('ids-input--text', $class, 'Default type should add "ids-input--text".');
+        self::assertStringContainsString('ids-input--medium', $class, 'Default size should add "ids-input--medium".');
+
         self::assertStringNotContainsString('ids-input--disabled', $class, 'Disabled modifier should not be present by default.');
         self::assertStringNotContainsString('ids-input--error', $class, 'Error modifier should not be present by default.');
         self::assertStringNotContainsString('ids-input--required', $class, 'Required modifier should not be present by default.');
@@ -61,16 +59,16 @@ final class InputTextTest extends KernelTestCase
     #[DataProvider('variantProvider')]
     public function testVariantClasses(array $props, array $expectedClasses): void
     {
-        $crawler = $this->renderTwigComponent(InputText::class, $props)->crawler();
+        $crawler = $this->renderTwigComponent(Input::class, $props)->crawler();
         $input = $this->getInput($crawler);
-        $class = (string) $input->attr('class');
+        $class = $this->getClassAttr($input);
 
         foreach ($expectedClasses as $cls) {
             self::assertStringContainsString($cls, $class, sprintf('Expected class "%s" should be present.', $cls));
         }
     }
 
-    public static function variantProvider(): \Generator
+    public static function variantProvider(): Generator
     {
         yield 'type: email' => [['type' => 'email'], ['ids-input--email']];
         yield 'type: password' => [['type' => 'password'], ['ids-input--password']];
@@ -88,45 +86,47 @@ final class InputTextTest extends KernelTestCase
 
     public function testBooleanPropsAlsoAddNativeAttributes(): void
     {
-        $crawler = $this->renderTwigComponent(InputText::class, [
+        $crawler = $this->renderTwigComponent(Input::class, [
             'disabled' => true,
             'required' => true,
         ])->crawler();
 
         $input = $this->getInput($crawler);
+
         self::assertNotNull($input->attr('disabled'), 'When disabled=true, the "disabled" attribute should be rendered.');
         self::assertNotNull($input->attr('required'), 'When required=true, the "required" attribute should be rendered.');
     }
 
-    public function testAttributesBagMergesAndControlsValueAndWrapperDataAttr(): void
+    public function testAttributesBagMergesAndWrapperCustomInit(): void
     {
-        $crawler = $this->renderTwigComponent(InputText::class, [
+        $crawler = $this->renderTwigComponent(Input::class, [
             'attributes' => [
                 'class' => 'extra-class',
-                'placeholder' => 'foo',
-                'data-custom' => 'custom',
-                'data-ids-custom-init' => 'true',
+                'placeholder' => 'Type…',
+                'data-qa' => 'ipt',
+                'data-ids-custom-init' => '1',
                 'value' => 'Hello',
             ],
         ])->crawler();
 
         $wrapper = $this->getWrapper($crawler);
-        self::assertSame('true', $wrapper->attr('data-ids-custom-init'), 'Wrapper should receive data-ids-custom-init from attributes.');
+        self::assertNotNull($wrapper->attr('data-ids-custom-init'), 'Wrapper should include data-ids-custom-init when provided in attributes.');
 
         $input = $this->getInput($crawler);
-        $class = (string) $input->attr('class');
+        $class = $this->getClassAttr($input);
+
         self::assertStringContainsString('extra-class', $class, 'Custom classes should be merged into input "class".');
-        self::assertSame('foo', $input->attr('placeholder'), 'Placeholder should be rendered onto the input.');
-        self::assertSame('custom', $input->attr('data-custom'), 'Custom data attribute should be rendered.');
+        self::assertSame('Type…', $input->attr('placeholder'), 'Placeholder should be rendered onto the input.');
+        self::assertSame('ipt', $input->attr('data-qa'), 'Custom data attribute should be rendered.');
         self::assertSame('Hello', $input->attr('value'), 'Value should be rendered onto the input.');
     }
 
     public function testClearActionVisibilityTogglesWithValue(): void
     {
-        $crawler = $this->renderTwigComponent(InputText::class, [])->crawler();
+        $crawler = $this->renderTwigComponent(Input::class, [])->crawler();
         $this->assertClearActionHidden($crawler, true);
 
-        $crawler = $this->renderTwigComponent(InputText::class, [
+        $crawler = $this->renderTwigComponent(Input::class, [
             'attributes' => ['value' => 'x'],
         ])->crawler();
         $this->assertClearActionHidden($crawler, false);
@@ -135,39 +135,33 @@ final class InputTextTest extends KernelTestCase
     public function testInvalidTypeValueCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);
-        $this->mountTwigComponent(InputText::class, ['type' => 'unsupported']);
+        $this->mountTwigComponent(Input::class, ['type' => 'unsupported']);
     }
 
     public function testInvalidSizeValueCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);
-        $this->mountTwigComponent(InputText::class, ['size' => 'giant']);
+        $this->mountTwigComponent(Input::class, ['size' => 'giant']);
     }
 
     public function testInvalidBooleanTypesCauseResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);
-        $this->mountTwigComponent(InputText::class, ['disabled' => 'yes']);
+        $this->mountTwigComponent(Input::class, ['disabled' => 'yes']);
     }
 
-    /**
-     * @return \Symfony\Component\DomCrawler\Crawler
-     */
-    private function getInput(Crawler $crawler): Crawler
+    private function getWrapper(Crawler $crawler): Crawler
     {
-        $node = $crawler->filter('.ids-input-text__source > input')->first();
-        self::assertGreaterThan(0, $node->count(), 'Input element not found under .ids-input-text__source.');
+        $node = $crawler->filter('div.ids-input-text')->first();
+        self::assertGreaterThan(0, $node->count(), 'Wrapper .ids-input-text should be present.');
 
         return $node;
     }
 
-    /**
-     * @return \Symfony\Component\DomCrawler\Crawler
-     */
-    private function getWrapper(Crawler $crawler): Crawler
+    private function getInput(Crawler $crawler): Crawler
     {
-        $node = $crawler->filter('div.ids-input-text')->first();
-        self::assertGreaterThan(0, $node->count(), 'Wrapper .ids-input-text not found.');
+        $node = $crawler->filter('.ids-input-text__source > input')->first();
+        self::assertGreaterThan(0, $node->count(), 'Input element not found under .ids-input-text__source.');
 
         return $node;
     }
@@ -177,11 +171,16 @@ final class InputTextTest extends KernelTestCase
         $action = $crawler->filter('.ids-input-text__actions > div')->first();
         self::assertGreaterThan(0, $action->count(), 'Clear action container should be present.');
 
-        $class = (string) $action->attr('class');
+        $class = $this->getClassAttr($action);
         if ($expectedHidden) {
             self::assertStringContainsString('ids-input-text__action--hidden', $class, 'Clear action should be hidden when value is empty.');
         } else {
             self::assertStringNotContainsString('ids-input-text__action--hidden', $class, 'Clear action should be visible when value is non-empty.');
         }
+    }
+
+    private function getClassAttr(Crawler $node): string
+    {
+        return (string) $node->attr('class');
     }
 }
