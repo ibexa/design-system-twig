@@ -7,18 +7,12 @@ export class Expander extends Base {
     private _hasLabel: boolean;
     private _collapseLabel: string | undefined;
     private _expandLabel: string | undefined;
-    private _labelContainer: HTMLElement;
+    private _labelContainer: HTMLElement | null;
 
     constructor(container: HTMLElement) {
         super(container);
 
-        const labelContainer = this._container.querySelector<HTMLElement>('.ids-expander__label');
-
-        if (!labelContainer) {
-            throw new Error('No label container found for this expander!');
-        }
-
-        this._labelContainer = labelContainer;
+        this._labelContainer = this._container.querySelector<HTMLElement>('.ids-expander__label');
         this._hasLabel = this._container.classList.contains('ids-expander--has-label');
 
         if (this._hasLabel) {
@@ -38,18 +32,14 @@ export class Expander extends Base {
     toggleIsExpanded(isExpanded: boolean) {
         this._container.classList.toggle('ids-expander--is-expanded', isExpanded);
 
-        if (this._hasLabel && this._collapseLabel && this._expandLabel) {
+        if (this._hasLabel && this._collapseLabel && this._expandLabel && this._labelContainer) {
             this._labelContainer.innerHTML = isExpanded ? this._collapseLabel : this._expandLabel;
         }
     }
 
     init() {
         this._container.addEventListener('click', () => {
-            if (typeof this._expandHandler !== 'function') {
-                throw new Error('No expandHandler method provided!');
-            }
-
-            this._expandHandler(!this.isExpanded());
+            this._expandHandler?.(!this.isExpanded());
         });
 
         super.init();

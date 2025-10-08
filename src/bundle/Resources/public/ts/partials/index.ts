@@ -1,3 +1,4 @@
 export * from './base';
 export * from './base_choice_input';
+export * from './base_dropdown';
 export * from './base_field';

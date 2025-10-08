@@ -2,6 +2,7 @@ import { InputTextField, InputTextInput } from './components/input_text';
 import { Accordion } from './components/accordion';
 import { AltRadioInput } from './components/alt_radio/alt_radio_input';
 import { CheckboxInput } from './components/checkbox';
+import { DropdownSingleInput } from './components/dropdown/dropdown_single_input';
 
 const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
 
@@ -25,6 +26,14 @@ checkboxContainers.forEach((checkboxContainer: HTMLDivElement) => {
     const checkboxInstance = new CheckboxInput(checkboxContainer);
 
     checkboxInstance.init();
+});
+
+const dropdownContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown:not([data-ids-custom-init])');
+
+dropdownContainers.forEach((dropdownContainer: HTMLDivElement) => {
+    const dropdownInstance = new DropdownSingleInput(dropdownContainer);
+
+    dropdownInstance.init();
 });
 
 const fieldInputTextContainers = document.querySelectorAll<HTMLDivElement>('.ids-field--input-text:not([data-ids-custom-init])');
