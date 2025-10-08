@@ -1,6 +1,6 @@
-{% set classes = html_classes('ids-field', 'ids-field--' ~ type, attributes.render('class') ?? '') %}
+{% set component_classes = html_classes('ids-field', 'ids-field--' ~ type, class) %}
 
-<div class="{{ classes }}" {{ attributes }}>
+<div class="{{ component_classes }}" {{ attributes }}>
     {% if block('label') is defined and block('label') is not empty %}
         <div class="ids-field__label-wrapper">
             <twig:ibexa:label {{ ...label_extra }}>
