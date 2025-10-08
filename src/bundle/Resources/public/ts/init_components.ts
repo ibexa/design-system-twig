@@ -27,6 +27,14 @@ checkboxContainers.forEach((checkboxContainer: HTMLDivElement) => {
     checkboxInstance.init();
 });
 
+// const checkboxesFieldContainers = document.querySelectorAll<HTMLDivElement>('.ids-checkbox:not([data-ids-custom-init])');
+
+// checkboxContainers.forEach((checkboxContainer: HTMLDivElement) => {
+//     const checkboxInstance = new CheckboxInput(checkboxContainer);
+
+//     checkboxInstance.init();
+// });
+
 const fieldInputTextContainers = document.querySelectorAll<HTMLDivElement>('.ids-field--input-text:not([data-ids-custom-init])');
 
 fieldInputTextContainers.forEach((fieldInputTextContainer: HTMLDivElement) => {
