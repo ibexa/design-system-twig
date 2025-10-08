@@ -1,0 +1,38 @@
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_dropdown.html.twig' %}
+
+{% set class = html_classes('ids-dropdown--single', attributes.render('class') ?? '') %}
+
+{% block source %}
+    <select name="{{ name }}"{% if disabled %} disabled{% endif %}>
+        {% for item in items %}
+            <option value="{{ item.id }}"{% if item.id == value %} selected{% endif %}>{{ item.label }}</option>
+        {% endfor %}
+    </select>
+{% endblock source %}
+
+{% block selected_items %}
+    {{ selected_label }}
+{% endblock selected_items %}
+
+{% block items %}
+    {% for item in items %}
+        {% set item_classes =
+            html_classes(
+                (BASE_DROPDOWN_CLASS.ITEM),
+                {
+                    (BASE_DROPDOWN_CLASS.ITEM ~ '--selected'): item.id == value,
+                },
+            ) %}
+
+        <li
+            class="{{ item_classes }}"
+            key="{{ item.id }}"
+            data-id="{{ item.id }}"
+            data-label="{{ item.label }}"
+            role="button"
+            tabIndex="0"
+        >
+            {{ item.label }}
+        </li>
+    {% endfor %}
+{% endblock items %}
