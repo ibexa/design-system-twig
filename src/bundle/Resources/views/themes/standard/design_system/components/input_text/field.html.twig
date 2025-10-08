@@ -1,5 +1,7 @@
 {% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_field.html.twig' %}
 
+{% set class = html_classes('ids-input-text-field', attributes.render('class') ?? '') %}
+
 {% block content %}
     <twig:ibexa:input_text:input {{ ...input }} />
 {% endblock content %}
