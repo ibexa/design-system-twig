@@ -12,7 +12,6 @@ use Ibexa\DesignSystemTwig\Twig\Components\AbstractField;
 use Ibexa\DesignSystemTwig\Twig\Components\ListFieldTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 /**
  * @phpstan-type RadioButtonItem array{
