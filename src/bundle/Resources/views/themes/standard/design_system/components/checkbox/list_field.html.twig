@@ -1,5 +1,7 @@
 {% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_inputs_list.html.twig' %}
 
+{% set class = html_classes('ids-checkboxes-list-field', attributes.render('class') ?? '') %}
+
 {% block item %}
     <twig:ibexa:checkbox:field {{ ...item }}>
         {{ item.label }}
