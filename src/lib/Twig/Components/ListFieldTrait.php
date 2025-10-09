@@ -30,8 +30,15 @@ trait ListFieldTrait
     public function getItems(): array
     {
         return array_map(function ($item) {
-            return $item + ['name' => $this->name, 'required' => $this->required];
+            $listItem = $item + ['name' => $this->name, 'required' => $this->required];
+
+            return $this->modifyListItem($listItem);
         }, $this->items);
+    }
+
+    protected function modifyListItem(array $item): array
+    {
+        return $item;
     }
 
     protected function validateListFieldProps(OptionsResolver $resolver): void

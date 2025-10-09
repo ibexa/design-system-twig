@@ -29,6 +29,13 @@ final class ListField extends AbstractField
 
     public array $value = [];
 
+    protected function modifyListItem(array $item): array
+    {
+        $item['checked'] = in_array($item['value'], $this->value, true);
+
+        return $item;
+    }
+
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
         $this->validateListFieldProps($resolver);
