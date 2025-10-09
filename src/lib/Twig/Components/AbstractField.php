@@ -32,8 +32,6 @@ abstract class AbstractField
 
     public bool $required = false;
 
-    public string $value = '';
-
     /**
      * @param array<string, mixed> $props
      *
@@ -49,7 +47,6 @@ abstract class AbstractField
             'labelExtra' => [],
             'helperTextExtra' => [],
             'required' => false,
-            'value' => '',
         ]);
 
         $resolver->setRequired(['name']);
@@ -58,7 +55,6 @@ abstract class AbstractField
         $resolver->setAllowedTypes('labelExtra', 'array');
         $resolver->setAllowedTypes('helperTextExtra', 'array');
         $resolver->setAllowedTypes('required', 'bool');
-        $resolver->setAllowedTypes('value', 'string');
 
         $resolver->setNormalizer('labelExtra', static function (Options $options, array $attributes) {
             return self::assertForbidden($attributes, ['for', 'required'], 'labelExtra');
