@@ -79,13 +79,6 @@ abstract class AbstractChoiceInput
         return $resolver->resolve($props) + $props;
     }
 
-    // #[ExposeInTemplate('value')]
-    // public function getValue(): ?string
-    // {
-    //     dump(self::value);
-    //     return $this->value;
-    // }
-
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
 
     abstract public function getType(): string;
