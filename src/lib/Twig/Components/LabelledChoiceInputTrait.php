@@ -60,6 +60,4 @@ trait LabelledChoiceInputTrait
             'value' => $this->value,
         ];
     }
-
-    // abstract protected function getValue(): ?string;
 }
