@@ -15,7 +15,6 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
  * @phpstan-type ListItem array{
  *     value: string|int,
  *     label: string,
- *     disabled?: bool
  * }
  */
 trait ListFieldTrait
@@ -53,6 +52,4 @@ trait ListFieldTrait
             ->allowedValues('vertical', 'horizontal')
             ->default('vertical');
     }
-
-
 }
