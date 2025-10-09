@@ -21,7 +21,7 @@ trait ListFieldTrait
 {
     public string $direction = 'vertical';
 
-    /** @var ListItem */
+    /** @var ListItem[] */
     #[ExposeInTemplate(name: 'items', getter: 'getItems')]
     public array $items = [];
 
