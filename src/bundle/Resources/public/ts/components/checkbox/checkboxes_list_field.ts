@@ -66,7 +66,6 @@ export class CheckboxesListField extends BaseInputsList<string[]> {
             detail: [nextValue, itemValue, actionPerformed],
         });
 
-        console.log(changeEvent.detail);
         this._container.dispatchEvent(changeEvent);
     }
 
