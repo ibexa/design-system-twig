@@ -1,4 +1,3 @@
-import { ChangeEvent } from 'react';
 import { BaseInputsList } from '../../partials';
 
 export enum CheckboxesListFieldAction {
@@ -8,6 +7,11 @@ export enum CheckboxesListFieldAction {
 
 export class CheckboxesListField extends BaseInputsList<string[]> {
     private _itemsContainer: HTMLDivElement;
+
+    static EVENTS = {
+        ...BaseInputsList.EVENTS,
+        CHANGE: 'ids:checkboxes-list-field:change',
+    };
 
     constructor(container: HTMLDivElement) {
         super(container);
@@ -21,11 +25,12 @@ export class CheckboxesListField extends BaseInputsList<string[]> {
         this._itemsContainer = itemsContainer;
 
         this.onItemChange = this.onItemChange.bind(this);
-        // this.onChange = this.onChange.bind(this);
     }
 
     getItemsCheckboxes() {
-        const itemsCheckboxes = [...this._itemsContainer.querySelectorAll<HTMLInputElement>('.ids-choice-input-field .ids-input--checkbox')];
+        const itemsCheckboxes = [
+            ...this._itemsContainer.querySelectorAll<HTMLInputElement>('.ids-choice-input-field .ids-input--checkbox'),
+        ];
 
         return itemsCheckboxes;
     }
@@ -56,18 +61,14 @@ export class CheckboxesListField extends BaseInputsList<string[]> {
     }
 
     onChange(nextValue: string[], itemValue: string, actionPerformed: CheckboxesListFieldAction) {
-        const changeEvent = new CustomEvent('change', {
+        const changeEvent = new CustomEvent(CheckboxesListField.EVENTS.CHANGE, {
             bubbles: true,
-            detail: [
-                nextValue,
-                itemValue,
-                actionPerformed,
-            ],
+            detail: [nextValue, itemValue, actionPerformed],
         });
 
+        console.log(changeEvent.detail);
         this._container.dispatchEvent(changeEvent);
     }
-
 
     initCheckboxes() {
         const itemsCheckboxes = this.getItemsCheckboxes();
@@ -75,6 +76,21 @@ export class CheckboxesListField extends BaseInputsList<string[]> {
         itemsCheckboxes.forEach((checkbox) => {
             checkbox.addEventListener('change', this.onItemChange, false);
         });
+    }
+
+    unbindCheckboxes() {
+        const itemsCheckboxes = this.getItemsCheckboxes();
+
+        itemsCheckboxes.forEach((checkbox) => {
+            checkbox.removeEventListener('change', this.onItemChange, false);
+        });
+    }
+
+    reinit() {
+        super.reinit();
+
+        this.unbindCheckboxes();
+        this.initCheckboxes();
     }
 
     init() {

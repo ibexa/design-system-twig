@@ -17,6 +17,10 @@ export abstract class Base {
         return this._container;
     }
 
+    reinit() {
+        // to be overridden in subclasses if needed
+    }
+
     init() {
         this._container.setAttribute('data-ids-initialized', 'true');
 
