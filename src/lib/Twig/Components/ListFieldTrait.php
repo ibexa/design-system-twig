@@ -25,7 +25,7 @@ trait ListFieldTrait
     #[ExposeInTemplate(name: 'items', getter: 'getItems')]
     public array $items = [];
 
-    /** @return CheckboxItems */
+    /** @return ListItem[] */
     public function getItems(): array
     {
         return array_map(function ($item) {

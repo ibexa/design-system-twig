@@ -12,7 +12,6 @@ use Ibexa\DesignSystemTwig\Twig\Components\AbstractField;
 use Ibexa\DesignSystemTwig\Twig\Components\ListFieldTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 /**
  * @phpstan-type CheckboxItem array{
@@ -39,7 +38,7 @@ final class ListField extends AbstractField
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
         $this->validateListFieldProps($resolver);
-        
+
         // TODO: check if items are valid according to Checkbox/Field component
 
         $resolver->setDefaults(['value' => []]);
