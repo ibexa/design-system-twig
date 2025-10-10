@@ -70,7 +70,7 @@ export abstract class BaseDropdown extends Base {
     toggleSearchVisibility(): void {
         const maxVisibleItems = parseInt(this._itemsNode.dataset.maxVisibleItems ?? '10', 10);
 
-        console.log(this._itemsMap.size);
+        // console.log(this._itemsMap.size);
 
         console.log(maxVisibleItems);
         // if (isVisible) {
