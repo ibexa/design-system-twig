@@ -1,0 +1,52 @@
+{% set ghost_tag = type is defined and 'ghost' in type %}
+{% set tag_classes =
+    html_cva(
+        base: html_classes(
+            'ids-tag',
+            {
+                'ids-tag--dark': isDark,
+            },
+        ),
+        variants: {
+            type: {
+                primary: 'ids-tag--primary',
+                success: 'ids-tag--success',
+                info: 'ids-tag--info',
+                warning: 'ids-tag--warning',
+                error: 'ids-tag--error',
+                neutral: 'ids-tag--neutral',
+                'icon-tag': 'ids-tag--icon-tag',
+                'primary-alt': 'ids-tag--primary-alt',
+                'success-ghost': 'ids-tag--success-ghost',
+                'error-ghost': 'ids-tag--error-ghost',
+                'neutral-ghost': 'ids-tag--neutral-ghost',
+            },
+            size: {
+                medium: 'ids-tag--medium',
+                small: 'ids-tag--small',
+            },
+        },
+    )
+%}
+
+<div
+    class="{{
+        tag_classes.apply(
+            {
+                type,
+                size
+            },
+            attributes.render('class')
+        )
+    }}"
+>
+    {% if ghost_tag %}
+        <div class="ids-tag__ghost"></div>
+    {% endif %}
+    {% if icon %}
+        <div class="ids-tag__icon">
+            <twig:ibexa:icon name="{{ icon }}" size="small" />
+        </div>
+    {% endif %}
+    {{ block('content') }}
+</div>
