@@ -1,5 +1,6 @@
-{% set content_block = block('content') is defined ? block('content')|trim : '' %}
-{% set icon_only = content_block == '' and icon is not empty %}
+{% set _content %}{% block content %}{% endblock %}{% endset %}
+{% set has_content = _content|striptags|trim is not empty %}
+{% set icon_only = (not has_content) and icon is not empty %}
 {% set button_classes =
     html_cva(
         base: html_classes(
@@ -50,7 +51,7 @@
         {% endblock icon_outer %}
         {% if not icon_only %}
             <div class="ids-btn__label">
-                {{ content_block|raw }}
+                {{ _content|raw }}
             </div>
         {% endif %}
     {% endblock button_inner %}
