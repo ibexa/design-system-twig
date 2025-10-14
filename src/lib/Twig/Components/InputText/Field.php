@@ -29,6 +29,8 @@ final class Field extends AbstractField
 
     public string $type = 'input-text';
 
+    public string $value = '';
+
     /**
      * @return AttrMap
      */
@@ -63,5 +65,7 @@ final class Field extends AbstractField
         });
         $resolver->setRequired(['name']);
         $resolver->setAllowedTypes('id', ['null', 'string']);
+        $resolver->setDefaults(['value' => '']);
+        $resolver->setAllowedTypes('value', 'string');
     }
 }

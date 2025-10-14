@@ -26,8 +26,14 @@ final class ListField extends AbstractField
 {
     use ListFieldTrait;
 
+    /** @var array<string|int> */
     public array $value = [];
 
+    /**
+     * @param CheckboxItem $item
+     *
+     * @return CheckboxItem
+     */
     protected function modifyListItem(array $item): array
     {
         $item['checked'] = in_array($item['value'], $this->value, true);
