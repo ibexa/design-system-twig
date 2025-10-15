@@ -10,6 +10,7 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 #[AsTwigComponent('ibexa:tag')]
@@ -19,9 +20,12 @@ final class Tag
 
     public string $type = 'primary';
 
+    public bool $isDark = false;
+
     public string $icon = '';
 
-    public string $isDark = '';
+    /** @var string[] */
+    private static array $ghostTypes = ['success-ghost', 'error-ghost', 'neutral-ghost'];
 
     /**
      * @param array<string, mixed> $props
@@ -39,15 +43,21 @@ final class Tag
             ->default('medium');
         $resolver
             ->define('type')
-            ->allowedValues('primary', 'primary-alt', 'info', 'success', 'warning', 'error', 'neutral', 'icon-tag', 'success-ghost', 'error-ghost', 'neutral-ghost')
-            ->default('primary');
+            ->allowedValues('primary', 'primary-alt', 'info', 'success', 'warning', 'error', 'neutral', 'icon-tag', ...self::$ghostTypes);
         $resolver
             ->define('icon')
             ->allowedTypes('string');
         $resolver
             ->define('isDark')
-            ->allowedTypes('bool');
+            ->allowedTypes('bool')
+            ->default(false);
 
         return $resolver->resolve($props) + $props;
+    }
+
+    #[ExposeInTemplate('is_ghost_type')]
+    public function isGhostType() : bool
+    {
+        return in_array($this->type, self::$ghostTypes);
     }
 }

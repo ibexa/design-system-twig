@@ -1,4 +1,3 @@
-{% set ghost_tag = type is defined and 'ghost' in type %}
 {% set tag_classes =
     html_cva(
         base: html_classes(
@@ -40,7 +39,7 @@
         )
     }}"
 >
-    {% if ghost_tag %}
+    {% if is_ghost_type %}
         <div class="ids-tag__ghost-dot"></div>
     {% endif %}
     {% if icon %}
