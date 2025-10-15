@@ -12,11 +12,20 @@ use Ibexa\DesignSystemTwig\Twig\Components\AbstractDropdown;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 #[AsTwigComponent('ibexa:dropdown_single:input')]
 final class Input extends AbstractDropdown
 {
     public ?string $value = '';
+
+    #[PostMount]
+    public function postMount(): void
+    {
+        if (empty($this->value)) {
+            $this->value = $this->items[0]['id'] ?? '';
+        }
+    }
 
     #[ExposeInTemplate('selected_label')]
     public function getSelectedLabel(): string

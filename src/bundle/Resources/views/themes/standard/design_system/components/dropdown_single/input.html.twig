@@ -13,26 +13,3 @@
 {% block selected_items %}
     {{ selected_label }}
 {% endblock selected_items %}
-
-{% block items %}
-    {% for item in items %}
-        {% set item_classes =
-            html_classes(
-                (BASE_DROPDOWN_CLASS.ITEM),
-                {
-                    (BASE_DROPDOWN_CLASS.ITEM ~ '--selected'): item.id == value,
-                },
-            ) %}
-
-        <li
-            class="{{ item_classes }}"
-            key="{{ item.id }}"
-            data-id="{{ item.id }}"
-            data-label="{{ item.label }}"
-            role="button"
-            tabIndex="0"
-        >
-            {{ item.label }}
-        </li>
-    {% endfor %}
-{% endblock items %}

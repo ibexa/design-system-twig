@@ -52,10 +52,12 @@
                 data-ids-custom-init="true"
             />
         </div>
-        <ul class="ids-dropdown__items" data-max-visible-items="{{ max_visible_items }}">
+        <ul class="ids-dropdown__items" style="--max-visible-items: {{ max_visible_items }}">
             {% for item in items %}
                 {% set item_content %}
-                    {{ block('item_content') is defined ? block('item_content') : item.label }}
+                    {% with { item } %}
+                        {{ block('item_content') is defined ? block('item_content') : item.label }}
+                    {% endwith %}
                 {% endset %}
 
                 {{ _self.item_wrapper(item_content, item.id == value, item.id, item.label) }}
@@ -66,7 +68,10 @@
         {% set item_content %}
             {{ block('item_content') is defined ? block('item_content') : '' }}
         {% endset %}
-        {{ _self.item_wrapper(item_content) }}
+
+        <template class="ids-dropdown__template" data-id="item">
+            {{ _self.item_wrapper(item_content) }}
+        </template>
     {% endblock templates %}
 </div>
 
