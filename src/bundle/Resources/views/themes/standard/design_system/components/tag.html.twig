@@ -47,5 +47,7 @@
             <twig:ibexa:icon name="{{ icon }}" size="small" />
         </div>
     {% endif %}
-    {{ block('content') }}
+    <div className="ids-tag__content">
+        {{ block('content') }}
+    </div>
 </div>
