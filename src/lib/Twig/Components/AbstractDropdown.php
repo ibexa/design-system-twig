@@ -25,7 +25,7 @@ abstract class AbstractDropdown
     public string $placeholder;
 
     #[ExposeInTemplate('max_visible_items')]
-    public int $maxVisibleItems = 30;
+    public int $maxVisibleItems = 10;
 
     /**
      * @param array<string, mixed> $props
@@ -57,7 +57,7 @@ abstract class AbstractDropdown
         $resolver
             ->define('maxVisibleItems')
             ->allowedTypes('int')
-            ->default(30);
+            ->default(10);
 
         $this->configurePropsResolver($resolver);
 
