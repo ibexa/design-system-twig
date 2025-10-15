@@ -56,7 +56,7 @@ final class Tag
     }
 
     #[ExposeInTemplate('is_ghost_type')]
-    public function isGhostType() : bool
+    public function isGhostType(): bool
     {
         return in_array($this->type, self::$ghostTypes);
     }
