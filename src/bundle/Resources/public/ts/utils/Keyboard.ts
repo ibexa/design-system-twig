@@ -16,7 +16,7 @@ export class Keyboard {
         keys.forEach((key) => {
             const listenerKey = this.getKey(key, listenerElement);
             const handleKeyDown = (event: Event) => {
-                if (event instanceof KeyboardEvent && key.includes(event.key)) {
+                if (event instanceof KeyboardEvent && event.key === key) {
                     callback(event);
                 }
             };
