@@ -326,8 +326,7 @@ export abstract class BaseDropdown extends Base {
         });
     }
 
-    /* eslint-disable-next-line max-lines-per-function */
-    protected initKeyboard() {
+    protected initKeyboardWidgetOpenEvent() {
         this._keyboard.bindKey(
             ['Enter', ' '],
             (event) => {
@@ -336,7 +335,9 @@ export abstract class BaseDropdown extends Base {
             },
             this._widgetNode,
         );
+    }
 
+    protected initKeyboardDropdownSelectEvent() {
         this._keyboard.bindKey(
             ['Enter', ' '],
             (event) => {
@@ -349,7 +350,9 @@ export abstract class BaseDropdown extends Base {
             },
             this._itemsContainerNode,
         );
+    }
 
+    protected initKeyboardDropdownCloseEvent() {
         this._keyboard.bindKey(
             ['Escape'],
             (event) => {
@@ -361,7 +364,9 @@ export abstract class BaseDropdown extends Base {
             },
             this._itemsContainerNode,
         );
+    }
 
+    protected initKeyboardDropdownMoveEvents() {
         this._keyboard.bindKey(
             ['ArrowDown'],
             (event) => {
@@ -395,6 +400,13 @@ export abstract class BaseDropdown extends Base {
             },
             this._itemsContainerNode,
         );
+    }
+
+    protected initKeyboard() {
+        this.initKeyboardWidgetOpenEvent();
+        this.initKeyboardDropdownSelectEvent();
+        this.initKeyboardDropdownCloseEvent();
+        this.initKeyboardDropdownMoveEvents();
     }
 
     public init() {
