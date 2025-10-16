@@ -53,19 +53,19 @@ final class Expander
             ->required()
             ->allowedValues('caret', 'chevron');
         $resolver
-            ->define('is_expanded')
+            ->define('isExpanded')
             ->allowedTypes('bool')
             ->default(false);
         $resolver
-            ->define('expand_label')
+            ->define('expandLabel')
             ->allowedTypes('string')
             ->default('');
         $resolver
-            ->define('collapse_label')
+            ->define('collapseLabel')
             ->allowedTypes('string')
             ->default('');
         $resolver
-            ->define('has_icon')
+            ->define('hasIcon')
             ->allowedTypes('bool')
             ->default(true);
 
