@@ -275,6 +275,47 @@ export abstract class BaseDropdown extends Base {
         });
     }
 
+    protected getRecalculateHeightModifier() {
+        return {
+            enabled: true,
+            fn: ({ state }: ModifierArguments<Options>) => {
+                const isHidden = state.elements.popper.hasAttribute('hidden');
+
+                if (isHidden) {
+                    return;
+                }
+
+                const nextHeight = this.calculateItemsNodeHeight();
+
+                this._itemsNode.style.height = `${nextHeight.toString()}px`;
+            },
+            name: 'recalculateHeight',
+            phase: 'write' as const,
+        };
+    }
+
+    protected getHideOutsideViewportModifier() {
+        return {
+            enabled: true,
+            fn: ({ state }: ModifierArguments<Options>) => {
+                const isHidden = state.elements.popper.hasAttribute('hidden');
+
+                if (isHidden) {
+                    return;
+                }
+
+                const { top: referenceTop, bottom: referenceBottom } = this._widgetNode.getBoundingClientRect();
+                const { innerHeight: windowHeight } = window;
+
+                if (referenceBottom < 0 || referenceTop > windowHeight) {
+                    this.toggleItemsContainer(false);
+                }
+            },
+            name: 'hideOutsideViewport',
+            phase: 'main' as const,
+        };
+    }
+
     protected initItemsContainer() {
         const popperConfig = {
             modifiers: [
@@ -284,22 +325,8 @@ export abstract class BaseDropdown extends Base {
                         offset: [0, POPPER_OFFSET],
                     },
                 },
-                {
-                    enabled: true,
-                    fn: ({ state }: ModifierArguments<Options>) => {
-                        const isHidden = state.elements.popper.hasAttribute('hidden');
-
-                        if (isHidden) {
-                            return;
-                        }
-
-                        const nextHeight = this.calculateItemsNodeHeight();
-
-                        this._itemsNode.style.height = `${nextHeight.toString()}px`;
-                    },
-                    name: 'recalculateHeight',
-                    phase: 'write' as const,
-                },
+                this.getRecalculateHeightModifier(),
+                this.getHideOutsideViewportModifier(),
             ],
             placement: 'bottom-start' as const,
             strategy: 'fixed' as const,
