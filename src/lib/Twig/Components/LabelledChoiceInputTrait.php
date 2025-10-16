@@ -57,9 +57,7 @@ trait LabelledChoiceInputTrait
             'disabled' => $this->disabled,
             'error' => $this->error,
             'required' => $this->required,
-            'value' => $this->getValue(),
+            'value' => $this->value,
         ];
     }
-
-    abstract protected function getValue(): ?string;
 }

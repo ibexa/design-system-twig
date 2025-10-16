@@ -29,7 +29,7 @@ abstract class AbstractChoiceInput
 
     public string $size = 'medium';
 
-    protected ?string $value = null;
+    public ?string $value = null;
 
     /**
      * @param array<string, mixed> $props
@@ -77,12 +77,6 @@ abstract class AbstractChoiceInput
         $this->configurePropsResolver($resolver);
 
         return $resolver->resolve($props) + $props;
-    }
-
-    #[ExposeInTemplate('value')]
-    protected function getValue(): ?string
-    {
-        return null;
     }
 
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;

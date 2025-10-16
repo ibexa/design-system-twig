@@ -38,7 +38,6 @@ final class FieldTest extends KernelTestCase
 
         $wrapper = $this->getWrapper($crawler);
         $class = $this->getClassAttr($wrapper);
-        self::assertSame('foo', $wrapper->attr('value'), 'Wrapper "value" should be passed through.');
         self::assertStringContainsString('ids-radio-button-field', $class, 'Wrapper should have "ids-radio-button-field" class.');
         self::assertStringContainsString('My label', $this->getText($wrapper), 'Wrapper should render provided label content.');
 
