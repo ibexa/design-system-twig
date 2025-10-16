@@ -27,7 +27,6 @@ final class ExpanderTest extends KernelTestCase
                 'expandLabel' => 'Show',
                 'collapseLabel' => 'Hide',
                 'hasIcon' => true,
-                'message' => 'Toggle section',
             ]
         );
 
@@ -50,7 +49,6 @@ final class ExpanderTest extends KernelTestCase
                 'expandLabel' => 'Show',
                 'collapseLabel' => 'Hide',
                 'hasIcon' => true,
-                'message' => 'Click to hide section',
             ]
         );
 
@@ -86,7 +84,6 @@ final class ExpanderTest extends KernelTestCase
                 'expandLabel' => 'Show',
                 'collapseLabel' => 'Hide',
                 'hasIcon' => true,
-                'message' => 'Click to expand',
             ]
         );
 
@@ -110,7 +107,6 @@ final class ExpanderTest extends KernelTestCase
                 'expandLabel' => 'More',
                 'collapseLabel' => 'Less',
                 'hasIcon' => true,
-                'message' => 'Toggle more info',
             ]
         );
 
@@ -133,7 +129,6 @@ final class ExpanderTest extends KernelTestCase
                 'expandLabel' => 'Show',
                 'collapseLabel' => 'Hide',
                 'hasIcon' => false,
-                'message' => 'Just text',
             ]
         );
 
@@ -155,7 +150,6 @@ final class ExpanderTest extends KernelTestCase
                 'expandLabel' => 'Open more',
                 'collapseLabel' => 'Close',
                 'hasIcon' => true,
-                'message' => 'open-close',
             ]
         );
 
@@ -174,10 +168,7 @@ final class ExpanderTest extends KernelTestCase
                 'expandLabel' => 'Show',
                 'collapseLabel' => 'Hide',
                 'hasIcon' => false,
-                'message' => 'msg',
-                'attributes' => [
-                    'class' => 'u-mt-2 custom-hook',
-                ],
+                'class' => 'u-mt-2 custom-hook',
             ]
         );
 
