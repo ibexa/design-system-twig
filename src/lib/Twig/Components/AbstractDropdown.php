@@ -12,6 +12,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
+/**
+ * @phpstan-type DropdownItem array{
+ *     id: string,
+ *     label: string
+ * }
+ */
 abstract class AbstractDropdown
 {
     public string $name;
@@ -20,6 +26,7 @@ abstract class AbstractDropdown
 
     public bool $error = false;
 
+    /** @var array<DropdownItem> */
     public array $items = [];
 
     public string $placeholder;
