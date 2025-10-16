@@ -39,7 +39,7 @@ final class Input extends AbstractDropdown
     }
 
     #[ExposeInTemplate('is_empty')]
-    public function isEmpty() : bool
+    public function isEmpty(): bool
     {
         return $this->value === '';
     }
