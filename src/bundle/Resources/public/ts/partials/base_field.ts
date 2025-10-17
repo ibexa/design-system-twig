@@ -1,8 +1,8 @@
 import { Base } from './base';
 import { HelperText } from '../components/helper_text';
+import { Label } from '../components/label';
 
 import ValidatorManager from '../validators/ValidatorManager';
-import { Label } from '../components/label';
 
 export abstract class BaseField<T> extends Base {
     protected _labelInstance: Label | null = null;
