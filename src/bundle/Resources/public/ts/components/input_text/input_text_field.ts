@@ -1,7 +1,7 @@
 import { Base } from '../../partials';
 import { HelperText } from '../helper_text';
 import { InputTextInput } from './input_text_input';
-import { Label } from '../Label';
+import { Label } from '../label';
 
 import IsEmptyStringValidator from '@ids-core/validators/IsEmptyStringValidator';
 import type { TranslatorType } from '@ids-core/types/translator';

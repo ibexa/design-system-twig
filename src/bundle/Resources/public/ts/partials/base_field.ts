@@ -1,6 +1,6 @@
 import { Base } from './base';
 import { HelperText } from '../components/helper_text';
-import { Label } from '../components/Label';
+import { Label } from '../components/label';
 
 import ValidatorManager from '../validators/ValidatorManager';
 
