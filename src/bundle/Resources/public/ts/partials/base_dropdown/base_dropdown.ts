@@ -169,7 +169,7 @@ export abstract class BaseDropdown extends Base {
             const item = this.getItemFromNode(itemNode);
 
             if (item) {
-                this._itemsMap.set(String(item.id), item);
+                this._itemsMap.set(item.id, item);
             }
         });
     }
@@ -178,7 +178,7 @@ export abstract class BaseDropdown extends Base {
         this._itemsMap.clear();
 
         items.forEach((item) => {
-            this._itemsMap.set(String(item.id), item);
+            this._itemsMap.set(item.id, item);
         });
     }
 
@@ -251,7 +251,7 @@ export abstract class BaseDropdown extends Base {
 
             const nextHeight = this.calculateItemsNodeHeight();
 
-            this._itemsNode.style.height = `${nextHeight.toString()}px`;
+            this._itemsNode.style.height = `${nextHeight}px`;
             this._itemsContainerNode.style.removeProperty('visibility');
             searchInput.focus();
             document.addEventListener('click', this.clickOutsideItemsContainerHandler);
@@ -287,7 +287,7 @@ export abstract class BaseDropdown extends Base {
 
                 const nextHeight = this.calculateItemsNodeHeight();
 
-                this._itemsNode.style.height = `${nextHeight.toString()}px`;
+                this._itemsNode.style.height = `${nextHeight}px`;
             },
             name: 'recalculateHeight',
             phase: 'write' as const,

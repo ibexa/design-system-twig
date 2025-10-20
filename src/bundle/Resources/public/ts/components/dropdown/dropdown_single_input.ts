@@ -76,9 +76,7 @@ export class DropdownSingleInput extends BaseDropdown {
         }
     }
 
-    public setValue(rawValue: string) {
-        const value = String(rawValue);
-
+    public setValue(value: string) {
         if (this._value === value) {
             return;
         }
