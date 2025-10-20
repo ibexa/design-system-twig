@@ -54,11 +54,19 @@ final class OverflowList
     #[ExposeInTemplate('item_template_props')]
     public function getItemTemplateProps(): array
     {
+        $itemPropsNames = array_keys($this->items[0]);
+
         $itemPropsPatterns = array_map(
-            fn (string $name): string => '{{ ' . $name . ' }}',
+            static fn (string $name): string => '{{ ' . $name . ' }}',
             $this->itemTemplateProps
         );
 
-        return array_combine($this->itemTemplateProps, $itemPropsPatterns);
+        $props = array_combine($itemPropsNames, $itemPropsPatterns);
+
+        if (empty($props)) {
+            return [];
+        }
+
+        return $props;
     }
 }
