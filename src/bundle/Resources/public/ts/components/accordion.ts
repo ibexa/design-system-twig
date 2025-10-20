@@ -42,7 +42,7 @@ export class Accordion extends Base {
 
         const initialHeight = isExpanded ? 0 : this._contentElement.offsetHeight;
 
-        this._contentElement.style.height = `${initialHeight.toString()}px`;
+        this._contentElement.style.height = `${initialHeight}px`;
 
         reflow(this._contentElement);
 
@@ -62,7 +62,7 @@ export class Accordion extends Base {
 
         const finalHeight = isExpanded ? this._contentElement.scrollHeight : 0;
 
-        this._contentElement.style.height = `${finalHeight.toString()}px`;
+        this._contentElement.style.height = `${finalHeight}px`;
     }
 
     onToggleClick(isExpanded: boolean) {

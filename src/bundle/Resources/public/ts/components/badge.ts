@@ -58,7 +58,7 @@ export default class Badge extends Base {
     }
 
     getValueRestrictedByMaxValue(): string {
-        return this._value > this._maxBadgeValue ? `${this._maxBadgeValue.toString()}+` : this._value.toString();
+        return this._value > this._maxBadgeValue ? `${this._maxBadgeValue}+` : this._value.toString();
     }
 
     getValue(): number | null {
