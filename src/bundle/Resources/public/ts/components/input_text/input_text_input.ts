@@ -36,7 +36,7 @@ export class InputTextInput extends Base {
     private _updateInputPadding() {
         const actionsWidth = this._actionsElement.offsetWidth;
 
-        this._inputElement.style.paddingRight = `${actionsWidth.toString()}px`;
+        this._inputElement.style.paddingRight = `${actionsWidth}px`;
     }
 
     changeValue(value: string) {
