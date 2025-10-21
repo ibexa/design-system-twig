@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
+  <file source-language="en" target-language="en" datatype="plaintext" original="not.available">
+    <header>
+      <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
+      <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
+    </header>
+    <body>
+      <trans-unit id="61c7070a29f932eb0b1a343509d049aa52c92c09" resname="ibexa.clear-btn.label">
+        <source>Clear</source>
+        <target state="new">Clear</target>
+        <note>key: ibexa.clear-btn.label</note>
+      </trans-unit>
+      <trans-unit id="6c89c5a149a0c096f007f1774344ec53cd18bb20" resname="ibexa.expander.label.collapse">
+        <source>Hide</source>
+        <target state="new">Hide</target>
+        <note>key: ibexa.expander.label.collapse</note>
+      </trans-unit>
+      <trans-unit id="27f50d9dad7b783bd2a0db1d75acf7ef32824ab5" resname="ibexa.expander.label.expand">
+        <source>Show</source>
+        <target state="new">Show</target>
+        <note>key: ibexa.expander.label.expand</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
