@@ -16,25 +16,36 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
  *     value: string|int,
  *     label: string,
  * }
+ * @phpstan-type ListItems list<ListItem>
  */
 trait ListFieldTrait
 {
+    public const string VERTICAL = 'vertical';
+    public const string HORIZONTAL = 'horizontal';
+
     public string $direction = 'vertical';
 
-    /** @var ListItem[] */
+    /** @var ListItems */
     #[ExposeInTemplate(name: 'items', getter: 'getItems')]
     public array $items = [];
 
-    /** @return ListItem[] */
+    /**
+     * @return ListItems
+     */
     public function getItems(): array
     {
-        return array_map(function ($item) {
+        return array_map(function (array $item) {
             $listItem = $item + ['name' => $this->name, 'required' => $this->required];
 
             return $this->modifyListItem($listItem);
         }, $this->items);
     }
 
+    /**
+     * @param ListItem $item
+     *
+     * @return ListItem
+     */
     protected function modifyListItem(array $item): array
     {
         return $item;
@@ -49,7 +60,7 @@ trait ListFieldTrait
 
         $resolver
             ->define('direction')
-            ->allowedValues('vertical', 'horizontal')
-            ->default('vertical');
+            ->allowedValues(self::VERTICAL, self::HORIZONTAL)
+            ->default(self::VERTICAL);
     }
 }
