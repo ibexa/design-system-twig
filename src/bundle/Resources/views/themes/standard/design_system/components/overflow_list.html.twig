@@ -1,12 +1,13 @@
 {% set overflow_list_classes = html_classes('ids-overflow-list', attributes.render('class') ?? '') %}
 
 <div class="{{ overflow_list_classes }}">
-    {% for item in items %}
-        {{ block('item') }}
-    {% endfor %}
+    <div class="ids-overflow-list__items">
+        {% for item in items %}
+            {{ block('item') }}
+        {% endfor %}
 
-    {{ block('more_item') }}
-
+        {{ block('more_item') }}
+    </div>
     <template class="ids-overflow-list__template" data-id="item">
         {% with { item: item_template_props } %}
             {{ block('item') }}
