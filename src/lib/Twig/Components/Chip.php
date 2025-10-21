@@ -20,6 +20,7 @@ final class Chip
     public bool $isClosable = true;
 
     public bool $disabled = true;
+
     /**
      * @param array<string, mixed> $props
      *
