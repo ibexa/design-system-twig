@@ -46,7 +46,6 @@ final class ListField extends AbstractField
         $this->validateListFieldProps($resolver);
 
         // TODO: check if items are valid according to Checkbox/Field component
-
         $resolver->setDefaults(['value' => []]);
         $resolver->setAllowedTypes('value', 'array');
     }

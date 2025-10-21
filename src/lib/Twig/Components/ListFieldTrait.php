@@ -34,7 +34,7 @@ trait ListFieldTrait
      */
     public function getItems(): array
     {
-        return array_map(function (array $item) {
+        return array_map(function (array $item): array {
             $listItem = $item + ['name' => $this->name, 'required' => $this->required];
 
             return $this->modifyListItem($listItem);
