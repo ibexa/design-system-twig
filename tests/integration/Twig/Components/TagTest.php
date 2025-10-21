@@ -131,7 +131,11 @@ final class TagTest extends KernelTestCase
 
         $wrapper = $this->getWrapper($crawler);
 
-        self::assertStringContainsString('extra-class', $this->getClassAttr($wrapper), 'Custom class should be merged into wrapper class attribute.');
+        self::assertStringContainsString(
+            'extra-class',
+            $this->getClassAttr($wrapper),
+            'Custom class should be merged into wrapper class attribute.'
+        );
     }
 
     public function testInvalidSizeValueCausesResolverErrorOnMount(): void
