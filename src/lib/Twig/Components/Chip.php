@@ -10,6 +10,7 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 #[AsTwigComponent('ibexa:chip')]
@@ -17,9 +18,10 @@ final class Chip
 {
     public bool $error = false;
 
-    public bool $isClosable = true;
+    #[ExposeInTemplate('is_closable')]
+    public bool $is_closable = true;
 
-    public bool $disabled = true;
+    public bool $disabled = false;
 
     /**
      * @param array<string, mixed> $props

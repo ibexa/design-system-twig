@@ -1,3 +1,5 @@
+{% trans_default_domain 'ibexa_design_system_twig' %}
+
 {% set chip_classes =
     html_classes(
         'ids-chip',
@@ -8,19 +10,20 @@
         attributes.render('class') ?? ''
     )
 %}
+{% set close_msg = 'ibexa.chip.close-btn.label'|trans|desc('Remove') %}
 
-<div tabIndex={{ disabled ? -1 : 0 }} class="{{ chip_classes }}" {{ attributes }}>
+<div tabIndex={{ disabled ? -1 : 0 }} class="{{ chip_classes }}" aria-disabled="{{ disabled ? 'true' : 'false' }}" {{ attributes }}>
     <div class="ids-chip__content">
         {{ block('content') }}
     </div>
-    {% if isClosable %}
+    {% if is_closable %}
         <twig:ibexa:button
             type="tertiary-alt"
             size="small"
             icon="discard"
             class="ids-chip__close ids-chip-clear-btn"
             disabled="{{ disabled }}"
-            aria-label="Remove"
+            aria-label="close_msg"
         />
     {% endif %}
 </div>
