@@ -12,8 +12,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent('ibexa:ui:clear_btn')]
-final class ClearBtn
+#[AsTwigComponent('ibexa:ui:clear_button')]
+final class ClearButton
 {
     public bool $disabled = false;
 
