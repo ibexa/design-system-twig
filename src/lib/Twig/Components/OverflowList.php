@@ -22,6 +22,11 @@ final class OverflowList
     public array $items = [];
 
     /**
+     * @var array<string>
+     */
+    public array $itemTemplateProps = [];
+
+    /**
      * @param array<string, mixed> $props
      *
      * @return array<string, mixed>
@@ -35,19 +40,25 @@ final class OverflowList
             ->define('items')
             ->allowedTypes('array')
             ->default([]);
+        $resolver
+            ->define('itemTemplateProps')
+            ->allowedTypes('array')
+            ->default([]);
 
         return $resolver->resolve($props) + $props;
     }
 
+    /**
+     * @return array<string, string>
+     */
     #[ExposeInTemplate('item_template_props')]
     public function getItemTemplateProps(): array
     {
-        $item_props_names = array_keys($this->items[0]);
-        $item_props_patterns = array_map(
+        $itemPropsPatterns = array_map(
             fn (string $name): string => '{{ ' . $name . ' }}',
-            $item_props_names
+            $this->itemTemplateProps
         );
 
-        return array_combine($item_props_names, $item_props_patterns) ?? [];
+        return array_combine($this->itemTemplateProps, $itemPropsPatterns);
     }
 }
