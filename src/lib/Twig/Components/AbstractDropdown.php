@@ -104,7 +104,7 @@ abstract class AbstractDropdown
     public function getItemTemplateProps(): array
     {
         $itemPropsPatterns = array_map(
-            fn (string $name): string => '{{ ' . $name . ' }}',
+            static fn (string $name): string => '{{ ' . $name . ' }}',
             $this->itemTemplateProps
         );
 

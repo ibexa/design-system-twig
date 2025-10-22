@@ -12,7 +12,6 @@ use Ibexa\DesignSystemTwig\Twig\Components\AbstractDropdown;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
-use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 #[AsTwigComponent('ibexa:dropdown_multi:input')]
 final class Input extends AbstractDropdown
@@ -20,10 +19,14 @@ final class Input extends AbstractDropdown
     /** @var array<string> */
     public array $value = [];
 
+    /**
+     * @return array<int, array{id: string, label: string}|null>
+     */
     #[ExposeInTemplate('selected_items')]
     public function getSelectedItems(): array
     {
         $items = $this->items;
+
         return array_map(
             static function (string $id) use ($items) {
                 return array_find($items, static function (array $item) use ($id) {
