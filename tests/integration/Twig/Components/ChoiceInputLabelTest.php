@@ -71,6 +71,13 @@ final class ChoiceInputLabelTest extends KernelTestCase
         self::assertSame('custom', $label->attr('data-custom'), 'Custom data attribute should be rendered on the label.');
     }
 
+    public function testEmptyForCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(ChoiceInputLabel::class, ['for' => '', 'content' => 'x']);
+    }
+
     public function testInvalidForTypeCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);
