@@ -24,6 +24,7 @@ export class DropdownSingleInput extends BaseDropdown {
 
         this._itemsMap.forEach((item) => {
             const option = document.createElement('option');
+
             option.value = item.id;
             option.textContent = item.label;
 

@@ -1,5 +1,5 @@
 {% set label = is_expanded ? collapse_label : expand_label %}
-{% set has_label = label != '' %}
+{% set has_label = label is not empty %}
 
 {% set button_classes =
     html_classes(
