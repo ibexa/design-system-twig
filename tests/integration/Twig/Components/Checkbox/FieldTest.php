@@ -101,6 +101,15 @@ final class FieldTest extends KernelTestCase
         ]));
     }
 
+    public function testEmptyNameCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Field::class, $this->baseProps([
+            'name' => '',
+        ]));
+    }
+
     public function testEmptyIdCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);

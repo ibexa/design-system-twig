@@ -104,6 +104,17 @@ final class InputTest extends KernelTestCase
         ]);
     }
 
+    public function testEmptyNameCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, [
+            'id' => 'agree',
+            'name' => '',
+            'value' => 'yes',
+        ]);
+    }
+
     public function testMissingRequiredOptionsCauseResolverErrorOnMount(): void
     {
         $this->expectException(MissingOptionsException::class);

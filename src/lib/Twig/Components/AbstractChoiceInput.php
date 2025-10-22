@@ -44,7 +44,10 @@ abstract class AbstractChoiceInput
         $resolver
             ->define('name')
             ->required()
-            ->allowedTypes('string');
+            ->allowedTypes('string')
+            ->allowedValues(static function (string $value): bool {
+                return trim($value) !== '';
+            });
         $resolver
             ->define('checked')
             ->allowedTypes('bool')
