@@ -17,19 +17,20 @@ export default class Chip extends Base {
 
     private handleDelete(event: MouseEvent): void {
         event.stopPropagation();
+
         if (this.onDelete) {
             this.onDelete(event);
         }
     }
 
-    private initDeleteButton(deleteButton: HTMLButtonElement): void {
-        deleteButton.addEventListener('click', this.handleDelete.bind(this));
+    private initDeleteButton(): void {
+        if (this.deleteButton) {
+            this.deleteButton.addEventListener('click', this.handleDelete.bind(this));
+        }
     }
 
     public init(): void {
-        if (this.deleteButton) {
-            this.initDeleteButton(this.deleteButton);
-        }
         super.init();
+        this.initDeleteButton();
     }
 }
