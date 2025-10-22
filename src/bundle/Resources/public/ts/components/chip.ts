@@ -1,34 +1,34 @@
 import { Base } from '../partials';
 
 interface ChipConfig {
-    onClose?: (event: Event) => void;
+    onDelete?: (event: Event) => void;
 }
 
 export default class Chip extends Base {
-    private closeButton: HTMLButtonElement | null;
-    private onClose?: (event: Event) => void;
+    private deleteButton: HTMLButtonElement | null;
+    private onDelete?: (event: Event) => void;
 
     constructor(container: HTMLDivElement, config: ChipConfig = {}) {
         super(container);
 
-        this.closeButton = this._container.querySelector('.ids-chip__close');
-        this.onClose = config.onClose;
+        this.deleteButton = this._container.querySelector('.ids-chip__delete');
+        this.onDelete = config.onDelete;
     }
 
-    private handleClose(event: MouseEvent): void {
+    private handleDelete(event: MouseEvent): void {
         event.stopPropagation();
-        if (this.onClose) {
-            this.onClose(event);
+        if (this.onDelete) {
+            this.onDelete(event);
         }
     }
 
-    private initCloseButton(closeButton: HTMLButtonElement): void {
-        closeButton.addEventListener('click', this.handleClose.bind(this));
+    private initDeleteButton(deleteButton: HTMLButtonElement): void {
+        deleteButton.addEventListener('click', this.handleDelete.bind(this));
     }
 
     public init(): void {
-        if (this.closeButton) {
-            this.initCloseButton(this.closeButton);
+        if (this.deleteButton) {
+            this.initDeleteButton(this.deleteButton);
         }
         super.init();
     }

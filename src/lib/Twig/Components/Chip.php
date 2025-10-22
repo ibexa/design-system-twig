@@ -18,8 +18,8 @@ final class Chip
 {
     public bool $error = false;
 
-    #[ExposeInTemplate('is_closable')]
-    public bool $is_closable = true;
+    #[ExposeInTemplate('is_deletable')]
+    public bool $isDeletable = true;
 
     public bool $disabled = false;
 
@@ -38,7 +38,7 @@ final class Chip
             ->allowedTypes('bool')
             ->default(false);
         $resolver
-            ->define('isClosable')
+            ->define('isDeletable')
             ->allowedTypes('bool')
             ->default(true);
         $resolver
