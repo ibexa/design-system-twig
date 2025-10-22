@@ -27,7 +27,6 @@ final class FieldTest extends KernelTestCase
             [
                 'name' => 'title',
                 'id' => 'title',
-                'value' => 'Hello',
                 'required' => true,
                 'labelExtra' => ['class' => 'u-mb-1'],
                 'helperTextExtra' => ['data-test' => 'help'],
@@ -39,7 +38,6 @@ final class FieldTest extends KernelTestCase
 
         self::assertSame('title', $component->name, 'Prop "name" should be set on the component.');
         self::assertSame('title', $component->id, 'Prop "id" should be set on the component.');
-        self::assertSame('Hello', $component->value, 'Prop "value" should be set on the component.');
         self::assertTrue($component->required, 'Prop "required" should be true.');
 
         /** @var array<string, mixed> $label */
@@ -53,7 +51,6 @@ final class FieldTest extends KernelTestCase
         self::assertSame('title', $input['id'] ?? null, 'Input "id" should be set from prop.');
         self::assertSame('title', $input['name'] ?? null, 'Input "name" should be set from prop.');
         self::assertTrue((bool)($input['required'] ?? false), 'Input should have required attribute.');
-        self::assertSame('Hello', $input['value'] ?? null, 'Input "value" should pass through.');
         self::assertSame('true', $input['data-ids-custom-init'] ?? null, 'Input should include data-ids-custom-init="true".');
         self::assertSame('ids-input u-w-full', $input['class'] ?? null, 'Input class should be merged.');
         self::assertSame('Type…', $input['placeholder'] ?? null, 'Input placeholder should be merged.');

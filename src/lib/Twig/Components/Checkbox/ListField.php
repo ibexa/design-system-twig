@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\DesignSystemTwig\Twig\Components\RadioButton;
+namespace Ibexa\DesignSystemTwig\Twig\Components\Checkbox;
 
 use Ibexa\DesignSystemTwig\Twig\Components\AbstractField;
 use Ibexa\DesignSystemTwig\Twig\Components\ListFieldTrait;
@@ -14,27 +14,39 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
- * @phpstan-type RadioButtonItem array{
+ * @phpstan-type CheckboxItem array{
  *     value: string|int,
  *     label: string,
  *     disabled?: bool
  * }
- * @phpstan-type RadioButtonItems list<RadioButtonItem>
+ * @phpstan-type CheckboxItems list<CheckboxItem>
  */
-#[AsTwigComponent('ibexa:radio_button:list_field')]
+#[AsTwigComponent('ibexa:checkbox:list_field')]
 final class ListField extends AbstractField
 {
     use ListFieldTrait;
 
-    public string $value = '';
+    /** @var array<string|int> */
+    public array $value = [];
+
+    /**
+     * @param CheckboxItem $item
+     *
+     * @return CheckboxItem
+     */
+    protected function modifyListItem(array $item): array
+    {
+        $item['checked'] = in_array($item['value'], $this->value, true);
+
+        return $item;
+    }
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
         $this->validateListFieldProps($resolver);
 
-        // TODO: check if items are valid according to RadioButton/Field component
-
-        $resolver->setDefaults(['value' => '']);
-        $resolver->setAllowedTypes('value', 'string');
+        // TODO: check if items are valid according to Checkbox/Field component
+        $resolver->setDefaults(['value' => []]);
+        $resolver->setAllowedTypes('value', 'array');
     }
 }
