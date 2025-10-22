@@ -36,7 +36,10 @@ final class ChoiceInputLabel
         $resolver
             ->define('for')
             ->required()
-            ->allowedTypes('string');
+            ->allowedTypes('string')
+            ->allowedValues(static function (string $value): bool {
+                return trim($value) !== '';
+            });
 
         return $resolver->resolve($props) + $props;
     }
