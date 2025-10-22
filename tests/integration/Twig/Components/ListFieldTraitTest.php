@@ -57,6 +57,39 @@ final class ListFieldTraitTest extends TestCase
         );
     }
 
+    public function testItemMissingValueCausesResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->getComponent()->resolve([
+            'items' => [
+                ['label' => 'Alpha'],
+            ],
+        ]);
+    }
+
+    public function testItemMissingLabelCausesResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->getComponent()->resolve([
+            'items' => [
+                ['value' => 'A'],
+            ],
+        ]);
+    }
+
+    public function testItemWithInvalidTypesCausesResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->getComponent()->resolve([
+            'items' => [
+                ['label' => 123, 'value' => new \stdClass()],
+            ],
+        ]);
+    }
+
     public function testInvalidItemsTypeCausesResolverError(): void
     {
         $this->expectException(InvalidOptionsException::class);
