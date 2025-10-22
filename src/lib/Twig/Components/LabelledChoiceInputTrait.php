@@ -26,7 +26,10 @@ trait LabelledChoiceInputTrait
         $resolver
             ->define('id')
             ->required()
-            ->allowedTypes('string');
+            ->allowedTypes('string')
+            ->allowedValues(static function (string $value): bool {
+                return trim($value) !== '';
+            });
         $resolver
             ->define('inputWrapperClassName')
             ->allowedTypes('string')
