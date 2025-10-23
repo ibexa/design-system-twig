@@ -15,7 +15,7 @@ export default class Chip extends Base {
         this.onDelete = config.onDelete;
     }
 
-    private handleDelete(event: MouseEvent): void {
+    protected handleDelete(event: MouseEvent): void {
         event.stopPropagation();
 
         if (this.onDelete) {
@@ -23,7 +23,7 @@ export default class Chip extends Base {
         }
     }
 
-    private initDeleteButton(): void {
+    protected initDeleteButton(): void {
         if (this.deleteButton) {
             this.deleteButton.addEventListener('click', this.handleDelete.bind(this));
         }
