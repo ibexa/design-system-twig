@@ -3,7 +3,7 @@ import { HelperText } from '../helper_text';
 import { InputTextInput } from './input_text_input';
 import { Label } from '../Label';
 
-import IsEmptyStringValidator from '@ids-core/validators/IsEmptyStringValidator';
+import { IsEmptyStringValidator } from '@ids-core/validators/IsEmptyStringValidator';
 import type { TranslatorType } from '@ids-core/types/translator';
 import type { ValidationResult } from '@ids-core/types/validation';
 import ValidatorManager from '../../validators/ValidatorManager';

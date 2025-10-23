@@ -1,4 +1,4 @@
-import BaseValidator from '@ids-core/validators/BaseValidator';
+import { BaseValidator } from '@ids-core/validators/BaseValidator';
 import type { ValidationResult } from '@ids-core/types/validation';
 
 export default class ValidatorManager<T> {
