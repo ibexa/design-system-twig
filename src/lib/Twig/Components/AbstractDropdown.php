@@ -8,7 +8,11 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
+use JMS\TranslationBundle\Annotation\Desc;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
@@ -20,6 +24,8 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
  */
 abstract class AbstractDropdown
 {
+    private const TRANSLATION_DOMAIN = 'ibexa_design_system_twig';
+
     public string $name;
 
     public bool $disabled = false;
@@ -33,6 +39,10 @@ abstract class AbstractDropdown
 
     #[ExposeInTemplate('max_visible_items')]
     public int $maxVisibleItems = 10;
+
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
 
     /**
      * @param array<string, mixed> $props
@@ -55,12 +65,19 @@ abstract class AbstractDropdown
         $resolver
             ->define('items')
             ->allowedTypes('array')
-            ->default([]);
-            // TODO: resolve array structure of objects with 'id' (string/number) and 'label' (string) keys
+            ->default([])
+            ->normalize(self::normalizeItems(...));
         $resolver
             ->define('placeholder')
             ->allowedTypes('string')
-            ->default('Select an item'); // TODO: translation
+            ->default(
+                $this->translator->trans(
+                    /** @Desc("Select an item") */
+                    'ids.dropdown.placeholder',
+                    [],
+                    self::TRANSLATION_DOMAIN
+                )
+            );
         $resolver
             ->define('maxVisibleItems')
             ->allowedTypes('int')
@@ -78,4 +95,38 @@ abstract class AbstractDropdown
     }
 
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
+
+    /**
+     * @param Options<array<string, mixed>> $options
+     * @param array<int, mixed> $items
+     *
+     * @return array<int, DropdownItem>
+     */
+    private static function normalizeItems(Options $options, array $items): array
+    {
+        $itemResolver = new OptionsResolver();
+        $itemResolver
+            ->setRequired(['id', 'label'])
+            ->setAllowedTypes('id', ['int', 'string'])
+            ->setNormalizer('id', static fn (Options $itemOptions, int|string $id): string => (string) $id)
+            ->setAllowedTypes('label', 'string');
+
+        foreach ($items as $index => $item) {
+            if (!\is_array($item)) {
+                throw new InvalidOptionsException(
+                    sprintf(
+                        'Each dropdown item must be an array, "%s" given at index %d.',
+                        get_debug_type($item),
+                        $index
+                    )
+                );
+            }
+
+            $resolvedItem = $itemResolver->resolve($item);
+
+            $items[$index] = $resolvedItem;
+        }
+
+        return $items;
+    }
 }
