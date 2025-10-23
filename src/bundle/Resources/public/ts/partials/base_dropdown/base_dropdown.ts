@@ -43,43 +43,43 @@ export abstract class BaseDropdown extends Base {
     constructor(container: HTMLDivElement) {
         super(container);
 
-        const _togglerNode = this._container.querySelector<HTMLElementIDSInstance<Expander>>('.ids-expander');
-        const _itemsContainerNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__items-container');
-        const _itemsNode = _itemsContainerNode?.querySelector<HTMLUListElement>('.ids-dropdown__items');
-        const _selectionInfoNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__selection-info');
-        const _placeholderNode = _selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__placeholder');
-        const _searchNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__search');
-        const _searchWidgetNode = _searchNode?.querySelector<HTMLDivElement>('.ids-input-text');
-        const _selectionInfoItemsNode = _selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__selection-info-items');
-        const _sourceNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__source');
-        const _widgetNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__widget');
+        const togglerNode = this._container.querySelector<HTMLElementIDSInstance<Expander>>('.ids-expander');
+        const itemsContainerNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__items-container');
+        const itemsNode = itemsContainerNode?.querySelector<HTMLUListElement>('.ids-dropdown__items');
+        const selectionInfoNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__selection-info');
+        const placeholderNode = selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__placeholder');
+        const searchNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__search');
+        const searchWidgetNode = searchNode?.querySelector<HTMLDivElement>('.ids-input-text');
+        const selectionInfoItemsNode = selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__selection-info-items');
+        const sourceNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__source');
+        const widgetNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__widget');
 
         if (
-            !_togglerNode ||
-            !_itemsContainerNode ||
-            !_itemsNode ||
-            !_placeholderNode ||
-            !_searchNode ||
-            !_searchWidgetNode ||
-            !_selectionInfoItemsNode ||
-            !_selectionInfoNode ||
-            !_sourceNode ||
-            !_widgetNode
+            !togglerNode ||
+            !itemsContainerNode ||
+            !itemsNode ||
+            !placeholderNode ||
+            !searchNode ||
+            !searchWidgetNode ||
+            !selectionInfoItemsNode ||
+            !selectionInfoNode ||
+            !sourceNode ||
+            !widgetNode
         ) {
             throw new Error('Dropdown: Required elements are missing in the container.');
         }
 
-        this._expanderInstance = new Expander(_togglerNode);
-        this._searchInstance = new InputTextInput(_searchWidgetNode);
-        this._itemsContainerNode = _itemsContainerNode;
-        this._itemsNode = _itemsNode;
-        this._placeholderNode = _placeholderNode;
-        this._searchNode = _searchNode;
-        this._searchWidgetNode = _searchWidgetNode;
-        this._selectionInfoNode = _selectionInfoNode;
-        this._selectionInfoItemsNode = _selectionInfoItemsNode;
-        this._sourceNode = _sourceNode;
-        this._widgetNode = _widgetNode;
+        this._expanderInstance = new Expander(togglerNode);
+        this._searchInstance = new InputTextInput(searchWidgetNode);
+        this._itemsContainerNode = itemsContainerNode;
+        this._itemsNode = itemsNode;
+        this._placeholderNode = placeholderNode;
+        this._searchNode = searchNode;
+        this._searchWidgetNode = searchWidgetNode;
+        this._selectionInfoNode = selectionInfoNode;
+        this._selectionInfoItemsNode = selectionInfoItemsNode;
+        this._sourceNode = sourceNode;
+        this._widgetNode = widgetNode;
 
         this._templates = {
             item: this._container.querySelector<HTMLTemplateElement>('template.ids-dropdown__template[data-id="item"]') ?? undefined,

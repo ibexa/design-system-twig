@@ -7,13 +7,13 @@ export class DropdownSingleInput extends BaseDropdown {
     constructor(container: HTMLDivElement) {
         super(container);
 
-        const _sourceInputNode = this._sourceNode.querySelector<HTMLSelectElement>('select');
+        const sourceInputNode = this._sourceNode.querySelector<HTMLSelectElement>('select');
 
-        if (!_sourceInputNode) {
+        if (!sourceInputNode) {
             throw new Error('DropdownSingleInput: Required elements are missing in the container.');
         }
 
-        this._sourceInputNode = _sourceInputNode;
+        this._sourceInputNode = sourceInputNode;
         this._value = this._sourceInputNode.value;
 
         this.onItemClick = this.onItemClick.bind(this);
