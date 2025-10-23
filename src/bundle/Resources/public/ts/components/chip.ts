@@ -1,12 +1,12 @@
 import { Base } from '../partials';
 
 interface ChipConfig {
-    onDelete?: (event: Event) => void;
+    onDelete?: (event: MouseEvent) => void;
 }
 
 export default class Chip extends Base {
     private deleteButton: HTMLButtonElement | null;
-    private onDelete?: (event: Event) => void;
+    private onDelete?: (event: MouseEvent) => void;
 
     constructor(container: HTMLDivElement, config: ChipConfig = {}) {
         super(container);
