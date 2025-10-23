@@ -1,12 +1,18 @@
 import { Base } from '../../partials';
 
+export interface AltRadioInputOptions {
+    onTileClick?: (event: MouseEvent, inputId: string) => void;
+}
+
 export class AltRadioInput extends Base {
-    private _inputElement: HTMLInputElement;
-    private _tileElement: HTMLDivElement;
+    private inputElement: HTMLInputElement;
+    private tileElement: HTMLDivElement;
+    private onTileClick?: (event: MouseEvent, inputId: string) => void;
 
-    private _isFocused = false;
+    private isChecked = false;
+    private isFocused = false;
 
-    constructor(container: HTMLDivElement) {
+    constructor(container: HTMLDivElement, { onTileClick }: AltRadioInputOptions = {}) {
         super(container);
 
         const inputElement = this._container.querySelector<HTMLInputElement>('.ids-alt-radio__source .ids-input');
@@ -16,55 +22,67 @@ export class AltRadioInput extends Base {
             throw new Error('AltRadio: Required elements are missing in the container.');
         }
 
-        this._inputElement = inputElement;
-        this._tileElement = tileElement;
+        this.inputElement = inputElement;
+        this.tileElement = tileElement;
+
+        this.onTileClick = onTileClick;
     }
 
     setFocus(nextIsFocused: boolean) {
-        if (this._isFocused === nextIsFocused) {
+        if (this.isFocused === nextIsFocused) {
             return;
         }
 
-        this._isFocused = nextIsFocused;
+        this.isFocused = nextIsFocused;
 
-        this._tileElement.classList.toggle('ids-alt-radio__tile--focused', nextIsFocused);
+        this.tileElement.classList.toggle('ids-alt-radio__tile--focused', nextIsFocused);
 
         if (nextIsFocused) {
-            this._inputElement.focus();
+            this.inputElement.focus();
         } else {
-            this._inputElement.blur();
+            this.inputElement.blur();
         }
     }
 
     setError(value: boolean) {
-        this._tileElement.classList.toggle('ids-alt-radio__tile--error', value);
+        this.tileElement.classList.toggle('ids-alt-radio_tile--error', value);
     }
 
     getInputElement(): HTMLInputElement {
-        return this._inputElement;
+        return this.inputElement;
+    }
+
+    toggleChecked(value?: boolean) {
+        const isChecked = value ?? !this.isChecked;
+
+        this.isChecked = isChecked;
+        this.inputElement.checked = isChecked;
+        this.tileElement.classList.toggle('ids-alt-radio__tile--checked', isChecked);
     }
 
     initInputListeners() {
-        this._inputElement.addEventListener('focus', () => {
+        this.inputElement.addEventListener('focus', () => {
             this.setFocus(true);
         });
 
-        this._inputElement.addEventListener('blur', () => {
+        this.inputElement.addEventListener('blur', () => {
             this.setFocus(false);
         });
 
-        this._inputElement.addEventListener('input', () => {
-            this._tileElement.classList.toggle('ids-alt-radio__tile--checked', this._inputElement.checked);
+        this.inputElement.addEventListener('input', () => {
+            this.toggleChecked();
         });
     }
 
     initTileBtn() {
-        this._tileElement.addEventListener('click', (event) => {
+        this.tileElement.addEventListener('click', (event) => {
             event.preventDefault();
             event.stopPropagation();
 
-            this._inputElement.focus();
-            this._inputElement.click();
+            this.inputElement.focus();
+            this.inputElement.click();
+
+            this.onTileClick?.(event, this.inputElement.id);
         });
     }
 
