@@ -1,0 +1,42 @@
+{% set component_classes =
+    html_cva(
+        base: html_classes(
+            'ids-toggle',
+            {
+                'ids-toggle--checked': checked,
+                'ids-toggle--disabled': disabled,
+            }
+        ),
+        variants: {
+            size: {
+                medium: 'ids-toggle--medium',
+                small: 'ids-toggle--small'
+            }
+        }
+    )
+%}
+{{dump()}}
+<div class="{{ component_classes.apply({ size }, class) }}" {{ _attributes.defaults(attributes) }}>
+    <div class="ids-toggle__source">
+        <twig:ibexa:checkbox:input
+            :id="id"
+            :name="name"
+            :value="value"
+            :checked="checked"
+            :disabled="disabled"
+            :required="required"
+            data-ids-custom-init="1"
+        />
+    </div>
+    <div class="ids-toggle__widget" role="button">
+        <div class="ids-toggle__indicator"></div>
+    </div>
+    <twig:ibexa:choice_input_label
+        class="ids-toggle__label"
+        :for="id"
+        :data-ids-on-label="onLabel"
+        :data-ids-off-label="offLabel"
+    >
+        {{ checked ? onLabel : offLabel }}
+    </twig:ibexa:choice_input_label>
+</div>
