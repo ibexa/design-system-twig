@@ -17,14 +17,14 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
- * @phpstan-type DropdownItem array{
+ * @phpstan-type TDropdownItem array{
  *     id: string,
  *     label: string
  * }
  */
 abstract class AbstractDropdown
 {
-    private const TRANSLATION_DOMAIN = 'ibexa_design_system_twig';
+    private const string TRANSLATION_DOMAIN = 'ibexa_design_system_twig';
 
     public string $name;
 
@@ -32,7 +32,7 @@ abstract class AbstractDropdown
 
     public bool $error = false;
 
-    /** @var array<DropdownItem> */
+    /** @var array<TDropdownItem> */
     public array $items = [];
 
     public string $placeholder;
@@ -100,7 +100,7 @@ abstract class AbstractDropdown
      * @param Options<array<string, mixed>> $options
      * @param array<int, mixed> $items
      *
-     * @return array<int, DropdownItem>
+     * @return array<int, TDropdownItem>
      */
     private static function normalizeItems(Options $options, array $items): array
     {
@@ -112,7 +112,7 @@ abstract class AbstractDropdown
             ->setAllowedTypes('label', 'string');
 
         foreach ($items as $index => $item) {
-            if (!\is_array($item)) {
+            if (!is_array($item)) {
                 throw new InvalidOptionsException(
                     sprintf(
                         'Each dropdown item must be an array, "%s" given at index %d.',
@@ -122,9 +122,7 @@ abstract class AbstractDropdown
                 );
             }
 
-            $resolvedItem = $itemResolver->resolve($item);
-
-            $items[$index] = $resolvedItem;
+            $items[$index] = $itemResolver->resolve($item);
         }
 
         return $items;

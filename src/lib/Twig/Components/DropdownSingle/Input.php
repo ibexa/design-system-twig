@@ -31,7 +31,7 @@ final class Input extends AbstractDropdown
     public function getSelectedLabel(): string
     {
         $value = $this->value ?? '';
-        $selected_item = array_find($this->items, static function (array $item) use ($value) {
+        $selected_item = array_find($this->items, static function (array $item) use ($value): bool {
             return $item['id'] === $value;
         });
 
