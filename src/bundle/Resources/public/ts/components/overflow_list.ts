@@ -8,12 +8,12 @@ export class OverflowList extends Base {
     private _moreItemNode: HTMLDivElement;
     private _numberOfItems = 0;
     private _numberOfVisibleItems = 0;
+    private _resizeTimeoutId: number | null = null;
     private _templates: Record<'item' | 'itemMore', string> = {
         item: '',
         itemMore: '',
     };
 
-    private _resizeTimeoutId: number | null = null;
     private _resizeObserver = new ResizeObserver(() => {
         if (this._resizeTimeoutId) {
             clearTimeout(this._resizeTimeoutId);
@@ -42,14 +42,14 @@ export class OverflowList extends Base {
             item: this.getTemplate('item'),
             itemMore: this.getTemplate('item_more'),
         };
-
         this._numberOfItems = this.getItems(false, false).length;
         this._numberOfVisibleItems = this._numberOfItems;
     }
 
     private getItems(getOnlyVisible = false, withOverflow = true): HTMLDivElement[] {
-        const itemsSelector = `:scope > *${getOnlyVisible ? ':not([hidden])' : ''}`;
-        const items = Array.from(this._itemsNode.querySelectorAll<HTMLDivElement>(itemsSelector));
+        const items = getOnlyVisible
+            ? Array.from(this._itemsNode.querySelectorAll<HTMLDivElement>(':scope > *:not([hidden])'))
+            : Array.from(this._itemsNode.querySelectorAll<HTMLDivElement>(':scope > *'));
 
         if (withOverflow) {
             return items;
@@ -73,6 +73,7 @@ export class OverflowList extends Base {
 
         if (hiddenCount > 0) {
             const tempMoreItem = document.createElement('div');
+
             tempMoreItem.innerHTML = this._templates.itemMore.replace('{{ hidden_count }}', hiddenCount.toString());
 
             if (!tempMoreItem.firstElementChild) {
@@ -131,6 +132,7 @@ export class OverflowList extends Base {
 
     public rerender() {
         let stopRecalculating = true;
+
         do {
             stopRecalculating = this.recalculateVisibleItems();
 
