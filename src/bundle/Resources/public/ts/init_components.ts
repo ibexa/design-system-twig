@@ -1,7 +1,7 @@
+import { AltRadioInput, AltRadiosListField } from './components/alt_radio';
 import { CheckboxInput, CheckboxesListField } from './components/checkbox';
 import { InputTextField, InputTextInput } from './components/input_text';
 import { Accordion } from './components/accordion';
-import { AltRadioInput } from './components/alt_radio/alt_radio_input';
 
 const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
 
@@ -19,6 +19,14 @@ altRadioContainers.forEach((altRadioContainer: HTMLDivElement) => {
     altRadioInstance.init();
 });
 
+const altRadiosListContainers = document.querySelectorAll<HTMLDivElement>('.ids-alt-radio-list-field:not([data-ids-custom-init])');
+
+altRadiosListContainers.forEach((altRadiosListContainer: HTMLDivElement) => {
+    const altRadiosListInstance = new AltRadiosListField(altRadiosListContainer);
+
+    altRadiosListInstance.init();
+});
+
 const checkboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-checkbox:not([data-ids-custom-init])');
 
 checkboxContainers.forEach((checkboxContainer: HTMLDivElement) => {
@@ -27,7 +35,7 @@ checkboxContainers.forEach((checkboxContainer: HTMLDivElement) => {
     checkboxInstance.init();
 });
 
-const checkboxesFieldContainers = document.querySelectorAll<HTMLDivElement>('.ids-field.ids-field--list:not([data-ids-custom-init])');
+const checkboxesFieldContainers = document.querySelectorAll<HTMLDivElement>('.ids-checkboxes-list-field:not([data-ids-custom-init])');
 
 checkboxesFieldContainers.forEach((checkboxesFieldContainer: HTMLDivElement) => {
     const checkboxesFieldInstance = new CheckboxesListField(checkboxesFieldContainer);
