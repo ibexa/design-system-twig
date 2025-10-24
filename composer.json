@@ -15,6 +15,7 @@
         "symfony/event-dispatcher": "^7.2",
         "symfony/http-foundation": "^7.2",
         "symfony/http-kernel": "^7.2",
+        "symfony/uid": "^7.3",
         "symfony/ux-twig-component": "^2.27",
         "symfony/yaml": "^7.2",
         "twig/html-extra": "^3.20"
