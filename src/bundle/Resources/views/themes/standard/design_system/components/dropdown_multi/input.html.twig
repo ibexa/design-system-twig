@@ -1,0 +1,25 @@
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_dropdown.html.twig' %}
+
+{% set class = html_classes('ids-dropdown--multi', attributes.render('class') ?? '') %}
+
+{% block source %}
+    <select multiple name="{{ name }}"{% if disabled %} disabled{% endif %}>
+        {% for item in items %}
+            <option value="{{ item.id }}"{% if item.id in value %} selected{% endif %}>{{ item.label }}</option>
+        {% endfor %}
+    </select>
+{% endblock source %}
+
+{% block item_content %}
+    <twig:ibexa:checkbox:input
+        name="{{ name }}-checkbox"
+        :checked="item.id in value"
+        :value="item.id"
+        data-ids-custom-init="true"
+    />
+    {{ item.label }}
+{% endblock item_content %}
+
+{% block selected_items %}
+    {{ selected_items|map(item => item.label)|join(', ') }}
+{% endblock selected_items %}

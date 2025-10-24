@@ -1,8 +1,8 @@
 import { CheckboxInput, CheckboxesListField } from './components/checkbox';
+import { DropdownMultiInput, DropdownSingleInput } from './components/dropdown';
 import { InputTextField, InputTextInput } from './components/input_text';
 import { Accordion } from './components/accordion';
 import { AltRadioInput } from './components/alt_radio/alt_radio_input';
-import { DropdownSingleInput } from './components/dropdown/dropdown_single_input';
 import { OverflowList } from './components/overflow_list';
 
 const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
@@ -37,9 +37,17 @@ checkboxesFieldContainers.forEach((checkboxesFieldContainer: HTMLDivElement) => 
     checkboxesFieldInstance.init();
 });
 
-const dropdownContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown:not([data-ids-custom-init])');
+const dropdownMultiContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown--multi:not([data-ids-custom-init])');
 
-dropdownContainers.forEach((dropdownContainer: HTMLDivElement) => {
+dropdownMultiContainers.forEach((dropdownContainer: HTMLDivElement) => {
+    const dropdownInstance = new DropdownMultiInput(dropdownContainer);
+
+    dropdownInstance.init();
+});
+
+const dropdownSingleContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown--single:not([data-ids-custom-init])');
+
+dropdownSingleContainers.forEach((dropdownContainer: HTMLDivElement) => {
     const dropdownInstance = new DropdownSingleInput(dropdownContainer);
 
     dropdownInstance.init();
