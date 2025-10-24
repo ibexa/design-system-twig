@@ -5,6 +5,7 @@ export default [
     {
         files: ['**/*.ts'],
         rules: {
+            'no-magic-numbers': ['error', { ignore: [-1, 0] }],
             '@typescript-eslint/unbound-method': 'off',
         },
     },

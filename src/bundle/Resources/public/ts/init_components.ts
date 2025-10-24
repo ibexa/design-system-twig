@@ -3,6 +3,7 @@ import { InputTextField, InputTextInput } from './components/input_text';
 import { Accordion } from './components/accordion';
 import { AltRadioInput } from './components/alt_radio/alt_radio_input';
 import { DropdownSingleInput } from './components/dropdown/dropdown_single_input';
+import { OverflowList } from './components/overflow_list';
 
 const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
 
@@ -58,4 +59,12 @@ inputTextContainers.forEach((inputTextContainer: HTMLDivElement) => {
     const inputTextInstance = new InputTextInput(inputTextContainer);
 
     inputTextInstance.init();
+});
+
+const overflowListContainers = document.querySelectorAll<HTMLDivElement>('.ids-overflow-list:not([data-ids-custom-init])');
+
+overflowListContainers.forEach((overflowListContainer: HTMLDivElement) => {
+    const overflowListInstance = new OverflowList(overflowListContainer);
+
+    overflowListInstance.init();
 });
