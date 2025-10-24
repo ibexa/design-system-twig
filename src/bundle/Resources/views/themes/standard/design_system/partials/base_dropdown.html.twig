@@ -68,7 +68,9 @@
     </div>
     {% block templates %}
         {% set item_content %}
-            {{ block('item_content') is defined ? block('item_content') : '' }}
+            {% with { item: item_template_props } %}
+                {{ block('item_content') is defined ? block('item_content') : '' }}
+            {% endwith %}
         {% endset %}
 
         <template class="ids-dropdown__template" data-id="item">

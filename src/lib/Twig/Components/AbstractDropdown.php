@@ -35,6 +35,9 @@ abstract class AbstractDropdown
     /** @var array<TDropdownItem> */
     public array $items = [];
 
+    /** @var array<string> */
+    public array $itemTemplateProps = ['id', 'label'];
+
     public string $placeholder;
 
     #[ExposeInTemplate('max_visible_items')]
@@ -92,6 +95,20 @@ abstract class AbstractDropdown
     public function getIsSearchVisible(): bool
     {
         return count($this->items) > $this->maxVisibleItems;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    #[ExposeInTemplate('item_template_props')]
+    public function getItemTemplateProps(): array
+    {
+        $itemPropsPatterns = array_map(
+            fn (string $name): string => '{{ ' . $name . ' }}',
+            $this->itemTemplateProps
+        );
+
+        return array_combine($this->itemTemplateProps, $itemPropsPatterns);
     }
 
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
