@@ -11,6 +11,16 @@
         <target state="new">Clear</target>
         <note>key: ibexa.clear-btn.label</note>
       </trans-unit>
+      <trans-unit id="8bd385b5e5cc2e1edee94e57245b6d8a42f50aac" resname="ibexa.dropdown.placeholder">
+        <source>Select an item</source>
+        <target state="new">Select an item</target>
+        <note>key: ibexa.dropdown.placeholder</note>
+      </trans-unit>
+      <trans-unit id="3a9a0c14a5a935a76adbed08e80fbe1392d8eb6a" resname="ibexa.dropdown.search.placeholder">
+        <source>Search...</source>
+        <target state="new">Search...</target>
+        <note>key: ibexa.dropdown.search.placeholder</note>
+      </trans-unit>
       <trans-unit id="6c89c5a149a0c096f007f1774344ec53cd18bb20" resname="ibexa.expander.label.collapse">
         <source>Hide</source>
         <target state="new">Hide</target>

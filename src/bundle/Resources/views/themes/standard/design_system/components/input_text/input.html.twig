@@ -64,7 +64,7 @@
     </div>
     <div class="ids-input-text__actions">
         {%- for action in actions -%}
-            <div class="{{ action.class }}">
+            <div class="{{ html_classes('ids-input-text__action', action.class) }}">
                 {{- action.component|raw -}}
             </div>
         {%- endfor -%}

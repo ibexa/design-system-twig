@@ -1,0 +1,99 @@
+{% trans_default_domain 'ibexa_design_system_twig' %}
+
+{% set classes =
+    html_classes(
+        'ids-dropdown',
+        {
+            'ids-dropdown--disabled': disabled,
+            'ids-dropdown--error': error,
+        },
+        class
+    )
+%}
+{% set widget_classes =
+    html_classes(
+        'ids-dropdown__widget ids-input',
+        {
+            'ids-input--disabled': disabled,
+            'ids-input--error': error,
+        }
+    )
+%}
+
+<div class="{{ classes }}">
+    <div class="ids-dropdown__source">
+        {% block source %}
+        {% endblock source %}
+    </div>
+    <div class="{{ widget_classes }}" role="button" tabIndex="0">
+        <div class="ids-dropdown__selection-info">
+            {% block selection_info %}
+                {% block placeholder %}
+                    <div class="ids-dropdown__placeholder"{% if not is_empty %} hidden{% endif %}>
+                        {{ 'ibexa.dropdown.placeholder'|trans|desc('Select an item') }}
+                    </div>
+                {% endblock placeholder %}
+                <div class="ids-dropdown__selection-info-items"{% if is_empty %} hidden{% endif %}>
+                    {% block selected_items %}{% endblock selected_items %}
+                </div>
+            {% endblock selection_info %}
+        </div>
+        <div class="ids-dropdown__expander">
+            <twig:ibexa:expander
+                type="chevron"
+                tabindex="-1"
+            />
+        </div>
+    </div>
+    <div class="ids-dropdown__items-container" hidden>
+        <div class="ids-dropdown__search"{% if not is_search_visible %} hidden{% endif %}>
+            <twig:ibexa:input_text:input
+                name="dropdown-search"
+                :placeholder="'ibexa.dropdown.search.placeholder'|trans|desc('Search...')"
+                size="small"
+                data-ids-custom-init="true"
+            />
+        </div>
+        <ul class="ids-dropdown__items" style="--max-visible-items: {{ max_visible_items }}">
+            {% for item in items %}
+                {% set item_content %}
+                    {% with { item } %}
+                        {{ block('item_content') is defined ? block('item_content') : item.label }}
+                    {% endwith %}
+                {% endset %}
+
+                {{ _self.item_wrapper(item_content, item.id == value, item.id, item.label) }}
+            {% endfor %}
+        </ul>
+    </div>
+    {% block templates %}
+        {% set item_content %}
+            {{ block('item_content') is defined ? block('item_content') : '' }}
+        {% endset %}
+
+        <template class="ids-dropdown__template" data-id="item">
+            {{ _self.item_wrapper(item_content) }}
+        </template>
+    {% endblock templates %}
+</div>
+
+{% macro item_wrapper(content = '', is_selected = false, id = '', label = '') %}
+    {% set item_classes =
+        html_classes(
+            'ids-dropdown__item',
+            {
+                'ids-dropdown__item--selected': is_selected,
+            },
+        ) %}
+
+    <li
+        class="{{ item_classes }}"
+        key="{{ id }}"
+        data-id="{{ id }}"
+        data-label="{{ label }}"
+        role="button"
+        tabIndex="0"
+    >
+        {{ content }}
+    </li>
+{% endmacro %}

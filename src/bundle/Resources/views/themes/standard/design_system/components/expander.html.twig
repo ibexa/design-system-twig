@@ -1,10 +1,11 @@
 {% set label = is_expanded ? collapse_label : expand_label %}
+{% set has_label = label is not empty %}
 
 {% set button_classes =
     html_classes(
         'ids-expander',
-        'ids-expander--has-label',
         {
+            'ids-expander--has-label': has_label,
             'ids-expander--has-icon': has_icon,
             'ids-expander--is-expanded': is_expanded
         },
@@ -20,7 +21,9 @@
     aria-expanded="{{ is_expanded ? 'true' : 'false' }}"
     class="{{ button_classes }}"
 >
-    <span class="ids-expander__label">{{ label }}</span>
+    {% if has_label %}
+        <span class="ids-expander__label">{{ label }}</span>
+    {% endif %}
     {% if has_icon %}
         <twig:ibexa:icon name="{{ icon_name }}" size="small" />
     {% endif %}
