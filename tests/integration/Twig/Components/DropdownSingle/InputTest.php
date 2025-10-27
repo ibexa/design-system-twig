@@ -23,7 +23,11 @@ final class InputTest extends KernelTestCase
     {
         $component = $this->mountTwigComponent(Input::class, $this->baseProps(['value' => 'foo']));
 
-        self::assertInstanceOf(Input::class, $component, 'Component should mount as DropdownSingle\\Input.');
+        self::assertInstanceOf(
+            Input::class,
+            $component,
+            'Component should mount as DropdownSingle\\Input.'
+        );
     }
 
     public function testEmptyStateShowsPlaceholderAndHidesSelectedItems(): void
@@ -35,15 +39,33 @@ final class InputTest extends KernelTestCase
 
         $select = $this->getSelect($crawler);
         $selectedOption = $select->filter('option[selected]')->first();
-        self::assertSame('a', $selectedOption->attr('value'), 'Without a value, the first option should be selected by default.');
-        self::assertSame('Alpha', trim($selectedOption->text('')), 'The first option label should be shown as selected by default.');
+        self::assertSame(
+            'a',
+            $selectedOption->attr('value'),
+            'Without a value, the first option should be selected by default.'
+        );
+        self::assertSame(
+            'Alpha',
+            trim($selectedOption->text('')),
+            'The first option label should be shown as selected by default.'
+        );
 
         $placeholder = $crawler->filter('.ids-dropdown__placeholder')->first();
         $selectedBox = $crawler->filter('.ids-dropdown__selection-info-items')->first();
 
-        self::assertNotNull($placeholder->attr('hidden'), 'Placeholder should be hidden when no explicit value is selected.');
-        self::assertNull($selectedBox->attr('hidden'), 'Selection box should be visible when no explicit value is selected.');
-        self::assertStringContainsString('Alpha', trim($selectedBox->text('')), 'Selection box should show the first item label by default.');
+        self::assertNotNull(
+            $placeholder->attr('hidden'),
+            'Placeholder should be hidden when no explicit value is selected.'
+        );
+        self::assertNull(
+            $selectedBox->attr('hidden'),
+            'Selection box should be visible when no explicit value is selected.'
+        );
+        self::assertStringContainsString(
+            'Alpha',
+            trim($selectedBox->text('')),
+            'Selection box should show the first item label by default.'
+        );
     }
 
     public function testSelectedValueHidesPlaceholderAndShowsSelectedLabel(): void
@@ -53,15 +75,33 @@ final class InputTest extends KernelTestCase
         $select = $this->getSelect($crawler);
         $selectedOption = $select->filter('option[selected]')->first();
 
-        self::assertSame('b', $selectedOption->attr('value'), 'Selected <option> should match provided value.');
-        self::assertSame('Beta', trim($selectedOption->text('')), 'Selected <option> text should be the item label.');
+        self::assertSame(
+            'b',
+            $selectedOption->attr('value'),
+            'Selected <option> should match provided value.'
+        );
+        self::assertSame(
+            'Beta',
+            trim($selectedOption->text('')),
+            'Selected <option> text should be the item label.'
+        );
 
         $placeholder = $crawler->filter('.ids-dropdown__placeholder')->first();
         $selectedBox = $crawler->filter('.ids-dropdown__selection-info-items')->first();
 
-        self::assertNotNull($placeholder->attr('hidden'), 'Placeholder should be hidden when a value is selected.');
-        self::assertNull($selectedBox->attr('hidden'), 'Selection box should be visible when a value is selected.');
-        self::assertStringContainsString('Beta', trim($selectedBox->text('')), 'Selection box should render selected label.');
+        self::assertNotNull(
+            $placeholder->attr('hidden'),
+            'Placeholder should be hidden when a value is selected.'
+        );
+        self::assertNull(
+            $selectedBox->attr('hidden'),
+            'Selection box should be visible when a value is selected.'
+        );
+        self::assertStringContainsString(
+            'Beta',
+            trim($selectedBox->text('')),
+            'Selection box should render selected label.'
+        );
     }
 
     public function testOptionsAreRenderedAndOneIsMarkedSelected(): void
@@ -71,12 +111,24 @@ final class InputTest extends KernelTestCase
         $select = $this->getSelect($crawler);
         $options = $select->filter('option');
 
-        self::assertSame(3, $options->count(), 'Should render three <option> elements.');
-        self::assertSame('a', $select->filter('option[selected]')->attr('value'), 'The <option> with selected attribute should match provided value.');
+        self::assertSame(
+            3,
+            $options->count(),
+            'Should render three <option> elements.'
+        );
+        self::assertSame(
+            'a',
+            $select->filter('option[selected]')->attr('value'),
+            'The <option> with selected attribute should match provided value.'
+        );
 
-        $labels = $options->each(static fn (Crawler $o) => trim($o->text('')));
+        $labels = $options->each(static fn (Crawler $o): string => trim($o->text('')));
 
-        self::assertSame(['Alpha', 'Beta', 'Gamma'], $labels, 'Options should render provided labels in order.');
+        self::assertSame(
+            ['Alpha', 'Beta', 'Gamma'],
+            $labels,
+            'Options should render provided labels in order.'
+        );
     }
 
     public function testDisabledAndErrorAddClassesAndSelectDisabled(): void
@@ -90,11 +142,30 @@ final class InputTest extends KernelTestCase
         $widget = $this->getWidget($crawler);
         $select = $this->getSelect($crawler);
 
-        self::assertStringContainsString('ids-dropdown--disabled', $this->getClassAttr($wrapper), 'Wrapper should include disabled modifier.');
-        self::assertStringContainsString('ids-dropdown--error', $this->getClassAttr($wrapper), 'Wrapper should include error modifier.');
-        self::assertStringContainsString('ids-input--disabled', $this->getClassAttr($widget), 'Widget should include disabled modifier.');
-        self::assertStringContainsString('ids-input--error', $this->getClassAttr($widget), 'Widget should include error modifier.');
-        self::assertNotNull($select->attr('disabled'), 'Native "disabled" attribute should be present on <select> when disabled=true.');
+        self::assertStringContainsString(
+            'ids-dropdown--disabled',
+            $this->getClassAttr($wrapper),
+            'Wrapper should include disabled modifier.'
+        );
+        self::assertStringContainsString(
+            'ids-dropdown--error',
+            $this->getClassAttr($wrapper),
+            'Wrapper should include error modifier.'
+        );
+        self::assertStringContainsString(
+            'ids-input--disabled',
+            $this->getClassAttr($widget),
+            'Widget should include disabled modifier.'
+        );
+        self::assertStringContainsString(
+            'ids-input--error',
+            $this->getClassAttr($widget),
+            'Widget should include error modifier.'
+        );
+        self::assertNotNull(
+            $select->attr('disabled'),
+            'Native "disabled" attribute should be present on <select> when disabled=true.'
+        );
     }
 
     public function testWrapperClassMergesFromAttributes(): void
@@ -108,7 +179,11 @@ final class InputTest extends KernelTestCase
 
         $wrapper = $this->getWrapper($crawler);
 
-        self::assertStringContainsString('extra-class', $this->getClassAttr($wrapper), 'Custom class should be merged into wrapper classes.');
+        self::assertStringContainsString(
+            'extra-class',
+            $this->getClassAttr($wrapper),
+            'Custom class should be merged into wrapper classes.'
+        );
     }
 
     public function testInvalidItemsTypeCausesResolverErrorOnMount(): void
