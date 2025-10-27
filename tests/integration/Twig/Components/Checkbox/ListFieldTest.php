@@ -22,7 +22,11 @@ final class ListFieldTest extends KernelTestCase
     public function testMount(): void
     {
         $component = $this->mountTwigComponent(ListField::class, $this->baseProps());
-        self::assertInstanceOf(ListField::class, $component, 'Component should mount as Checkbox\\ListField.');
+        self::assertInstanceOf(
+            ListField::class,
+            $component,
+            'Component should mount as Checkbox\\ListField.'
+        );
     }
 
     public function testDefaultRenderProducesWrapperAndRendersItems(): void
@@ -31,24 +35,68 @@ final class ListFieldTest extends KernelTestCase
 
         $wrapper = $this->getWrapper($crawler);
         $classes = $this->getClassAttr($wrapper);
-        self::assertStringContainsString('ids-field', $classes, 'Wrapper should include "ids-field".');
-        self::assertStringContainsString('ids-field--list', $classes, 'Wrapper should include "ids-field--list".');
-        self::assertStringContainsString('ids-choice-inputs-list', $classes, 'Wrapper should include "ids-choice-inputs-list".');
-        self::assertStringContainsString('ids-checkboxes-list-field', $classes, 'Wrapper should include "ids-checkboxes-list-field".');
+        self::assertStringContainsString(
+            'ids-field',
+            $classes,
+            'Wrapper should include "ids-field".'
+        );
+        self::assertStringContainsString(
+            'ids-field--list',
+            $classes,
+            'Wrapper should include "ids-field--list".'
+        );
+        self::assertStringContainsString(
+            'ids-choice-inputs-list',
+            $classes,
+            'Wrapper should include "ids-choice-inputs-list".'
+        );
+        self::assertStringContainsString(
+            'ids-checkboxes-list-field',
+            $classes,
+            'Wrapper should include "ids-checkboxes-list-field".'
+        );
 
         $items = $crawler->filter('.ids-choice-inputs-list__items .ids-checkbox-field');
-        self::assertSame(2, $items->count(), 'Should render exactly two checkbox field items.');
+        self::assertSame(
+            2,
+            $items->count(),
+            'Should render exactly two checkbox field items.'
+        );
 
         $firstInput = $this->getCheckboxInput($items->eq(0));
         $secondInput = $this->getCheckboxInput($items->eq(1));
 
-        self::assertSame('checkbox', $firstInput->attr('type'), 'First item should be a checkbox input.');
-        self::assertSame('group', $firstInput->attr('name'), 'First item "name" should be taken from the top-level group.');
-        self::assertSame('checkbox', $secondInput->attr('type'), 'Second item should be a checkbox input.');
-        self::assertSame('group', $secondInput->attr('name'), 'Second item "name" should be taken from the top-level group.');
+        self::assertSame(
+            'checkbox',
+            $firstInput->attr('type'),
+            'First item should be a checkbox input.'
+        );
+        self::assertSame(
+            'group',
+            $firstInput->attr('name'),
+            'First item "name" should be taken from the top-level group.'
+        );
+        self::assertSame(
+            'checkbox',
+            $secondInput->attr('type'),
+            'Second item should be a checkbox input.'
+        );
+        self::assertSame(
+            'group',
+            $secondInput->attr('name'),
+            'Second item "name" should be taken from the top-level group.'
+        );
 
-        self::assertStringContainsString('Pick A', $this->getText($items->eq(0)), 'First item should render its label.');
-        self::assertStringContainsString('Pick B', $this->getText($items->eq(1)), 'Second item should render its label.');
+        self::assertStringContainsString(
+            'Pick A',
+            $this->getText($items->eq(0)),
+            'First item should render its label.'
+        );
+        self::assertStringContainsString(
+            'Pick B',
+            $this->getText($items->eq(1)),
+            'Second item should render its label.'
+        );
     }
 
     public function testWrapperAttributesMergeClassAndData(): void
@@ -61,8 +109,16 @@ final class ListFieldTest extends KernelTestCase
         )->crawler();
 
         $wrapper = $this->getWrapper($crawler);
-        self::assertStringContainsString('extra-class', $this->getClassAttr($wrapper), 'Custom wrapper class should be merged.');
-        self::assertSame('custom', $wrapper->attr('data-custom'), 'Custom data attribute should render on the wrapper.');
+        self::assertStringContainsString(
+            'extra-class',
+            $this->getClassAttr($wrapper),
+            'Custom wrapper class should be merged.'
+        );
+        self::assertSame(
+            'custom',
+            $wrapper->attr('data-custom'),
+            'Custom data attribute should render on the wrapper.'
+        );
     }
 
     public function testDirectionVariantAddsExpectedClass(): void
@@ -74,7 +130,11 @@ final class ListFieldTest extends KernelTestCase
 
         $wrapper = $this->getWrapper($crawler);
 
-        self::assertStringContainsString('ids-choice-inputs-list--horizontal', $this->getClassAttr($wrapper), 'Direction "horizontal" should add the corresponding class.');
+        self::assertStringContainsString(
+            'ids-choice-inputs-list--horizontal',
+            $this->getClassAttr($wrapper),
+            'Direction "horizontal" should add the corresponding class.'
+        );
     }
 
     public function testPerItemPropsAreForwardedToNestedField(): void
@@ -92,11 +152,23 @@ final class ListFieldTest extends KernelTestCase
         $first = $this->getCheckboxInput($items->eq(0));
         $second = $this->getCheckboxInput($items->eq(1));
 
-        self::assertNotNull($first->attr('disabled'), 'Disabled=true on first item should render native "disabled".');
-        self::assertNull($first->attr('required'), 'First item should not be required.');
+        self::assertNotNull(
+            $first->attr('disabled'),
+            'Disabled=true on first item should render native "disabled".'
+        );
+        self::assertNull(
+            $first->attr('required'),
+            'First item should not be required.'
+        );
 
-        self::assertNull($second->attr('disabled'), 'Second item should not be disabled.');
-        self::assertNotNull($second->attr('required'), 'Required=true on second item should render native "required".');
+        self::assertNull(
+            $second->attr('disabled'),
+            'Second item should not be disabled.'
+        );
+        self::assertNotNull(
+            $second->attr('required'),
+            'Required=true on second item should render native "required".'
+        );
     }
 
     public function testInvalidItemsTypeCausesResolverErrorOnMount(): void
@@ -147,7 +219,11 @@ final class ListFieldTest extends KernelTestCase
     private function getWrapper(Crawler $crawler): Crawler
     {
         $node = $crawler->filter('.ids-field')->first();
-        self::assertGreaterThan(0, $node->count(), 'Wrapper ".ids-field" should be present.');
+        self::assertGreaterThan(
+            0,
+            $node->count(),
+            'Wrapper ".ids-field" should be present.'
+        );
 
         return $node;
     }
@@ -155,7 +231,11 @@ final class ListFieldTest extends KernelTestCase
     private function getCheckboxInput(Crawler $scope): Crawler
     {
         $node = $scope->filter('input[type="checkbox"]')->first();
-        self::assertGreaterThan(0, $node->count(), 'Checkbox input should be present.');
+        self::assertGreaterThan(
+            0,
+            $node->count(),
+            'Checkbox input should be present.'
+        );
 
         return $node;
     }

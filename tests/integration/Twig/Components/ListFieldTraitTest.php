@@ -24,17 +24,37 @@ final class ListFieldTraitTest extends TestCase
             'direction' => 'horizontal',
         ]);
 
-        self::assertArrayHasKey('items', $resolved, 'Resolved options should contain "items".');
-        self::assertCount(2, $resolved['items'], '"items" should contain two entries.');
-        self::assertSame('horizontal', $resolved['direction'] ?? null, '"direction" should resolve to HORIZONTAL.');
+        self::assertArrayHasKey(
+            'items',
+            $resolved,
+            'Resolved options should contain "items".'
+        );
+        self::assertCount(
+            2,
+            $resolved['items'],
+            '"items" should contain two entries.'
+        );
+        self::assertSame(
+            'horizontal',
+            $resolved['direction'] ?? null,
+            '"direction" should resolve to HORIZONTAL.'
+        );
     }
 
     public function testDefaultsWhenNoOptionsProvided(): void
     {
         $resolved = $this->getComponent()->resolve([]);
 
-        self::assertSame([], $resolved['items'], '"items" should default to an empty array.');
-        self::assertSame('vertical', $resolved['direction'], '"direction" should default to VERTICAL.');
+        self::assertSame(
+            [],
+            $resolved['items'],
+            '"items" should default to an empty array.'
+        );
+        self::assertSame(
+            'vertical',
+            $resolved['direction'],
+            '"direction" should default to VERTICAL.'
+        );
     }
 
     public function testInvalidItemsTypeCausesResolverError(): void
