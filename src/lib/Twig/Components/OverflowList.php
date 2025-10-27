@@ -75,19 +75,27 @@ final class OverflowList
     private static function normalizeItems(Options $options, array $value): array
     {
         if (!array_is_list($value)) {
-            throw new InvalidArgumentException('Property "items" must be a list (sequential array).');
+            throw new InvalidArgumentException(
+                'Property "items" must be a list (sequential array).'
+            );
         }
 
         foreach ($value as $i => $item) {
             if (!is_array($item)) {
-                throw new InvalidArgumentException(sprintf('items[%d] must be an array, %s given.', $i, get_debug_type($item)));
+                throw new InvalidArgumentException(
+                    sprintf('items[%d] must be an array, %s given.', $i, get_debug_type($item))
+                );
             }
             foreach (array_keys($item) as $key) {
                 if (!is_string($key)) {
-                    throw new InvalidArgumentException(sprintf('items[%d] must use string keys.', $i));
+                    throw new InvalidArgumentException(
+                        sprintf('items[%d] must use string keys.', $i)
+                    );
                 }
                 if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $key)) {
-                    throw new InvalidArgumentException(sprintf('Invalid key "%s" in items[%d].', $key, $i));
+                    throw new InvalidArgumentException(
+                        sprintf('Invalid key "%s" in items[%d].', $key, $i)
+                    );
                 }
             }
         }
@@ -106,11 +114,15 @@ final class OverflowList
         foreach ($value as $key => $prop) {
             if (!is_string($prop)) {
                 $index = is_int($key) ? (string) $key : sprintf('"%s"', $key);
-                throw new InvalidArgumentException(sprintf('itemTemplateProps[%s] must be a string, %s given.', $index, get_debug_type($prop)));
+                throw new InvalidArgumentException(
+                    sprintf('itemTemplateProps[%s] must be a string, %s given.', $index, get_debug_type($prop))
+                );
             }
 
             if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $prop)) {
-                throw new InvalidArgumentException(sprintf('Invalid itemTemplateProps value "%s".', $prop));
+                throw new InvalidArgumentException(
+                    sprintf('Invalid itemTemplateProps value "%s".', $prop)
+                );
             }
         }
 
