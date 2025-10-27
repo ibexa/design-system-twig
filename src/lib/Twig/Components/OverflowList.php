@@ -18,10 +18,10 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 #[AsTwigComponent('ibexa:overflow_list')]
 final class OverflowList
 {
-    /** @var list<array> */
+    /** @var array<int, array<string, mixed>> */
     public array $items = [];
 
-    /** @var list<string> */
+    /** @var array<int, string> */
     public array $itemTemplateProps = [];
 
     /**
