@@ -1,0 +1,29 @@
+{% trans_default_domain 'ibexa_design_system_twig' %}
+
+{% set chip_classes =
+    html_classes(
+        'ids-chip',
+        {
+            'ids-chip--error': error,
+            'ids-chip--disabled': disabled,
+        },
+        attributes.render('class') ?? ''
+    )
+%}
+{% set delete_msg = 'ibexa.chip.delete-btn.label'|trans|desc('Delete') %}
+
+<div tabIndex={{ disabled ? -1 : 0 }} class="{{ chip_classes }}" aria-disabled="{{ disabled ? 'true' : 'false' }}" {{ attributes }}>
+    <div class="ids-chip__content">
+        {{ block('content') }}
+    </div>
+    {% if is_deletable %}
+        <twig:ibexa:button
+            type="tertiary-alt"
+            size="small"
+            icon="discard"
+            class="ids-chip__delete"
+            disabled="{{ disabled }}"
+            :aria-label="delete_msg"
+        />
+    {% endif %}
+</div>
