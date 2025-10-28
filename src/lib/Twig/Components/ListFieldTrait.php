@@ -69,29 +69,48 @@ trait ListFieldTrait
         $resolver->setOptions('items', static function (OptionsResolver $itemsResolver): void {
             $itemsResolver->setPrototype(true);
             $itemsResolver
-                ->setRequired(['id', 'label', 'value'])
-                ->setAllowedTypes('id', 'string')
-                ->setAllowedValues('id', static fn (string $value): bool => trim($value) !== '')
-                ->setAllowedTypes('label', 'string')
-                ->setAllowedTypes('value', ['string', 'int']);
+                ->define('id')
+                ->required()
+                ->allowedTypes('string')
+                ->allowedValues(static fn (string $value): bool => trim($value) !== '');
 
-            $itemsResolver->setDefined([
-                'disabled',
-                'attributes',
-                'label_attributes',
-                'inputWrapperClassName',
-                'labelClassName',
-                'name',
-                'required',
-            ]);
+            $itemsResolver
+                ->define('label')
+                ->required()
+                ->allowedTypes('string');
 
-            $itemsResolver->setAllowedTypes('disabled', 'bool');
-            $itemsResolver->setAllowedTypes('attributes', 'array');
-            $itemsResolver->setAllowedTypes('label_attributes', 'array');
-            $itemsResolver->setAllowedTypes('inputWrapperClassName', 'string');
-            $itemsResolver->setAllowedTypes('labelClassName', 'string');
-            $itemsResolver->setAllowedTypes('name', 'string');
-            $itemsResolver->setAllowedTypes('required', 'bool');
+            $itemsResolver
+                ->define('value')
+                ->required()
+                ->allowedTypes('string', 'int');
+
+            $itemsResolver
+                ->define('disabled')
+                ->allowedTypes('bool');
+
+            $itemsResolver
+                ->define('attributes')
+                ->allowedTypes('array');
+
+            $itemsResolver
+                ->define('label_attributes')
+                ->allowedTypes('array');
+
+            $itemsResolver
+                ->define('inputWrapperClassName')
+                ->allowedTypes('string');
+
+            $itemsResolver
+                ->define('labelClassName')
+                ->allowedTypes('string');
+
+            $itemsResolver
+                ->define('name')
+                ->allowedTypes('string');
+
+            $itemsResolver
+                ->define('required')
+                ->allowedTypes('bool');
         });
 
         $resolver
