@@ -11,6 +11,7 @@ namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components;
 use Ibexa\Tests\Integration\DesignSystemTwig\Twig\Stub\DummyListFieldComponent;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 final class ListFieldTraitTest extends TestCase
 {
@@ -59,7 +60,7 @@ final class ListFieldTraitTest extends TestCase
 
     public function testItemMissingValueCausesResolverError(): void
     {
-        $this->expectException(InvalidOptionsException::class);
+        $this->expectException(MissingOptionsException::class);
 
         $this->getComponent()->resolve([
             'items' => [
@@ -68,9 +69,20 @@ final class ListFieldTraitTest extends TestCase
         ]);
     }
 
+    public function testItemMissingIdCausesResolverError(): void
+    {
+        $this->expectException(MissingOptionsException::class);
+
+        $this->getComponent()->resolve([
+            'items' => [
+                ['label' => 'Alpha', 'value' => 'A'],
+            ],
+        ]);
+    }
+
     public function testItemMissingLabelCausesResolverError(): void
     {
-        $this->expectException(InvalidOptionsException::class);
+        $this->expectException(MissingOptionsException::class);
 
         $this->getComponent()->resolve([
             'items' => [
@@ -85,7 +97,7 @@ final class ListFieldTraitTest extends TestCase
 
         $this->getComponent()->resolve([
             'items' => [
-                ['label' => 123, 'value' => new \stdClass()],
+                ['id' => 'a', 'label' => 123, 'value' => new \stdClass()],
             ],
         ]);
     }

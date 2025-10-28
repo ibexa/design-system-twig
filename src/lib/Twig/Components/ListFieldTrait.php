@@ -8,14 +8,21 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 /**
  * @phpstan-type ListItem array{
+ *     id: non-empty-string,
  *     value: string|int,
  *     label: string,
+ *     disabled?: bool,
+ *     name?: string,
+ *     required?: bool,
+ *     attributes?: array<string, mixed>,
+ *     label_attributes?: array<string, mixed>,
+ *     inputWrapperClassName?: string,
+ *     labelClassName?: string
  * }
  * @phpstan-type ListItems list<ListItem>
  */
@@ -54,44 +61,37 @@ trait ListFieldTrait
 
     protected function validateListFieldProps(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'items' => [],
-        ]);
-        $resolver->setAllowedTypes('items', 'array');
-        $resolver->setAllowedValues('items', static function (array $items): bool {
-            foreach ($items as $index => $item) {
-                if (!is_array($item)) {
-                    throw new InvalidOptionsException(
-                        sprintf('Item at index %d must be an array, %s given.', $index, get_debug_type($item))
-                    );
-                }
+        $resolver
+            ->define('items')
+            ->default([])
+            ->allowedTypes('array');
 
-                if (!array_key_exists('value', $item)) {
-                    throw new InvalidOptionsException(
-                        sprintf('Item at index %d must define a "value" key.', $index)
-                    );
-                }
+        $resolver->setOptions('items', static function (OptionsResolver $itemsResolver): void {
+            $itemsResolver->setPrototype(true);
+            $itemsResolver
+                ->setRequired(['id', 'label', 'value'])
+                ->setAllowedTypes('id', 'string')
+                ->setAllowedValues('id', static fn (string $value): bool => trim($value) !== '')
+                ->setAllowedTypes('label', 'string')
+                ->setAllowedTypes('value', ['string', 'int']);
 
-                if (!array_key_exists('label', $item)) {
-                    throw new InvalidOptionsException(
-                        sprintf('Item at index %d must define a "label" key.', $index)
-                    );
-                }
+            $itemsResolver->setDefined([
+                'disabled',
+                'attributes',
+                'label_attributes',
+                'inputWrapperClassName',
+                'labelClassName',
+                'name',
+                'required',
+            ]);
 
-                if (!is_string($item['label'])) {
-                    throw new InvalidOptionsException(
-                        sprintf('Item at index %d must define a "label" string, %s given.', $index, get_debug_type($item['label']))
-                    );
-                }
-
-                if (!is_string($item['value']) && !is_int($item['value'])) {
-                    throw new InvalidOptionsException(
-                        sprintf('Item at index %d must define a "value" as string or int, %s given.', $index, get_debug_type($item['value']))
-                    );
-                }
-            }
-
-            return true;
+            $itemsResolver->setAllowedTypes('disabled', 'bool');
+            $itemsResolver->setAllowedTypes('attributes', 'array');
+            $itemsResolver->setAllowedTypes('label_attributes', 'array');
+            $itemsResolver->setAllowedTypes('inputWrapperClassName', 'string');
+            $itemsResolver->setAllowedTypes('labelClassName', 'string');
+            $itemsResolver->setAllowedTypes('name', 'string');
+            $itemsResolver->setAllowedTypes('required', 'bool');
         });
 
         $resolver
