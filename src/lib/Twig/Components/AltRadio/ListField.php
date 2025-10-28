@@ -15,9 +15,17 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
  * @phpstan-type AltRadioItem array{
+ *     id: non-empty-string,
  *     value: string|int,
  *     label: string,
- *     disabled?: bool
+ *     disabled?: bool,
+ *     tileClass?: string,
+ *     attributes?: array<string, mixed>,
+ *     label_attributes?: array<string, mixed>,
+ *     inputWrapperClassName?: string,
+ *     labelClassName?: string,
+ *     name?: string,
+ *     required?: bool
  * }
  * @phpstan-type AltRadioItems list<AltRadioItem>
  */
@@ -32,7 +40,40 @@ final class ListField extends AbstractField
     {
         $this->validateListFieldProps($resolver);
 
-        // TODO: check if items have value and label component
+        $resolver->setOptions('items', static function (OptionsResolver $itemsResolver): void {
+            $itemsResolver->setPrototype(true);
+
+            $itemsResolver
+                ->define('id')
+                ->required()
+                ->allowedTypes('string')
+                ->allowedValues(static fn (string $value): bool => trim($value) !== '');
+
+            $itemsResolver
+                ->define('value')
+                ->required()
+                ->allowedTypes('string', 'int');
+
+            $itemsResolver
+                ->define('label')
+                ->required()
+                ->allowedTypes('string');
+
+            $itemsResolver
+                ->define('disabled')
+                ->allowedTypes('bool')
+                ->default(false);
+
+            $itemsResolver
+                ->define('tileClass')
+                ->allowedTypes('string')
+                ->default('');
+
+            $itemsResolver
+                ->define('attributes')
+                ->allowedTypes('array')
+                ->default([]);
+        });
 
         $resolver->setDefaults(['direction' => 'horizontal']);
         $resolver->setDefaults(['value' => '']);
