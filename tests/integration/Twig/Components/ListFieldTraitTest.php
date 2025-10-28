@@ -10,6 +10,7 @@ namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components;
 
 use Ibexa\Tests\Integration\DesignSystemTwig\Twig\Stub\DummyListFieldComponent;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
@@ -111,7 +112,7 @@ final class ListFieldTraitTest extends TestCase
         yield 'invalid label/value types' => [
             [
                 'items' => [
-                    ['id' => 'a', 'label' => 123, 'value' => new \stdClass()],
+                    ['id' => 'a', 'label' => 123, 'value' => new stdClass()],
                 ],
             ],
         ];
