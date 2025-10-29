@@ -10,7 +10,9 @@ namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components;
 
 use Ibexa\Tests\Integration\DesignSystemTwig\Twig\Stub\DummyListFieldComponent;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 final class ListFieldTraitTest extends TestCase
 {
@@ -55,6 +57,129 @@ final class ListFieldTraitTest extends TestCase
             $resolved['direction'],
             '"direction" should default to VERTICAL.'
         );
+    }
+
+    public function testItemMissingValueCausesResolverError(): void
+    {
+        $this->expectException(MissingOptionsException::class);
+
+        $this->getComponent()->resolve([
+            'items' => [
+                ['label' => 'Alpha'],
+            ],
+        ]);
+    }
+
+    public function testItemMissingIdCausesResolverError(): void
+    {
+        $this->expectException(MissingOptionsException::class);
+
+        $this->getComponent()->resolve([
+            'items' => [
+                ['label' => 'Alpha', 'value' => 'A'],
+            ],
+        ]);
+    }
+
+    public function testItemMissingLabelCausesResolverError(): void
+    {
+        $this->expectException(MissingOptionsException::class);
+
+        $this->getComponent()->resolve([
+            'items' => [
+                ['value' => 'A'],
+            ],
+        ]);
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     *
+     * @dataProvider invalidItemOptionsProvider
+     */
+    public function testInvalidItemOptionsCauseResolverError(array $options): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->getComponent()->resolve($options);
+    }
+
+    /**
+     * @return iterable<string, array{0: array<string, mixed>}>
+     */
+    public static function invalidItemOptionsProvider(): iterable
+    {
+        yield 'invalid label/value types' => [
+            [
+                'items' => [
+                    ['id' => 'a', 'label' => 123, 'value' => new stdClass()],
+                ],
+            ],
+        ];
+
+        yield 'empty id' => [
+            [
+                'items' => [
+                    ['id' => '   ', 'label' => 'Alpha', 'value' => 'A'],
+                ],
+            ],
+        ];
+
+        yield 'invalid disabled type' => [
+            [
+                'items' => [
+                    ['id' => 'a', 'label' => 'Alpha', 'value' => 'A', 'disabled' => 'yes'],
+                ],
+            ],
+        ];
+
+        yield 'invalid attributes type' => [
+            [
+                'items' => [
+                    ['id' => 'a', 'label' => 'Alpha', 'value' => 'A', 'attributes' => 'oops'],
+                ],
+            ],
+        ];
+
+        yield 'invalid label_attributes type' => [
+            [
+                'items' => [
+                    ['id' => 'a', 'label' => 'Alpha', 'value' => 'A', 'label_attributes' => 'oops'],
+                ],
+            ],
+        ];
+
+        yield 'invalid input wrapper class name' => [
+            [
+                'items' => [
+                    ['id' => 'a', 'label' => 'Alpha', 'value' => 'A', 'inputWrapperClassName' => ['not-a-string']],
+                ],
+            ],
+        ];
+
+        yield 'invalid label class name' => [
+            [
+                'items' => [
+                    ['id' => 'a', 'label' => 'Alpha', 'value' => 'A', 'labelClassName' => ['not-a-string']],
+                ],
+            ],
+        ];
+
+        yield 'invalid name type' => [
+            [
+                'items' => [
+                    ['id' => 'a', 'label' => 'Alpha', 'value' => 'A', 'name' => ['array']],
+                ],
+            ],
+        ];
+
+        yield 'invalid required type' => [
+            [
+                'items' => [
+                    ['id' => 'a', 'label' => 'Alpha', 'value' => 'A', 'required' => 'yes'],
+                ],
+            ],
+        ];
     }
 
     public function testInvalidItemsTypeCausesResolverError(): void

@@ -112,6 +112,16 @@ final class InputTest extends KernelTestCase
         self::assertStringContainsString('ids-input--small', $this->getClassAttr($input), 'Size "small" should add "ids-input--small" class.');
     }
 
+    public function testEmptyNameCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, [
+            'name' => '',
+            'value' => 'A',
+        ]);
+    }
+
     public function testInvalidDisabledTypeCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);

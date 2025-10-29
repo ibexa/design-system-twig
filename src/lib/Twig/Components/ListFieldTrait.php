@@ -13,8 +13,16 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 /**
  * @phpstan-type ListItem array{
+ *     id: non-empty-string,
  *     value: string|int,
  *     label: string,
+ *     disabled?: bool,
+ *     name?: string,
+ *     required?: bool,
+ *     attributes?: array<string, mixed>,
+ *     label_attributes?: array<string, mixed>,
+ *     inputWrapperClassName?: string,
+ *     labelClassName?: string
  * }
  * @phpstan-type ListItems list<ListItem>
  */
@@ -53,10 +61,57 @@ trait ListFieldTrait
 
     protected function validateListFieldProps(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'items' => [],
-        ]);
-        $resolver->setAllowedTypes('items', 'array');
+        $resolver
+            ->define('items')
+            ->default([])
+            ->allowedTypes('array');
+
+        $resolver->setOptions('items', static function (OptionsResolver $itemsResolver): void {
+            $itemsResolver->setPrototype(true);
+            $itemsResolver
+                ->define('id')
+                ->required()
+                ->allowedTypes('string')
+                ->allowedValues(static fn (string $value): bool => trim($value) !== '');
+
+            $itemsResolver
+                ->define('label')
+                ->required()
+                ->allowedTypes('string');
+
+            $itemsResolver
+                ->define('value')
+                ->required()
+                ->allowedTypes('string', 'int');
+
+            $itemsResolver
+                ->define('disabled')
+                ->allowedTypes('bool');
+
+            $itemsResolver
+                ->define('attributes')
+                ->allowedTypes('array');
+
+            $itemsResolver
+                ->define('label_attributes')
+                ->allowedTypes('array');
+
+            $itemsResolver
+                ->define('inputWrapperClassName')
+                ->allowedTypes('string');
+
+            $itemsResolver
+                ->define('labelClassName')
+                ->allowedTypes('string');
+
+            $itemsResolver
+                ->define('name')
+                ->allowedTypes('string');
+
+            $itemsResolver
+                ->define('required')
+                ->allowedTypes('bool');
+        });
 
         $resolver
             ->define('direction')

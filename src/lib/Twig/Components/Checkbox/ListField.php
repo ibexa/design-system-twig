@@ -15,9 +15,17 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
  * @phpstan-type CheckboxItem array{
+ *     id: non-empty-string,
  *     value: string|int,
  *     label: string,
- *     disabled?: bool
+ *     disabled?: bool,
+ *     name?: string,
+ *     required?: bool,
+ *     attributes?: array<string, mixed>,
+ *     label_attributes?: array<string, mixed>,
+ *     inputWrapperClassName?: string,
+ *     labelClassName?: string,
+ *     checked?: bool
  * }
  * @phpstan-type CheckboxItems list<CheckboxItem>
  */

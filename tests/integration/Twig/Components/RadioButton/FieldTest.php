@@ -81,6 +81,30 @@ final class FieldTest extends KernelTestCase
         self::assertNotNull($input->attr('required'), 'Required should render native "required" attribute.');
     }
 
+    public function testEmptyNameCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(
+            Field::class,
+            $this->baseProps([
+                'name' => '',
+            ])
+        );
+    }
+
+    public function testEmptyIdCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(
+            Field::class,
+            $this->baseProps([
+                'id' => '',
+            ])
+        );
+    }
+
     public function testInvalidAttributesTypeCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);
