@@ -35,11 +35,7 @@ export class ToggleButtonInput extends BaseChoiceInput {
     protected updateLabel(): void {
         const isChecked = this._inputElement.checked;
 
-        if (isChecked) {
-            this.toggleLabelNode.textContent = this.labels.on;
-        } else {
-            this.toggleLabelNode.textContent = this.labels.off;
-        }
+        this.toggleLabelNode.textContent = isChecked ? this.labels.on : this.labels.off;
     }
 
     protected initWidgets(): void {
