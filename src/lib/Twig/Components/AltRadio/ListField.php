@@ -40,43 +40,19 @@ final class ListField extends AbstractField
     {
         $this->validateListFieldProps($resolver);
 
-        $resolver->setOptions('items', static function (OptionsResolver $itemsResolver): void {
-            $itemsResolver->setPrototype(true);
-
-            $itemsResolver
-                ->define('id')
-                ->required()
-                ->allowedTypes('string')
-                ->allowedValues(static fn (string $value): bool => trim($value) !== '');
-
-            $itemsResolver
-                ->define('value')
-                ->required()
-                ->allowedTypes('string', 'int');
-
-            $itemsResolver
-                ->define('label')
-                ->required()
-                ->allowedTypes('string');
-
-            $itemsResolver
-                ->define('disabled')
-                ->allowedTypes('bool')
-                ->default(false);
-
-            $itemsResolver
-                ->define('tileClass')
-                ->allowedTypes('string')
-                ->default('');
-
-            $itemsResolver
-                ->define('attributes')
-                ->allowedTypes('array')
-                ->default([]);
-        });
-
-        $resolver->setDefaults(['direction' => 'horizontal']);
-        $resolver->setDefaults(['value' => '']);
+        $resolver->setDefault('direction', self::HORIZONTAL);
+        $resolver->setDefault('value', '');
         $resolver->setAllowedTypes('value', 'string');
+    }
+
+    protected function configureListFieldItemOptions(OptionsResolver $itemsResolver): void
+    {
+        $itemsResolver
+            ->define('tileClass')
+            ->allowedTypes('string')
+            ->default('');
+
+        $itemsResolver->setDefault('disabled', false);
+        $itemsResolver->setDefault('attributes', []);
     }
 }
