@@ -123,5 +123,6 @@ trait ListFieldTrait
 
     protected function configureListFieldItemOptions(OptionsResolver $itemsResolver): void
     {
+        // Intentionally left blank; consuming components override to extend item option definitions.
     }
 }
