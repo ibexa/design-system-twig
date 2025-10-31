@@ -11,10 +11,10 @@
         <target state="new">Delete</target>
         <note>key: ibexa.chip.delete-btn.label</note>
       </trans-unit>
-      <trans-unit id="61c7070a29f932eb0b1a343509d049aa52c92c09" resname="ibexa.clear-btn.label">
+      <trans-unit id="325602325410dfc0d83e43dec9a10976368c7154" resname="ibexa.clear-button.label">
         <source>Clear</source>
         <target state="new">Clear</target>
-        <note>key: ibexa.clear-btn.label</note>
+        <note>key: ibexa.clear-button.label</note>
       </trans-unit>
       <trans-unit id="8bd385b5e5cc2e1edee94e57245b6d8a42f50aac" resname="ibexa.dropdown.placeholder">
         <source>Select an item</source>
@@ -35,6 +35,11 @@
         <source>Show</source>
         <target state="new">Show</target>
         <note>key: ibexa.expander.label.expand</note>
+      </trans-unit>
+      <trans-unit id="0af0c0b3e944e524dba4b327905685b9300f40e4" resname="ids.dropdown.placeholder">
+        <source>Select an item</source>
+        <target state="new">Select an item</target>
+        <note>key: ids.dropdown.placeholder</note>
       </trans-unit>
     </body>
   </file>

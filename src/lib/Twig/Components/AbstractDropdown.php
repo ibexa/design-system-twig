@@ -24,8 +24,6 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
  */
 abstract class AbstractDropdown
 {
-    private const string TRANSLATION_DOMAIN = 'ibexa_design_system_twig';
-
     public string $name;
 
     public bool $disabled = false;
@@ -78,7 +76,7 @@ abstract class AbstractDropdown
                     /** @Desc("Select an item") */
                     'ids.dropdown.placeholder',
                     [],
-                    self::TRANSLATION_DOMAIN
+                    'ibexa_design_system_twig'
                 )
             );
         $resolver

@@ -8,27 +8,27 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\UI;
 
-use Ibexa\DesignSystemTwig\Twig\Components\UI\ClearBtn;
+use Ibexa\DesignSystemTwig\Twig\Components\UI\ClearButton;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
 
-final class ClearBtnTest extends KernelTestCase
+final class ClearButtonTest extends KernelTestCase
 {
     use InteractsWithTwigComponents;
 
     public function testMount(): void
     {
-        $component = $this->mountTwigComponent(ClearBtn::class, ['disabled' => true]);
+        $component = $this->mountTwigComponent(ClearButton::class, ['disabled' => true]);
 
-        self::assertInstanceOf(ClearBtn::class, $component, 'Component should mount as UI\\ClearBtn.');
+        self::assertInstanceOf(ClearButton::class, $component, 'Component should mount as UI\\ClearButton.');
         self::assertTrue($component->disabled, 'Prop "disabled" should be true.');
     }
 
     public function testDefaultRenderProducesConfiguredButton(): void
     {
-        $crawler = $this->renderTwigComponent(ClearBtn::class)->crawler();
+        $crawler = $this->renderTwigComponent(ClearButton::class)->crawler();
 
         $button = $this->getButton($crawler);
         $class = $this->getClassAttr($button);
@@ -53,7 +53,7 @@ final class ClearBtnTest extends KernelTestCase
 
     public function testDisabledTrueAddsAttributeAndClass(): void
     {
-        $crawler = $this->renderTwigComponent(ClearBtn::class, ['disabled' => true])->crawler();
+        $crawler = $this->renderTwigComponent(ClearButton::class, ['disabled' => true])->crawler();
 
         $button = $this->getButton($crawler);
         $class = $this->getClassAttr($button);
@@ -65,7 +65,7 @@ final class ClearBtnTest extends KernelTestCase
     public function testInvalidDisabledTypeCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);
-        $this->mountTwigComponent(ClearBtn::class, ['disabled' => 'yes']);
+        $this->mountTwigComponent(ClearButton::class, ['disabled' => 'yes']);
     }
 
     private function getButton(Crawler $crawler): Crawler
