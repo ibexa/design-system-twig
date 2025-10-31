@@ -15,18 +15,18 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
- * @phpstan-type AttrMap array<string, scalar>
+ * @phpstan-type AttributeMap array<string, scalar>
  */
 abstract class AbstractField
 {
     /** @var non-empty-string */
     public string $name;
 
-    /** @var AttrMap */
+    /** @var AttributeMap */
     #[ExposeInTemplate(name: 'label_extra', getter: 'getLabelExtra')]
     public array $labelExtra = [];
 
-    /** @var AttrMap */
+    /** @var AttributeMap */
     #[ExposeInTemplate('helper_text_extra')]
     public array $helperTextExtra = [];
 
@@ -66,7 +66,7 @@ abstract class AbstractField
     }
 
     /**
-     * @return AttrMap
+     * @return AttributeMap
      */
     public function getLabelExtra(): array
     {
