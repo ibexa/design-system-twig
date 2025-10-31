@@ -8,16 +8,13 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components\InputText;
 
-use Ibexa\DesignSystemTwig\Twig\Components\AbstractField;
-use Ibexa\DesignSystemTwig\Twig\Components\SingleInputFieldTrait;
+use Ibexa\DesignSystemTwig\Twig\Components\AbstractSingleInputField;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent('ibexa:input_text:field')]
-final class Field extends AbstractField
+final class Field extends AbstractSingleInputField
 {
-    use SingleInputFieldTrait;
-
     public string $type = 'input-text';
 
     protected function configurePropsResolver(OptionsResolver $resolver): void

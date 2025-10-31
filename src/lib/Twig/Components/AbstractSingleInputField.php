@@ -16,7 +16,7 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 /**
  * @phpstan-type AttributeMap array<string, scalar>
  */
-trait SingleInputFieldTrait
+abstract class AbstractSingleInputField extends AbstractField
 {
     /** @var non-empty-string */
     public string $id;
