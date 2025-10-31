@@ -3,8 +3,11 @@ import { escapeHTML } from '@ids-core/helpers/escape';
 
 const RESIZE_TIMEOUT = 200;
 
+type OverflowListItemType = Record<string, string>;
+
 export class OverflowList extends Base {
     private _itemsNode: HTMLDivElement;
+    private _itemsTemplateProps: string[];
     private _moreItemNode: HTMLDivElement;
     private _numberOfItems = 0;
     private _numberOfVisibleItems = 0;
@@ -30,10 +33,20 @@ export class OverflowList extends Base {
         super(container);
 
         const itemsNode = container.querySelector<HTMLDivElement>('.ids-overflow-list__items');
-        const moreItemNode = itemsNode?.querySelector<HTMLDivElement>(':scope *:last-child');
+        const moreItemNode = itemsNode?.lastElementChild;
 
         if (!itemsNode || !moreItemNode) {
             throw new Error('OverflowList: OverflowList elements are missing in the container.');
+        }
+
+        if (!(moreItemNode instanceof HTMLDivElement)) {
+            throw new Error('OverflowList: More item element is not a HTMLDivElement.');
+        }
+
+        const itemsTemplateProps: unknown = JSON.parse(container.dataset.idsItemTemplateProps ?? '[]');
+
+        if (!Array.isArray(itemsTemplateProps) || !itemsTemplateProps.every((item) => typeof item === 'string')) {
+            throw new Error('OverflowList: Invalid item template props data attribute.');
         }
 
         this._itemsNode = itemsNode;
@@ -42,20 +55,9 @@ export class OverflowList extends Base {
             item: this.getTemplate('item'),
             itemMore: this.getTemplate('item_more'),
         };
+        this._itemsTemplateProps = itemsTemplateProps;
         this._numberOfItems = this.getItems(false, false).length;
         this._numberOfVisibleItems = this._numberOfItems;
-    }
-
-    private getItems(getOnlyVisible = false, withOverflow = true): HTMLDivElement[] {
-        const items = getOnlyVisible
-            ? Array.from(this._itemsNode.querySelectorAll<HTMLDivElement>(':scope > *:not([hidden])'))
-            : Array.from(this._itemsNode.querySelectorAll<HTMLDivElement>(':scope > *'));
-
-        if (withOverflow) {
-            return items;
-        }
-
-        return items.slice(0, -1);
     }
 
     private getTemplate(type: 'item' | 'item_more'): string {
@@ -132,8 +134,15 @@ export class OverflowList extends Base {
 
     public rerender() {
         let stopRecalculating = true;
+        let numberOfRecalculations = 0;
 
         do {
+            if (numberOfRecalculations > this._numberOfItems) {
+                throw new Error('OverflowList: Too many recalculations while rerendering the list.');
+            }
+
+            numberOfRecalculations++;
+
             stopRecalculating = this.recalculateVisibleItems();
 
             this.hideOverflowItems();
@@ -141,13 +150,13 @@ export class OverflowList extends Base {
         } while (!stopRecalculating);
     }
 
-    private setItemsContainer(items: Record<string, string>[]) {
+    private setItemsContainer(items: OverflowListItemType[]) {
         const fragment = document.createDocumentFragment();
 
         items.forEach((item) => {
-            const filledItem = Object.entries(item).reduce((acc, [key, value]) => {
+            const filledItem = this._itemsTemplateProps.reduce((acc, key) => {
                 const pattern = `{{ ${key} }}`;
-                const escapedValue = escapeHTML(value);
+                const escapedValue = escapeHTML(item[key]);
 
                 return acc.replaceAll(pattern, escapedValue);
             }, this._templates.item);
@@ -171,12 +180,27 @@ export class OverflowList extends Base {
     }
 
     private setItemsContainerWidth() {
+        this._itemsNode.style.width = '0px';
+
         const overflowListWidth = this._container.clientWidth;
 
         this._itemsNode.style.width = `${overflowListWidth}px`;
     }
 
-    public setItems(items: Record<string, string>[]) {
+    public getItems(getOnlyVisible = false, withOverflow = true): HTMLDivElement[] {
+        const items = getOnlyVisible
+            ? Array.from(this._itemsNode.querySelectorAll<HTMLDivElement>(':scope > *:not([hidden])'))
+            : Array.from(this._itemsNode.querySelectorAll<HTMLDivElement>(':scope > *'));
+
+        if (withOverflow) {
+            return items;
+        }
+
+        return items.slice(0, -1);
+    }
+
+    public setItems(items: OverflowListItemType[]) {
+        this.setItemsContainerWidth();
         this.setItemsContainer(items);
         this.resetState();
         this.rerender();

@@ -1,4 +1,6 @@
 import { BaseDropdown, BaseDropdownItem } from '../../partials';
+import { Chip } from '../chip';
+import { OverflowList } from '../overflow_list';
 import { createNodesFromTemplate } from '../../utils/dom';
 
 export enum DropdownMultiInputAction {
@@ -7,6 +9,7 @@ export enum DropdownMultiInputAction {
 }
 
 export class DropdownMultiInput extends BaseDropdown {
+    private selectionInfoItemsInstance: OverflowList;
     private _sourceInputNode: HTMLSelectElement;
     private _value: string[];
 
@@ -14,11 +17,13 @@ export class DropdownMultiInput extends BaseDropdown {
         super(container);
 
         const _sourceInputNode = this._sourceNode.querySelector<HTMLSelectElement>('select');
+        const selectionInfoItemsListNode = this._container.querySelector<HTMLDivElement>('.ids-overflow-list');
 
-        if (!_sourceInputNode) {
+        if (!_sourceInputNode || !selectionInfoItemsListNode) {
             throw new Error('DropdownMultiInput: Required elements are missing in the container.');
         }
 
+        this.selectionInfoItemsInstance = new OverflowList(selectionInfoItemsListNode);
         this._sourceInputNode = _sourceInputNode;
         this._value = this.getSelectedValuesFromSource();
 
@@ -79,15 +84,47 @@ export class DropdownMultiInput extends BaseDropdown {
         const items = values.map((value) => this.getItemById(value)).filter((item): item is BaseDropdownItem => item !== undefined);
 
         if (items.length) {
-            // TODO: implement OverflowList when merged
-            this._selectionInfoItemsNode.textContent = items.map(({ label }) => label).join(', ');
+            const idsOrder = Array.from(this._itemsMap.keys());
+            const selectionItems = items
+                .toSorted(({ id: idA }, { id: idB }) => idsOrder.indexOf(idA) - idsOrder.indexOf(idB))
+                .map(({ id, label }) => ({ id, label }));
+
             this._selectionInfoItemsNode.removeAttribute('hidden');
             this._placeholderNode.setAttribute('hidden', '');
+            this.selectionInfoItemsInstance.setItems(selectionItems);
+            this.initChips();
         } else {
-            this._selectionInfoItemsNode.textContent = '';
             this._selectionInfoItemsNode.setAttribute('hidden', '');
             this._placeholderNode.removeAttribute('hidden');
+            this.selectionInfoItemsInstance.setItems([]);
         }
+    }
+
+    protected onChipDelete = (id: string) => {
+        this.setValue(id);
+    };
+
+    protected initChips() {
+        const chipsNodes = this.selectionInfoItemsInstance.getItems();
+
+        chipsNodes.forEach((chipNode) => {
+            if (!(chipNode instanceof HTMLDivElement)) {
+                return;
+            }
+
+            const id = chipNode.dataset.idsId;
+            const chipInstance = new Chip(chipNode, {
+                onDelete: () => {
+                    if (!id) {
+                        return;
+                    }
+
+                    this.onChipDelete(id);
+                },
+            });
+
+            chipInstance.init();
+        });
     }
 
     public getItemContent(item: BaseDropdownItem, listItem: HTMLLIElement): NodeListOf<ChildNode> | string {
@@ -140,4 +177,23 @@ export class DropdownMultiInput extends BaseDropdown {
             this.setValue(id);
         }
     };
+
+    public toggleItemsContainer(nextIsExpanded?: boolean, event?: MouseEvent | KeyboardEvent) {
+        if (event?.target instanceof Element && event.target.closest('.ids-chip__delete')) {
+            return;
+        }
+
+        super.toggleItemsContainer(nextIsExpanded, event);
+    }
+
+    public initSelectionInfoItems() {
+        this.selectionInfoItemsInstance.init();
+        this.initChips();
+    }
+
+    public init() {
+        super.init();
+
+        this.initSelectionInfoItems();
+    }
 }

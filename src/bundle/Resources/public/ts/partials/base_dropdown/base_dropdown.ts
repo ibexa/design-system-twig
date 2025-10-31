@@ -206,7 +206,7 @@ export abstract class BaseDropdown extends Base {
 
     protected clickOutsideItemsContainerHandler = (event: MouseEvent) => {
         if (event.target instanceof Node && !this._widgetNode.contains(event.target) && !this._itemsContainerNode.contains(event.target)) {
-            this.toggleItemsContainer(false);
+            this.toggleItemsContainer(false, event);
         }
     };
 
@@ -241,7 +241,8 @@ export abstract class BaseDropdown extends Base {
         return nextHeight;
     }
 
-    public toggleItemsContainer(nextIsExpanded?: boolean) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public toggleItemsContainer(nextIsExpanded?: boolean, _event?: MouseEvent | KeyboardEvent) {
         const isExpanded = nextIsExpanded ?? !this._isExpanded;
 
         this._expanderInstance.toggleIsExpanded(isExpanded);
@@ -277,8 +278,8 @@ export abstract class BaseDropdown extends Base {
     protected initExpander() {
         this._expanderInstance.init();
 
-        this._widgetNode.addEventListener('click', () => {
-            this.toggleItemsContainer(!this._isExpanded);
+        this._widgetNode.addEventListener('click', (event) => {
+            this.toggleItemsContainer(!this._isExpanded, event);
         });
     }
 
@@ -365,7 +366,7 @@ export abstract class BaseDropdown extends Base {
             ['Enter', ' '],
             (event) => {
                 event.preventDefault();
-                this.toggleItemsContainer();
+                this.toggleItemsContainer(undefined, event);
             },
             this._widgetNode,
         );
@@ -392,7 +393,7 @@ export abstract class BaseDropdown extends Base {
             (event) => {
                 if (this._isExpanded) {
                     event.preventDefault();
-                    this.toggleItemsContainer(false);
+                    this.toggleItemsContainer(false, event);
                     this._widgetNode.focus();
                 }
             },

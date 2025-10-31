@@ -1,6 +1,6 @@
 {% set overflow_list_classes = html_classes('ids-overflow-list', attributes.render('class') ?? '') %}
 
-<div class="{{ overflow_list_classes }}">
+<div class="{{ overflow_list_classes }}" {{ attributes }} data-ids-item-template-props="{{ itemTemplateProps|json_encode }}">
     <div class="ids-overflow-list__items">
         {% for item in items %}
             {{ block('item') }}

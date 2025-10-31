@@ -21,5 +21,20 @@
 {% endblock item_content %}
 
 {% block selected_items %}
-    {{ selected_items|map(item => item.label)|join(', ') }}
+    <twig:ibexa:overflow_list 
+        :itemTemplateProps="['id', 'label']" 
+        :items="selected_items"
+        data-ids-custom-init="true"
+    >
+        <twig:block name="item">
+            <twig:ibexa:chip :data-ids-id="item.id">
+                {{ item.label }}
+            </twig:ibexa:chip>
+        </twig:block>
+        <twig:block name="more_item">
+            <twig:ibexa:chip :isDeletable="false">
+                +{{ "{{ hidden_count }}" }}
+            </twig:ibexa:chip>
+        </twig:block>
+    </twig:ibexa:overflow_list>
 {% endblock selected_items %}

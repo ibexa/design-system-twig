@@ -4,7 +4,7 @@ interface ChipConfig {
     onDelete?: (event: MouseEvent) => void;
 }
 
-export default class Chip extends Base {
+export class Chip extends Base {
     private deleteButton: HTMLButtonElement | null;
     private onDelete?: (event: MouseEvent) => void;
 
