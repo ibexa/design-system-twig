@@ -112,7 +112,17 @@ export abstract class BaseDropdown extends Base {
 
             listItem.dataset.id = item.id;
             listItem.dataset.label = item.label;
-            listItem.textContent = this.getItemContent(item);
+
+            const itemContent = this.getItemContent(item, listItem);
+
+            if (itemContent instanceof NodeList) {
+                listItem.innerHTML = '';
+                Array.from(itemContent).forEach((childNode) => {
+                    listItem.appendChild(childNode);
+                });
+            } else {
+                listItem.textContent = itemContent;
+            }
 
             this._itemsNode.appendChild(listItem);
         });
@@ -132,15 +142,12 @@ export abstract class BaseDropdown extends Base {
         }
     }
 
-    protected abstract setSourceValue(id: string): void;
-
-    protected abstract setSelectedItem(id: string): void;
-
     protected abstract setSource(): void;
 
     /******* Items management ********/
 
-    public getItemContent(item: BaseDropdownItem) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public getItemContent(item: BaseDropdownItem, _listItem: HTMLLIElement): NodeListOf<ChildNode> | string {
         return item.label;
     }
 
