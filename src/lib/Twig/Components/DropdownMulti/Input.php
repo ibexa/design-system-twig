@@ -28,8 +28,8 @@ final class Input extends AbstractDropdown
         $items = $this->items;
 
         return array_map(
-            static function (string $id) use ($items) {
-                return array_find($items, static function (array $item) use ($id) {
+            static function (string $id) use ($items): ?array {
+                return array_find($items, static function (array $item) use ($id): bool {
                     return $item['id'] === $id;
                 });
             },
