@@ -1,0 +1,7 @@
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_field.html.twig' %}
+
+{% set class = html_classes('ids-toggle-field', attributes.render('class') ?? '') %}
+
+{% block content %}
+    <twig:ibexa:toggle_button:input {{ ...input }} />
+{% endblock content %}

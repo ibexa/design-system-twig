@@ -1,6 +1,7 @@
 import { CheckboxInput, CheckboxesListField } from './components/checkbox';
 import { DropdownMultiInput, DropdownSingleInput } from './components/dropdown';
 import { InputTextField, InputTextInput } from './components/input_text';
+import { ToggleButtonField, ToggleButtonInput } from './components/toggle_button';
 import { Accordion } from './components/accordion';
 import { AltRadioInput } from './components/alt_radio/alt_radio_input';
 import { OverflowList } from './components/overflow_list';
@@ -75,4 +76,20 @@ overflowListContainers.forEach((overflowListContainer: HTMLDivElement) => {
     const overflowListInstance = new OverflowList(overflowListContainer);
 
     overflowListInstance.init();
+});
+
+const toggleButtonFieldContainers = document.querySelectorAll<HTMLDivElement>('.ids-toggle-field:not([data-ids-custom-init])');
+
+toggleButtonFieldContainers.forEach((toggleButtonFieldContainer: HTMLDivElement) => {
+    const toggleButtonFieldInstance = new ToggleButtonField(toggleButtonFieldContainer);
+
+    toggleButtonFieldInstance.init();
+});
+
+const toggleButtonContainers = document.querySelectorAll<HTMLDivElement>('.ids-toggle:not([data-ids-custom-init])');
+
+toggleButtonContainers.forEach((toggleButtonContainer: HTMLDivElement) => {
+    const toggleButtonInstance = new ToggleButtonInput(toggleButtonContainer);
+
+    toggleButtonInstance.init();
 });
