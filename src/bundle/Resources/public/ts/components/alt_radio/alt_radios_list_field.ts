@@ -51,30 +51,22 @@ export class AltRadiosListField extends BaseInputsList<string> {
         return itemsButtons;
     }
 
-    protected onItemClick(event: MouseEvent, itemValue: string) {
-        if (!(event.target instanceof HTMLDivElement)) {
+    protected onItemClick(_event: MouseEvent, itemValue: string) {
+        if (this.value === itemValue) {
             return;
         }
 
-        this.onChange(itemValue);
-    }
-
-    protected onChange(itemValue: string) {
         const changeEvent = new CustomEvent(AltRadiosListField.EVENTS.CHANGE, {
             bubbles: true,
             detail: itemValue,
         });
 
-        const currentValueInstance = this.itemsMap.get(this.value ?? '');
+        if (this.value) {
+            const currentValueInstance = this.itemsMap.get(this.value);
 
-        if (currentValueInstance) {
-            currentValueInstance.toggleChecked(false);
-        }
-
-        const nextValueInstance = this.itemsMap.get(itemValue);
-
-        if (nextValueInstance) {
-            nextValueInstance.toggleChecked(true);
+            if (currentValueInstance) {
+                currentValueInstance.toggleChecked(false);
+            }
         }
 
         this.value = itemValue;

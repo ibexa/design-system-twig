@@ -45,7 +45,7 @@ export class AltRadioInput extends Base {
     }
 
     setError(value: boolean) {
-        this.tileElement.classList.toggle('ids-alt-radio_tile--error', value);
+        this.tileElement.classList.toggle('ids-alt-radio__tile--error', value);
     }
 
     getInputElement(): HTMLInputElement {
