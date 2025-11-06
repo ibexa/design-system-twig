@@ -66,7 +66,7 @@ trait ListFieldTrait
             ->default([])
             ->allowedTypes('array');
 
-        $resolver->setOptions('items', static function (OptionsResolver $itemsResolver): void {
+        $resolver->setOptions('items', function (OptionsResolver $itemsResolver): void {
             $itemsResolver->setPrototype(true);
             $itemsResolver
                 ->define('id')
@@ -111,11 +111,18 @@ trait ListFieldTrait
             $itemsResolver
                 ->define('required')
                 ->allowedTypes('bool');
+
+            $this->configureListFieldItemOptions($itemsResolver);
         });
 
         $resolver
             ->define('direction')
             ->allowedValues(self::VERTICAL, self::HORIZONTAL)
             ->default(self::VERTICAL);
+    }
+
+    protected function configureListFieldItemOptions(OptionsResolver $itemsResolver): void
+    {
+        // Intentionally left blank; consuming components override to extend item option definitions.
     }
 }
