@@ -1,4 +1,13 @@
-{% set component_classes = html_classes('ids-choice-input-field', class) %}
+{% set component_classes =
+    html_classes(
+        'ids-choice-input-field',
+        {
+            'ids-choice-input-field--disabled': disabled,
+            'ids-choice-input-field--error': error,
+        },
+        class,
+    )
+%}
 {% set input_wrapper_classes = html_classes('ids-choice-input-field__input-wrapper', input_wrapper_class) %}
 {% set label_classes = html_classes('ids-choice-input-field__label', label_class) %}
 
