@@ -51,7 +51,8 @@ final class Badge
         $resolver
             ->define('value')
             ->allowedTypes('int')
-            ->required();
+            ->required()
+            ->normalize(static fn(OptionsResolver $options, int $value): int => max(0, $value));
         $resolver
             ->define('maxBadgeValue')
             ->allowedTypes('int')
