@@ -44,16 +44,18 @@ final class Icon
             ->define('name')
             ->allowedTypes('string')
             ->default('')
-            ->normalize(static function (Options $options, string $value): string {
-                $name = trim($value);
-                $path = trim($options['path'] ?? '');
+            ->normalize(
+                static function (Options $options, string $value): string {
+                    $name = trim($value);
+                    $path = trim($options['path'] ?? '');
 
-                if ($path === '' && $name === '') {
-                    throw new InvalidOptionsException("When 'path' is empty or not submitted, 'name' is required and cannot be empty.");
+                    if ($path === '' && $name === '') {
+                        throw new InvalidOptionsException("When 'path' is empty or not submitted, 'name' is required and cannot be empty.");
+                    }
+
+                    return $name;
                 }
-
-                return $name;
-            });
+            );
 
         return $resolver->resolve($props) + $props;
     }

@@ -126,6 +126,9 @@ abstract class AbstractDropdown
             ->setNormalizer('id', static fn (Options $itemOptions, int|string $id): string => (string) $id)
             ->setAllowedTypes('label', 'string');
 
+        /** @var array<int, array{id: string, label: string}> $normalizedItems */
+        $normalizedItems = [];
+
         foreach ($items as $index => $item) {
             if (!is_array($item)) {
                 throw new InvalidOptionsException(
