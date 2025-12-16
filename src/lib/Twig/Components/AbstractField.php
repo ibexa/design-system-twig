@@ -56,9 +56,12 @@ abstract class AbstractField
         $resolver->setAllowedTypes('helperTextExtra', 'array');
         $resolver->setAllowedTypes('required', 'bool');
 
-        $resolver->setNormalizer('labelExtra', static function (Options $options, array $attributes) {
-            return self::assertForbidden($attributes, ['for', 'required'], 'labelExtra');
-        });
+        $resolver->setNormalizer(
+            'labelExtra',
+            static function (Options $options, array $attributes): array {
+                return self::assertForbidden($attributes, ['for', 'required'], 'labelExtra');
+            }
+        );
 
         $this->configurePropsResolver($resolver);
 
