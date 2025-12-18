@@ -126,20 +126,24 @@ abstract class AbstractDropdown
             ->setNormalizer('id', static fn (Options $itemOptions, int|string $id): string => (string) $id)
             ->setAllowedTypes('label', 'string');
 
-        foreach ($items as $index => $item) {
-            if (!is_array($item)) {
-                throw new InvalidOptionsException(
-                    sprintf(
-                        'Each dropdown item must be an array, "%s" given at index %d.',
-                        get_debug_type($item),
-                        $index
-                    )
-                );
+            foreach ($items as $index => $item) {
+                if (!is_array($item)) {
+                    throw new InvalidOptionsException(
+                        sprintf(
+                            'Each dropdown item must be an array, "%s" given at index %d.',
+                            get_debug_type($item),
+                            $index
+                        )
+                    );
             }
 
-            $items[$index] = $itemResolver->resolve($item);
+            /** @var array{id: string, label: string} $resolvedItem */
+            $resolvedItem = $itemResolver->resolve($item);
+
+            $items[$index] = $resolvedItem;
         }
 
+        /** @var array<int, array{id: string, label: string}> $items */
         return $items;
     }
 }
