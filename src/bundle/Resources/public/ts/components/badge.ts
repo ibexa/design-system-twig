@@ -30,16 +30,19 @@ export default class Badge extends Base {
         const maxBadgeValue = this._container.dataset.idsMaxBadgeValue ?? '';
         const parsedMax = parseInt(maxBadgeValue, 10);
 
-        if (!maxBadgeValue || isNaN(parsedMax)) {
+        if (isNaN(parsedMax)) {
             throw new Error('There is no proper max badge value defined for this badge!');
         }
 
         this.maxBadgeValue = parsedMax;
-        this.variant = (this._container.dataset.idsVariant as BadgeVariant) ?? BadgeVariant.String;
+
+        const variantValue = this._container.dataset.idsVariant;
+
+        this.variant = variantValue === BadgeVariant.Number || variantValue === BadgeVariant.String ? variantValue : BadgeVariant.String;
 
         const initialValue = this._container.textContent?.trim() ?? '';
 
-        if (initialValue === null) {
+        if (initialValue === '') {
             throw new Error('No value found for this badge!');
         }
 
@@ -97,7 +100,7 @@ export default class Badge extends Base {
 
         const currentValue = this.parseValue(this.getValue()) ?? 0;
 
-        if (currentValue !== null && currentValue > this.maxBadgeValue) {
+        if (currentValue > this.maxBadgeValue) {
             this.setValue(currentValue.toString());
         }
     }
