@@ -23,19 +23,21 @@ final class BadgeTest extends KernelTestCase
     {
         $component = $this->mountTwigComponent(Badge::class, [
             'size' => 'small',
-            'value' => 7,
-            'maxBadgeValue' => 15,
+            'value' => '7',
+            'maxValue' => 15,
+            'variant' => 'number',
         ]);
 
         self::assertInstanceOf(Badge::class, $component, 'Component should mount as Badge.');
         self::assertSame('small', $component->size, 'Prop "size" should be "small".');
-        self::assertSame(7, $component->value, 'Prop "value" should be 7.');
-        self::assertSame(15, $component->maxBadgeValue, 'Prop "maxBadgeValue" should be 15.');
+        self::assertSame('7', $component->value, 'Prop "value" should be "7".');
+        self::assertSame(15, $component->maxValue, 'Prop "maxValue" should be 15.');
+        self::assertSame('number', $component->variant, 'Prop "variant" should be "number".');
     }
 
     public function testDefaultRender(): void
     {
-        $crawler = $this->renderTwigComponent(Badge::class, ['value' => 1])->crawler();
+        $crawler = $this->renderTwigComponent(Badge::class, ['value' => '1'])->crawler();
         $badge = $this->getBadge($crawler);
         $class = $this->getClassAttr($badge);
 
@@ -55,13 +57,14 @@ final class BadgeTest extends KernelTestCase
         self::assertStringContainsString('ids-badge--small', $class, 'Small size should add "ids-badge--small" class.');
     }
 
-    /**
-     * @param non-empty-string $size
-     */
     #[DataProvider('stretchedProvider')]
-    public function testStretchedModifier(string $size, int $value, bool $expected): void
+    public function testStretchedModifier(string $size, int|string $value, bool $expected): void
     {
-        $crawler = $this->renderTwigComponent(Badge::class, ['size' => $size, 'value' => $value])->crawler();
+        $crawler = $this->renderTwigComponent(Badge::class, [
+            'size' => $size,
+            'value' => $value,
+            'variant' => 'number',
+        ])->crawler();
         $badge = $this->getBadge($crawler);
         $class = $this->getClassAttr($badge);
 
@@ -73,37 +76,39 @@ final class BadgeTest extends KernelTestCase
     }
 
     /**
-     * @return iterable<string, array{0: string, 1: int, 2: bool}>
+     * @return iterable<string, array{0: string, 1: int|string, 2: bool}>
      */
     public static function stretchedProvider(): iterable
     {
-        yield 'medium below' => ['medium', 99, false];
-        yield 'medium at' => ['medium', 100, true];
-        yield 'small below' => ['small', 9, false];
-        yield 'small at' => ['small', 10, true];
+        yield 'medium below' => ['medium', '99', false];
+        yield 'medium at' => ['medium', '100', true];
+        yield 'small below' => ['small', '9', false];
+        yield 'small at' => ['small', '10', true];
     }
 
     public function testFormattedValueIsCappedByMax(): void
     {
         $crawler = $this->renderTwigComponent(Badge::class, [
-            'value' => 150,
-            'maxBadgeValue' => 99,
+            'value' => '150',
+            'maxValue' => 99,
+            'variant' => 'number',
         ])->crawler();
 
         $badge = $this->getBadge($crawler);
-        self::assertSame('99+', $this->getText($badge), 'When value exceeds maxBadgeValue, text should display "<max>+".');
+        self::assertSame('99+', $this->getText($badge), 'When value exceeds maxValue, text should display "<max>+".');
         self::assertSame('99', $badge->attr('data-ids-max-badge-value'), 'data-ids-max-badge-value should match the exposed "max_value".');
     }
 
     public function testFormattedValueDisplaysRawValueWhenUnderMax(): void
     {
         $crawler = $this->renderTwigComponent(Badge::class, [
-            'value' => 42,
-            'maxBadgeValue' => 99,
+            'value' => '42',
+            'maxValue' => 99,
+            'variant' => 'number',
         ])->crawler();
 
         $badge = $this->getBadge($crawler);
-        self::assertSame('42', $this->getText($badge), 'When value <= maxBadgeValue, text should display the raw value.');
+        self::assertSame('42', $this->getText($badge), 'When value <= maxValue, text should display the raw value.');
     }
 
     public function testInvalidPropsCauseResolverErrorOnMount(): void
@@ -116,7 +121,7 @@ final class BadgeTest extends KernelTestCase
     {
         $this->expectException(InvalidOptionsException::class);
 
-        $this->mountTwigComponent(Badge::class, ['value' => 'not-int']);
+        $this->mountTwigComponent(Badge::class, ['value' => ['not-scalar']]);
     }
 
     private function getBadge(Crawler $crawler): Crawler

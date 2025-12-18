@@ -22,16 +22,23 @@ final class Badge
         'small' => 10,
     ];
 
+    private const STRING_THRESHOLD = [
+        'medium' => 3,
+        'small' => 2,
+    ];
+
     public string $size = 'medium';
 
-    public int $value = 1;
+    public string $value = '1';
+
+    public string $variant = 'string';
 
     #[ExposeInTemplate('max_value')]
-    public int $maxBadgeValue;
+    public int $maxValue;
 
     public function __construct()
     {
-        $this->maxBadgeValue = self::DEFAULT_MAX_BADGE_VALUE;
+        $this->maxValue = self::DEFAULT_MAX_BADGE_VALUE;
     }
 
     /**
@@ -50,10 +57,14 @@ final class Badge
             ->default('medium');
         $resolver
             ->define('value')
-            ->allowedTypes('int')
+            ->allowedTypes('string', 'int')
             ->required();
         $resolver
-            ->define('maxBadgeValue')
+            ->define('variant')
+            ->allowedValues('string', 'number')
+            ->default('string');
+        $resolver
+            ->define('maxValue')
             ->allowedTypes('int')
             ->default(self::DEFAULT_MAX_BADGE_VALUE);
 
@@ -63,16 +74,28 @@ final class Badge
     #[ExposeInTemplate('is_stretched')]
     public function isStretched(): bool
     {
-        return $this->value >= self::THRESHOLD[$this->size];
+        if ($this->variant === 'number') {
+            $numericValue = (int)$this->value;
+
+            return $numericValue >= self::THRESHOLD[$this->size];
+        }
+
+        return strlen($this->value) >= self::STRING_THRESHOLD[$this->size];
     }
 
     #[ExposeInTemplate('formatted_value')]
     public function getFormattedValue(): string
     {
-        if ($this->value > $this->maxBadgeValue) {
-            return $this->maxBadgeValue . '+';
+        if ($this->variant === 'string') {
+            return (string)$this->value;
         }
 
-        return (string)$this->value;
+        $numericValue = (int)$this->value;
+
+        if ($numericValue > $this->maxValue) {
+            return $this->maxValue . '+';
+        }
+
+        return (string)$numericValue;
     }
 }
