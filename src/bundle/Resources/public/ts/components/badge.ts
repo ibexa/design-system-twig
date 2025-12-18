@@ -4,29 +4,40 @@ enum BadgeSize {
     Medium = 'medium',
     Small = 'small',
 }
+enum BadgeVariant {
+    String = 'string',
+    Number = 'number',
+}
 
 const THRESHOLD = {
     [BadgeSize.Medium]: 100,
     [BadgeSize.Small]: 10,
 };
 
+const STRING_THRESHOLD = {
+    [BadgeSize.Medium]: 3,
+    [BadgeSize.Small]: 2,
+};
+
 export default class Badge extends Base {
-    private _value = 0;
-    private _maxBadgeValue: number;
+    private value = '0';
+    private maxBadgeValue: number;
+    private variant: BadgeVariant;
 
     constructor(container: HTMLDivElement) {
         super(container);
 
-        const _maxBadgeValue = this._container.dataset.idsMaxBadgeValue ?? '';
-        const parsedMax = parseInt(_maxBadgeValue, 10);
+        const maxBadgeValue = this._container.dataset.idsMaxBadgeValue ?? '';
+        const parsedMax = parseInt(maxBadgeValue, 10);
 
-        if (!_maxBadgeValue || isNaN(parsedMax)) {
+        if (!maxBadgeValue || isNaN(parsedMax)) {
             throw new Error('There is no proper max badge value defined for this badge!');
         }
 
-        this._maxBadgeValue = parsedMax;
+        this.maxBadgeValue = parsedMax;
+        this.variant = (this._container.dataset.idsVariant as BadgeVariant) ?? BadgeVariant.String;
 
-        const initialValue = this._parseValue(this._container.textContent);
+        const initialValue = this._container.textContent?.trim() ?? '';
 
         if (initialValue === null) {
             throw new Error('No value found for this badge!');
@@ -35,7 +46,7 @@ export default class Badge extends Base {
         this.setValue(initialValue);
     }
 
-    private _parseValue(badgeContent: string | null): number | null {
+    private parseValue(badgeContent: string | null): number | null {
         if (badgeContent === null || badgeContent.trim() === '') {
             return null;
         }
@@ -45,24 +56,36 @@ export default class Badge extends Base {
         return isNaN(numericValue) ? null : numericValue;
     }
 
-    setValue(value: number): void {
-        this._value = value;
+    setValue(value: string): void {
+        this.value = value;
     }
 
     renderContent(): void {
-        const content = this.getValueRestrictedByMaxValue();
+        const content = this.getFormattedValue();
         const size = this.getSize();
 
         this._container.textContent = content;
-        this._container.classList.toggle('ids-badge--stretched', this._value >= THRESHOLD[size]);
+
+        const isStretched =
+            this.variant === BadgeVariant.Number
+                ? (this.parseValue(this.value) ?? 0) >= THRESHOLD[size]
+                : this.value.length >= STRING_THRESHOLD[size];
+
+        this._container.classList.toggle('ids-badge--stretched', isStretched);
     }
 
-    getValueRestrictedByMaxValue(): string {
-        return this._value > this._maxBadgeValue ? `${this._maxBadgeValue}+` : this._value.toString();
+    getFormattedValue(): string {
+        if (this.variant === BadgeVariant.String) {
+            return this.value;
+        }
+
+        const numericValue = this.parseValue(this.value) ?? 0;
+
+        return numericValue > this.maxBadgeValue ? `${this.maxBadgeValue}+` : numericValue.toString();
     }
 
-    getValue(): number | null {
-        return this._value;
+    getValue(): string | null {
+        return this.value;
     }
 
     getSize(): BadgeSize {
@@ -70,16 +93,16 @@ export default class Badge extends Base {
     }
 
     setMaxValue(max: number): void {
-        this._maxBadgeValue = max;
+        this.maxBadgeValue = max;
 
-        const currentValue = this.getValue();
+        const currentValue = this.parseValue(this.getValue()) ?? 0;
 
-        if (currentValue !== null && currentValue > this._maxBadgeValue) {
-            this.setValue(currentValue);
+        if (currentValue !== null && currentValue > this.maxBadgeValue) {
+            this.setValue(currentValue.toString());
         }
     }
 
     getMaxValue(): number {
-        return this._maxBadgeValue;
+        return this.maxBadgeValue;
     }
 }
