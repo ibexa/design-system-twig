@@ -3,7 +3,7 @@
 {% set class = html_classes('ids-dropdown--multi', attributes.render('class') ?? '') %}
 
 {% block source %}
-    <select multiple name="{{ name }}"{% if disabled %} disabled{% endif %}>
+    <select multiple="multiple" name="{{ name }}"{% if disabled %} disabled{% endif %}>
         {% for item in items %}
             <option value="{{ item.id }}"{% if item.id in value %} selected{% endif %}>{{ item.label }}</option>
         {% endfor %}
