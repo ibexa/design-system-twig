@@ -137,9 +137,13 @@ abstract class AbstractDropdown
                 );
             }
 
-            $items[$index] = $itemResolver->resolve($item);
+            /** @var array{id: string, label: string} $resolvedItem */
+            $resolvedItem = $itemResolver->resolve($item);
+
+            $items[$index] = $resolvedItem;
         }
 
+        /** @var array<int, array{id: string, label: string}> $items */
         return $items;
     }
 }
