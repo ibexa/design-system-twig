@@ -24,13 +24,13 @@ final class BadgeTest extends KernelTestCase
         $component = $this->mountTwigComponent(Badge::class, [
             'size' => 'small',
             'value' => 7,
-            'maxBadgeValue' => 15,
+            'maxValue' => 15,
         ]);
 
         self::assertInstanceOf(Badge::class, $component, 'Component should mount as Badge.');
         self::assertSame('small', $component->size, 'Prop "size" should be "small".');
         self::assertSame(7, $component->value, 'Prop "value" should be 7.');
-        self::assertSame(15, $component->maxBadgeValue, 'Prop "maxBadgeValue" should be 15.');
+        self::assertSame(15, $component->maxValue, 'Prop "maxValue" should be 15.');
     }
 
     public function testDefaultRender(): void
@@ -87,11 +87,11 @@ final class BadgeTest extends KernelTestCase
     {
         $crawler = $this->renderTwigComponent(Badge::class, [
             'value' => 150,
-            'maxBadgeValue' => 99,
+            'maxValue' => 99,
         ])->crawler();
 
         $badge = $this->getBadge($crawler);
-        self::assertSame('99+', $this->getText($badge), 'When value exceeds maxBadgeValue, text should display "<max>+".');
+        self::assertSame('99+', $this->getText($badge), 'When value exceeds maxValue, text should display "<max>+".');
         self::assertSame('99', $badge->attr('data-ids-max-badge-value'), 'data-ids-max-badge-value should match the exposed "max_value".');
     }
 
@@ -99,11 +99,11 @@ final class BadgeTest extends KernelTestCase
     {
         $crawler = $this->renderTwigComponent(Badge::class, [
             'value' => 42,
-            'maxBadgeValue' => 99,
+            'maxValue' => 99,
         ])->crawler();
 
         $badge = $this->getBadge($crawler);
-        self::assertSame('42', $this->getText($badge), 'When value <= maxBadgeValue, text should display the raw value.');
+        self::assertSame('42', $this->getText($badge), 'When value <= maxValue, text should display the raw value.');
     }
 
     public function testInvalidPropsCauseResolverErrorOnMount(): void
