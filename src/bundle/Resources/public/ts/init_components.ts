@@ -4,8 +4,6 @@ import { DropdownMultiInput, DropdownSingleInput } from './components/dropdown';
 import { InputTextField, InputTextInput } from './components/input_text';
 import { ToggleButtonField, ToggleButtonInput } from './components/toggle_button';
 import { Accordion } from './components/accordion';
-import { AltRadioInput } from './components/alt_radio/alt_radio_input';
-import { DropdownSingleInput } from './components/dropdown/dropdown_single_input';
 import { OverflowList } from './components/overflow_list';
 
 const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
