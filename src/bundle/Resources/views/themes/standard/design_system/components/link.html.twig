@@ -1,0 +1,66 @@
+{% set _content %}{% block content %}{% endblock %}{% endset %}
+{% set has_content = _content|striptags|trim is not empty %}
+
+{% if variant == 'button' %}
+    {% set icon_only = (not has_content) and icon is not empty %}
+    {% set link_classes =
+        html_cva(
+            base: html_classes(
+                'ids-btn',
+                {
+                    'ids-btn--icon-only': icon_only,
+                },
+            ),
+            variants: {
+                type: {
+                    primary: 'ids-btn--primary',
+                    secondary: 'ids-btn--secondary',
+                    tertiary: 'ids-btn--tertiary',
+                    'secondary-alt': 'ids-btn--secondary-alt',
+                    'tertiary-alt': 'ids-btn--tertiary-alt',
+                },
+                size: {
+                    medium: 'ids-btn--medium',
+                    small: 'ids-btn--small',
+                },
+            },
+        )
+    %}
+
+    <a
+        href="{{ href }}"
+        class="{{
+            link_classes.apply(
+                {
+                    type,
+                    size
+                },
+                attributes.render('class')
+            )
+        }}"
+        {{ attributes }}
+    >
+        {% block link_button_inner %}
+            {% if icon %}
+                <div class="ids-btn__icon">
+                    <twig:ibexa:icon name="{{ icon }}" size="{{ icon_size }}" />
+                </div>
+            {% endif %}
+            {% if not icon_only %}
+                <div class="ids-btn__label">
+                    {{ _content|raw }}
+                </div>
+            {% endif %}
+        {% endblock link_button_inner %}
+    </a>
+{% else %}
+    <a
+        href="{{ href }}"
+        class="{{ html_classes('ids-link', attributes.render('class')) }}"
+        {{ attributes }}
+    >
+        {% block link_text_inner %}
+            {{ _content|raw }}
+        {% endblock link_text_inner %}
+    </a>
+{% endif %}
