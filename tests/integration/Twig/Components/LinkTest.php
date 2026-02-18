@@ -105,6 +105,22 @@ final class LinkTest extends KernelTestCase
         self::assertStringContainsString('ids-btn--small', $classAttr, 'Size class should be applied');
     }
 
+    public function testButtonVariantDisabledState(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:link', [
+            'href' => '/test',
+            'variant' => 'button',
+            'disabled' => true,
+        ]);
+        $crawler = $rendered->crawler();
+
+        $link = $this->getButtonLink($crawler);
+        $classAttr = (string) $link->attr('class');
+
+        self::assertStringNotContainsString('ids-btn--disabled', $classAttr, 'Disabled class should NOT be present');
+        self::assertSame('true', $link->attr('aria-disabled'), 'aria-disabled attribute should be present and set to true');
+    }
+
     public function testButtonVariantWithIcon(): void
     {
         $rendered = $this->renderTwigComponent('ibexa:link', [

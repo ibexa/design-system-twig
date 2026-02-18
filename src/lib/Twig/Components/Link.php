@@ -24,6 +24,8 @@ final class Link
 
     public string $type = 'tertiary';
 
+    public bool $disabled = false;
+
     public string $icon = '';
 
     /**
@@ -60,6 +62,10 @@ final class Link
             ->define('type')
             ->allowedValues('primary', 'secondary', 'tertiary', 'secondary-alt', 'tertiary-alt')
             ->default('tertiary');
+        $resolver
+            ->define('disabled')
+            ->allowedTypes('bool')
+            ->default(false);
         $resolver
             ->define('icon')
             ->allowedTypes('string');

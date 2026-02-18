@@ -70,7 +70,7 @@ final class ButtonTest extends KernelTestCase
         $button = $this->getButton($crawler);
         $classAttr = (string) $button->attr('class');
 
-        self::assertStringContainsString('ids-btn--disabled', $classAttr, 'Disabled class should be present');
+        self::assertStringNotContainsString('ids-btn--disabled', $classAttr, 'Disabled class should NOT be present');
         self::assertNotNull($button->attr('disabled'), 'Disabled attribute should be present');
     }
 

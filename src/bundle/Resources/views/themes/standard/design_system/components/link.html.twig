@@ -38,7 +38,7 @@
                 attributes.render('class')
             )
         }}"
-        {{ attributes }}
+        {{ attributes.defaults({ 'aria-disabled': disabled ? 'true' : null }) }}
     >
         {% block link_button_inner %}
             {% if icon %}
