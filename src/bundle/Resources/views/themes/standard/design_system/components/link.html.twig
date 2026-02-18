@@ -56,7 +56,7 @@
 {% else %}
     <a
         href="{{ href }}"
-        class="{{ html_classes('ids-link', attributes.render('class')) }}"
+        class="{{ html_classes('ids-link', attributes.render('class')|default('')) }}"
         {{ attributes }}
     >
         {% block link_text_inner %}
