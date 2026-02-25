@@ -9,6 +9,7 @@
                 'ids-btn',
                 {
                     'ids-btn--icon-only': icon_only,
+                    'ids-link--disabled': disabled,
                 },
             ),
             variants: {
@@ -38,7 +39,7 @@
                 attributes.render('class')
             )
         }}"
-        {{ attributes.defaults({ 'aria-disabled': disabled ? 'true' : null }) }}
+        {{ attributes }}
     >
         {% block link_button_inner %}
             {% if icon %}
@@ -56,7 +57,7 @@
 {% else %}
     <a
         href="{{ href }}"
-        class="{{ html_classes('ids-link', attributes.render('class')|default('')) }}"
+        class="{{ html_classes('ids-link', {'ids-link--disabled': disabled}, attributes.render('class')|default('')) }}"
         {{ attributes }}
     >
         {% block link_text_inner %}
