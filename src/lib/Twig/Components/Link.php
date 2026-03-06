@@ -28,6 +28,8 @@ final class Link
 
     public string $icon = '';
 
+    public string $label = '';
+
     /**
      * @var array{small: string, medium: string}
      */
