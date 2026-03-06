@@ -27,6 +27,8 @@ final class Button
 
     public string $icon = '';
 
+    public string $label = '';
+
     /**
      * @var array{small: string, medium: string}
      */
