@@ -53,7 +53,7 @@ final class Button
             ->default('medium');
         $resolver
             ->define('type')
-            ->allowedValues('primary', 'secondary', 'tertiary', 'secondary-alt', 'tertiary-alt')
+            ->allowedValues('primary', 'secondary', 'tertiary', 'secondary-alt', 'tertiary-alt', 'info')
             ->default('primary');
         $resolver
             ->define('htmlType')
