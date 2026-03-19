@@ -29,6 +29,8 @@ final class Button
 
     public string $label = '';
 
+    public string $icon_position = 'start';
+
     /**
      * @var array{small: string, medium: string}
      */
@@ -66,6 +68,10 @@ final class Button
         $resolver
             ->define('icon')
             ->allowedTypes('string');
+        $resolver
+            ->define('icon_position')
+            ->allowedValues('start', 'end')
+            ->default('start');
 
         return $resolver->resolve($props) + $props;
     }

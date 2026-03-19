@@ -40,19 +40,36 @@
     {{ attributes.defaults({ disabled }) }}
 >
     {% block button_inner %}
-        {% block icon_outer %}
-            {% if icon %}
-                <div class="ids-btn__icon">
-                    {% block icon_inner %}
-                        <twig:ibexa:icon name="{{ icon }}" size="{{ icon_size }}" />
-                    {% endblock icon_inner %}
+        {% if icon_position == 'end' %}
+            {% if not icon_only %}
+                <div class="ids-btn__label">
+                    {{ _content|raw }}
                 </div>
             {% endif %}
-        {% endblock icon_outer %}
-        {% if not icon_only %}
-            <div class="ids-btn__label">
-                {{ _content|raw }}
-            </div>
+            {% block icon_outer %}
+                {% if icon %}
+                    <div class="ids-btn__icon">
+                        {% block icon_inner %}
+                            <twig:ibexa:icon name="{{ icon }}" size="{{ icon_size }}" />
+                        {% endblock icon_inner %}
+                    </div>
+                {% endif %}
+            {% endblock icon_outer %}
+        {% else %}
+            {% block icon_outer_start %}
+                {% if icon %}
+                    <div class="ids-btn__icon">
+                        {% block icon_inner_start %}
+                            <twig:ibexa:icon name="{{ icon }}" size="{{ icon_size }}" />
+                        {% endblock icon_inner_start %}
+                    </div>
+                {% endif %}
+            {% endblock icon_outer_start %}
+            {% if not icon_only %}
+                <div class="ids-btn__label">
+                    {{ _content|raw }}
+                </div>
+            {% endif %}
         {% endif %}
     {% endblock button_inner %}
 </button>
