@@ -22,7 +22,7 @@ abstract class AbstractChoiceInput
 
     public bool $error = false;
 
-    #[ExposeInTemplate('input_class')]
+    #[ExposeInTemplate('class')]
     public string $inputClass = '';
 
     public bool $required = false;

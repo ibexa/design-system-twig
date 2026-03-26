@@ -37,18 +37,12 @@ final class InputTest extends KernelTestCase
         self::assertSame('radio', $component->getType(), 'getType() should return "radio".');
     }
 
-    public function testDefaultRenderProducesWrapperAndInput(): void
+    public function testDefaultRenderProducesInputOnly(): void
     {
         $crawler = $this->renderTwigComponent(Input::class, [
             'name' => 'group',
             'value' => 'A',
         ])->crawler();
-
-        $wrapper = $this->getWrapper($crawler);
-        $wrapperClass = $this->getClassAttr($wrapper);
-
-        self::assertStringContainsString('ids-choice-input', $wrapperClass, 'Wrapper should contain base class "ids-choice-input".');
-        self::assertStringContainsString('ids-radio-button', $wrapperClass, 'Wrapper should contain variant class "ids-radio-button".');
 
         $input = $this->getInput($crawler);
         self::assertSame('radio', $input->attr('type'), 'Input "type" should be "radio".');
@@ -61,7 +55,7 @@ final class InputTest extends KernelTestCase
         self::assertStringContainsString('ids-input--medium', $inputClass, 'Input should have default size "ids-input--medium".');
     }
 
-    public function testWrapperAttributesMergeClassAndInputGetsDataFromAttributes(): void
+    public function testAttributesMergeClassAndInputGetsDataFromAttributes(): void
     {
         $crawler = $this->renderTwigComponent(Input::class, [
             'name' => 'group',
@@ -72,10 +66,8 @@ final class InputTest extends KernelTestCase
             ],
         ])->crawler();
 
-        $wrapper = $this->getWrapper($crawler);
-        self::assertStringContainsString('extra-class', $this->getClassAttr($wrapper), 'Custom class should merge into wrapper class attribute.');
-
         $input = $this->getInput($crawler);
+        self::assertStringContainsString('extra-class', $this->getClassAttr($input), 'Custom class should merge into input class attribute.');
         self::assertSame('custom', $input->attr('data-custom'), 'Custom data attribute should be rendered on the input element.');
     }
 
@@ -153,18 +145,10 @@ final class InputTest extends KernelTestCase
         ]);
     }
 
-    private function getWrapper(Crawler $crawler): Crawler
-    {
-        $node = $crawler->filter('.ids-radio-button')->first();
-        self::assertGreaterThan(0, $node->count(), 'Wrapper ".ids-radio-button" should be present.');
-
-        return $node;
-    }
-
     private function getInput(Crawler $crawler): Crawler
     {
-        $node = $crawler->filter('.ids-radio-button > input')->first();
-        self::assertGreaterThan(0, $node->count(), 'Input should be present under ".ids-radio-button > input".');
+        $node = $crawler->filter('input.ids-input--radio')->first();
+        self::assertGreaterThan(0, $node->count(), 'Input should be present.');
 
         return $node;
     }

@@ -1,8 +1,8 @@
 import { BaseChoiceInput } from '../../partials';
 
 export class CheckboxInput extends BaseChoiceInput {
-    constructor(container: HTMLDivElement) {
-        super(container);
+    constructor(inputElement: HTMLInputElement) {
+        super(inputElement);
 
         this.setIndeterminate(this._inputElement.classList.contains('ids-input--indeterminate'));
     }

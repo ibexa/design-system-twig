@@ -37,7 +37,7 @@ final class InputTest extends KernelTestCase
         self::assertSame('checkbox', $component->getType(), 'getType() should return "checkbox".');
     }
 
-    public function testDefaultRenderProducesWrapperAndInput(): void
+    public function testDefaultRenderProducesInputOnly(): void
     {
         $crawler = $this->renderTwigComponent(Input::class, [
             'id' => 'agree',
@@ -45,20 +45,18 @@ final class InputTest extends KernelTestCase
             'value' => 'yes',
         ])->crawler();
 
-        $wrapper = $this->getWrapper($crawler);
-        $wrapperClass = $this->getClassAttr($wrapper);
-
-        self::assertStringContainsString('ids-choice-input', $wrapperClass, 'Wrapper should contain base class "ids-choice-input".');
-        self::assertStringContainsString('ids-checkbox', $wrapperClass, 'Wrapper should contain variant class "ids-checkbox".');
-
         $input = $this->getInput($crawler);
         self::assertSame('checkbox', $input->attr('type'), 'Input "type" should be "checkbox".');
         self::assertSame('agree', $input->attr('id'), 'Input "id" should equal provided id.');
         self::assertSame('terms', $input->attr('name'), 'Input "name" should equal provided name.');
         self::assertSame('yes', $input->attr('value'), 'Input "value" should equal provided value.');
+
+        $inputClass = $this->getClassAttr($input);
+        self::assertStringContainsString('ids-input', $inputClass, 'Input should contain base class "ids-input".');
+        self::assertStringContainsString('ids-input--checkbox', $inputClass, 'Input should contain checkbox modifier class.');
     }
 
-    public function testWrapperAttributesMergeClass(): void
+    public function testAttributesMergeClassIntoInput(): void
     {
         $crawler = $this->renderTwigComponent(Input::class, [
             'id' => 'agree',
@@ -67,10 +65,9 @@ final class InputTest extends KernelTestCase
             'attributes' => ['class' => 'extra-class'],
         ])->crawler();
 
-        $wrapper = $this->getWrapper($crawler);
-        $wrapperClass = $this->getClassAttr($wrapper);
+        $input = $this->getInput($crawler);
 
-        self::assertStringContainsString('extra-class', $wrapperClass, 'Custom class should merge into wrapper class attribute.');
+        self::assertStringContainsString('extra-class', $this->getClassAttr($input), 'Custom class should merge into input class attribute.');
     }
 
     public function testBooleanPropsRenderNativeAttributesAndIndeterminateClass(): void
@@ -124,20 +121,9 @@ final class InputTest extends KernelTestCase
         ]);
     }
 
-    private function getWrapper(Crawler $crawler): Crawler
-    {
-        $node = $crawler->filter('.ids-checkbox')->first();
-        self::assertGreaterThan(0, $node->count(), 'Wrapper ".ids-checkbox" should be present.');
-
-        return $node;
-    }
-
     private function getInput(Crawler $crawler): Crawler
     {
-        $node = $crawler->filter('.ids-checkbox input')->first();
-        if ($node->count() === 0) {
-            $node = $crawler->filter('input')->first();
-        }
+        $node = $crawler->filter('input.ids-input--checkbox')->first();
         self::assertGreaterThan(0, $node->count(), 'Input element should be present.');
 
         return $node;

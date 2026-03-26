@@ -30,9 +30,9 @@ altRadiosListContainers.forEach((altRadiosListContainer: HTMLDivElement) => {
     altRadiosListInstance.init();
 });
 
-const checkboxContainers = document.querySelectorAll<HTMLDivElement>('.ids-checkbox:not([data-ids-custom-init])');
+const checkboxContainers = document.querySelectorAll<HTMLInputElement>('.ids-input--checkbox:not([data-ids-custom-init])');
 
-checkboxContainers.forEach((checkboxContainer: HTMLDivElement) => {
+checkboxContainers.forEach((checkboxContainer: HTMLInputElement) => {
     const checkboxInstance = new CheckboxInput(checkboxContainer);
 
     checkboxInstance.init();
