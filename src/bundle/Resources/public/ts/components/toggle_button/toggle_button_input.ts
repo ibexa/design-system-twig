@@ -11,7 +11,15 @@ export class ToggleButtonInput extends BaseChoiceInput {
     };
 
     constructor(container: HTMLDivElement) {
-        super(container);
+        const inputElement = container.querySelector<HTMLInputElement>('.ids-toggle__source input');
+
+        if (!inputElement) {
+            throw new Error('ToggleButtonInput: Input element is missing in the container.');
+        }
+
+        super(inputElement);
+
+        this._container = container;
 
         const widgetNode = this._container.querySelector<HTMLDivElement>('.ids-toggle__widget');
         const toggleLabelNode = this._container.querySelector<HTMLLabelElement>('.ids-toggle__label');
@@ -40,6 +48,10 @@ export class ToggleButtonInput extends BaseChoiceInput {
 
     protected initWidgets(): void {
         this.widgetNode.addEventListener('click', () => {
+            if (this._inputElement.disabled) {
+                return;
+            }
+
             this._inputElement.focus();
             this._inputElement.checked = !this._inputElement.checked;
             this._inputElement.dispatchEvent(new Event('change', { bubbles: true }));
