@@ -2,6 +2,7 @@ import { AltRadioInput, AltRadiosListField } from './components/alt_radio';
 import { CheckboxInput, CheckboxesListField } from './components/checkbox';
 import { DropdownMultiInput, DropdownSingleInput } from './components/dropdown';
 import { InputTextField, InputTextInput } from './components/input_text';
+import { RadioButtonInput, RadioButtonsListField } from './components/radio_button';
 import { ToggleButtonField, ToggleButtonInput } from './components/toggle_button';
 import { Accordion } from './components/accordion';
 import { OverflowList } from './components/overflow_list';
@@ -76,6 +77,22 @@ inputTextContainers.forEach((inputTextContainer: HTMLDivElement) => {
     const inputTextInstance = new InputTextInput(inputTextContainer);
 
     inputTextInstance.init();
+});
+
+const radioButtonContainers = document.querySelectorAll<HTMLInputElement>('.ids-input--radio:not([data-ids-custom-init])');
+
+radioButtonContainers.forEach((radioButtonContainer: HTMLInputElement) => {
+    const radioButtonInstance = new RadioButtonInput(radioButtonContainer);
+
+    radioButtonInstance.init();
+});
+
+const radioButtonsListFieldContainers = document.querySelectorAll<HTMLDivElement>('.ids-radio-buttons-list-field:not([data-ids-custom-init])');
+
+radioButtonsListFieldContainers.forEach((radioButtonsListFieldContainer: HTMLDivElement) => {
+    const radioButtonsListFieldInstance = new RadioButtonsListField(radioButtonsListFieldContainer);
+
+    radioButtonsListFieldInstance.init();
 });
 
 const overflowListContainers = document.querySelectorAll<HTMLDivElement>('.ids-overflow-list:not([data-ids-custom-init])');
