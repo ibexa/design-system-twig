@@ -68,5 +68,10 @@
                 {{- action.component|raw -}}
             </div>
         {%- endfor -%}
+        {% if actions_after is not empty %}
+            <div class="ids-input-text__action ids-input-text__action--custom">
+                {{- actions_after|raw -}}
+            </div>
+        {% endif %}
     </div>
 </div>

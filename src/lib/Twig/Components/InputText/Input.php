@@ -11,6 +11,7 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\InputText;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
+use Twig\Markup;
 
 #[AsTwigComponent('ibexa:input_text:input')]
 final class Input
@@ -18,6 +19,8 @@ final class Input
     public string $type = 'text';
 
     public string $size = 'medium';
+
+    public ?string $actions_after = null;
 
     public bool $disabled = false;
 
@@ -43,6 +46,10 @@ final class Input
             ->define('size')
             ->allowedValues('small', 'medium')
             ->default('medium');
+        $resolver
+            ->define('actions_after')
+            ->allowedTypes('null', 'string', Markup::class)
+            ->default(null);
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')

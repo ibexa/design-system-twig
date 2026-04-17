@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
+use Twig\Markup;
 
 final class InputTest extends KernelTestCase
 {
@@ -132,6 +133,30 @@ final class InputTest extends KernelTestCase
         $this->assertClearActionHidden($crawler, false);
     }
 
+    public function testActionsAfterRendersCustomTrailingAction(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'actions_after' => '<button type="button" class="qa-extra-action">Extra</button>',
+        ])->crawler();
+
+        $customAction = $crawler->filter('.ids-input-text__action--custom')->first();
+        self::assertGreaterThan(0, $customAction->count(), 'Custom trailing action wrapper should be rendered.');
+
+        $button = $customAction->filter('.qa-extra-action')->first();
+        self::assertGreaterThan(0, $button->count(), 'Custom trailing action markup should be rendered inside the wrapper.');
+        self::assertSame('Extra', trim($button->text()), 'Custom trailing action content should be preserved.');
+    }
+
+    public function testActionsAfterAcceptsTwigMarkup(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'actions_after' => new Markup('<button type="button" class="qa-extra-action">Extra</button>', 'UTF-8'),
+        ])->crawler();
+
+        $button = $crawler->filter('.ids-input-text__action--custom .qa-extra-action')->first();
+        self::assertGreaterThan(0, $button->count(), 'Twig Markup actions_after should render custom trailing action markup.');
+    }
+
     public function testInvalidTypeValueCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);
@@ -148,6 +173,12 @@ final class InputTest extends KernelTestCase
     {
         $this->expectException(InvalidOptionsException::class);
         $this->mountTwigComponent(Input::class, ['disabled' => 'yes']);
+    }
+
+    public function testInvalidActionsAfterTypeCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->mountTwigComponent(Input::class, ['actions_after' => ['unexpected']]);
     }
 
     private function getWrapper(Crawler $crawler): Crawler
