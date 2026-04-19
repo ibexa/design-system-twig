@@ -75,6 +75,22 @@ export class InputTextInput extends Base {
             event.stopPropagation();
 
             this.changeValue('');
+
+            if (!this._inputElement.readOnly) {
+                this._inputElement.select();
+            }
+
+            if (this._clearBtnElement.hasAttribute('data-send-form-after-clearing')) {
+                const form = this._clearBtnElement.closest('form');
+
+                if (form) {
+                    form.requestSubmit?.();
+
+                    if (!form.requestSubmit) {
+                        form.submit();
+                    }
+                }
+            }
         });
     }
 
@@ -90,8 +106,13 @@ export class InputTextInput extends Base {
             const isPasswordType = this._inputElement.type === 'password';
 
             this._inputElement.type = isPasswordType ? 'text' : 'password';
-            this._passwordShowIconElement?.classList.toggle('d-none', isPasswordType);
-            this._passwordHideIconElement?.classList.toggle('d-none', !isPasswordType);
+            if (this._passwordShowIconElement) {
+                this._passwordShowIconElement.hidden = isPasswordType;
+            }
+
+            if (this._passwordHideIconElement) {
+                this._passwordHideIconElement.hidden = !isPasswordType;
+            }
         });
     }
 

@@ -191,6 +191,18 @@ final class InputTest extends KernelTestCase
         self::assertSame(0, $crawler->filter('.ids-input-text__search-btn')->count(), 'Password search combination should not render the search button.');
     }
 
+    public function testSendFormAfterClearingAddsClearButtonMarker(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'send_form_after_clearing' => true,
+            'attributes' => ['value' => 'x'],
+        ])->crawler();
+
+        $clearButton = $crawler->filter('.ids-clear-btn')->first();
+        self::assertGreaterThan(0, $clearButton->count(), 'Clear button should be rendered.');
+        self::assertNotNull($clearButton->attr('data-send-form-after-clearing'), 'Clear button should expose the form submission marker.');
+    }
+
     public function testInvalidTypeValueCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);

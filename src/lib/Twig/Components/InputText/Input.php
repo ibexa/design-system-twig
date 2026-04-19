@@ -26,6 +26,8 @@ final class Input
 
     public string $search_button_type = 'submit';
 
+    public bool $send_form_after_clearing = false;
+
     public bool $disabled = false;
 
     public bool $error = false;
@@ -62,6 +64,10 @@ final class Input
             ->define('search_button_type')
             ->allowedValues('button', 'reset', 'submit')
             ->default('submit');
+        $resolver
+            ->define('send_form_after_clearing')
+            ->allowedTypes('bool')
+            ->default(false);
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')

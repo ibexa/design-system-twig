@@ -30,7 +30,14 @@
 %}
 
 {% set clear_action %}
-    <twig:ibexa:ui:clear_button :disabled="disabled" />
+    {% if send_form_after_clearing %}
+        <twig:ibexa:ui:clear_button
+            :disabled="disabled"
+            data-send-form-after-clearing
+        />
+    {% else %}
+        <twig:ibexa:ui:clear_button :disabled="disabled" />
+    {% endif %}
 {% endset %}
 
 {% set show_password_toggle = type == 'password' and not has_search_action %}
@@ -48,7 +55,7 @@
             <span class="ids-input-text__password-icon ids-input-text__password-icon--show">
                 <twig:ibexa:icon name="visibility" size="tiny-small" />
             </span>
-            <span class="ids-input-text__password-icon ids-input-text__password-icon--hide d-none">
+            <span class="ids-input-text__password-icon ids-input-text__password-icon--hide" hidden>
                 <twig:ibexa:icon name="visibility-hidden" size="tiny-small" />
             </span>
         </span>
