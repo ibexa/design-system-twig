@@ -33,6 +33,42 @@
     <twig:ibexa:ui:clear_button :disabled="disabled" />
 {% endset %}
 
+{% set show_password_toggle = type == 'password' and not has_search_action %}
+{% set show_search_action = has_search_action and type != 'password' %}
+
+{% set password_action %}
+    <button
+        type="button"
+        class="ids-btn ids-btn--tertiary-alt ids-btn--small ids-btn--icon-only ids-input-text__password-toggler"
+        {% if disabled %}disabled{% endif %}
+        aria-label="{{ 'ibexa.show-password.label'|trans({}, 'ibexa_design_system_twig')|desc('Toggle password visibility') }}"
+        title="{{ 'ibexa.show-password.label'|trans({}, 'ibexa_design_system_twig')|desc('Toggle password visibility') }}"
+    >
+        <span class="ids-btn__icon">
+            <span class="ids-input-text__password-icon ids-input-text__password-icon--show">
+                <twig:ibexa:icon name="visibility" size="tiny-small" />
+            </span>
+            <span class="ids-input-text__password-icon ids-input-text__password-icon--hide d-none">
+                <twig:ibexa:icon name="visibility-hidden" size="tiny-small" />
+            </span>
+        </span>
+    </button>
+{% endset %}
+
+{% set search_action %}
+    <button
+        type="{{ search_button_type }}"
+        class="ids-btn ids-btn--tertiary-alt ids-btn--small ids-btn--icon-only ids-input-text__search-btn"
+        {% if disabled %}disabled{% endif %}
+        aria-label="{{ 'ibexa.search-button.label'|trans({}, 'ibexa_design_system_twig')|desc('Search') }}"
+        title="{{ 'ibexa.search-button.label'|trans({}, 'ibexa_design_system_twig')|desc('Search') }}"
+    >
+        <span class="ids-btn__icon">
+            <twig:ibexa:icon name="search" size="tiny-small" />
+        </span>
+    </button>
+{% endset %}
+
 {% set actions = [
     {
         id: 'clear',
@@ -40,6 +76,24 @@
         component: clear_action
     }
 ] %}
+
+{% if show_password_toggle %}
+    {% set actions = actions|merge([
+        {
+            id: 'password-toggle',
+            component: password_action,
+        }
+    ]) %}
+{% endif %}
+
+{% if show_search_action %}
+    {% set actions = actions|merge([
+        {
+            id: 'search',
+            component: search_action,
+        }
+    ]) %}
+{% endif %}
 
 <div class="ids-input-text"{{ custom_init ? ' data-ids-custom-init' : '' }}>
     <div class="ids-input-text__source">
@@ -64,7 +118,7 @@
     </div>
     <div class="ids-input-text__actions">
         {%- for action in actions -%}
-            <div class="{{ html_classes('ids-input-text__action', action.class) }}">
+            <div class="{{ html_classes('ids-input-text__action', action.class|default('')) }}">
                 {{- action.component|raw -}}
             </div>
         {%- endfor -%}

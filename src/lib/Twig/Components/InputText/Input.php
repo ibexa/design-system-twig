@@ -20,7 +20,11 @@ final class Input
 
     public string $size = 'medium';
 
-    public ?string $actions_after = null;
+    public string|Markup|null $actions_after = null;
+
+    public bool $has_search_action = false;
+
+    public string $search_button_type = 'submit';
 
     public bool $disabled = false;
 
@@ -50,6 +54,14 @@ final class Input
             ->define('actions_after')
             ->allowedTypes('null', 'string', Markup::class)
             ->default(null);
+        $resolver
+            ->define('has_search_action')
+            ->allowedTypes('bool')
+            ->default(false);
+        $resolver
+            ->define('search_button_type')
+            ->allowedValues('button', 'reset', 'submit')
+            ->default('submit');
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')
