@@ -1,4 +1,4 @@
-import { ModifierArguments, Options, createPopper } from '@popperjs/core';
+import { ModifierArguments, Options, createPopper } from '@popperjs/core/index';
 
 import { Base } from '../base';
 import { Expander } from '../../components/expander';
