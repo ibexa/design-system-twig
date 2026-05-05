@@ -1,6 +1,7 @@
 import { BaseDropdown, BaseDropdownItem } from '../../partials';
 
 export class DropdownSingleInput extends BaseDropdown {
+    public canSelectOnlyOne = true;
     private _sourceInputNode: HTMLSelectElement;
     private _value?: string;
 
@@ -40,6 +41,10 @@ export class DropdownSingleInput extends BaseDropdown {
 
     protected setSourceValue(id: string) {
         this._sourceInputNode.value = id;
+    }
+
+    protected dispatchChangeEvent() {
+        this._sourceInputNode.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
     protected setSelectedItem(id: string) {
@@ -89,6 +94,29 @@ export class DropdownSingleInput extends BaseDropdown {
         this._value = value;
     }
 
+    public getSelectedItems(): HTMLOptionElement[] {
+        return this._sourceInputNode.selectedIndex === -1 ? [] : [this._sourceInputNode.selectedOptions[0]];
+    }
+
+    public selectOption(value: string) {
+        this.setValue(value);
+        this.dispatchChangeEvent();
+    }
+
+    public selectFirstOption() {
+        const firstOption = this._sourceInputNode.querySelector<HTMLOptionElement>('option');
+
+        if (!firstOption) {
+            return;
+        }
+
+        this.selectOption(firstOption.value);
+    }
+
+    public clearCurrentSelection() {
+        this.selectFirstOption();
+    }
+
     public onItemClick = (event: MouseEvent) => {
         if (event.currentTarget instanceof HTMLLIElement) {
             const { id } = event.currentTarget.dataset;
@@ -98,6 +126,7 @@ export class DropdownSingleInput extends BaseDropdown {
             }
 
             this.setValue(id);
+            this.dispatchChangeEvent();
             this.toggleItemsContainer(false);
         }
     };

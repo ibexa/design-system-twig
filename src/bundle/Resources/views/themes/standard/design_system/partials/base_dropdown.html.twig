@@ -54,7 +54,7 @@
                 data-ids-custom-init="true"
             />
         </div>
-        <ul class="ids-dropdown__items" style="--max-visible-items: {{ max_visible_items }}">
+        <ul class="ids-dropdown__items" data-max-visible-items="{{ max_visible_items }}" style="--max-visible-items: {{ max_visible_items }}">
             {% for item in items %}
                 {% set item_content %}
                     {% with { item } %}

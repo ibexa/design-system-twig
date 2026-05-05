@@ -7,6 +7,7 @@ export enum DropdownMultiInputAction {
 }
 
 export class DropdownMultiInput extends BaseDropdown {
+    public canSelectOnlyOne = false;
     private _sourceInputNode: HTMLSelectElement;
     private _value: string[];
 
@@ -62,6 +63,10 @@ export class DropdownMultiInput extends BaseDropdown {
         }
 
         optionNode.selected = actionPerformed === DropdownMultiInputAction.Check;
+    }
+
+    protected dispatchChangeEvent() {
+        this._sourceInputNode.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
     protected setSelectedItem(id: string, actionPerformed: DropdownMultiInputAction) {
@@ -129,6 +134,22 @@ export class DropdownMultiInput extends BaseDropdown {
         this._value = nextValue;
     }
 
+    public getSelectedItems(): HTMLOptionElement[] {
+        return Array.from(this._sourceInputNode.selectedOptions);
+    }
+
+    public clearCurrentSelection() {
+        const values = [...this._value];
+
+        values.forEach((value) => {
+            if (this.isSelected(value)) {
+                this.setValue(value);
+            }
+        });
+
+        this.dispatchChangeEvent();
+    }
+
     public onItemClick = (event: MouseEvent) => {
         if (event.currentTarget instanceof HTMLLIElement) {
             const { id } = event.currentTarget.dataset;
@@ -138,6 +159,7 @@ export class DropdownMultiInput extends BaseDropdown {
             }
 
             this.setValue(id);
+            this.dispatchChangeEvent();
         }
     };
 }
