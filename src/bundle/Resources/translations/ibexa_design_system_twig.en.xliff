@@ -21,6 +21,11 @@
         <target state="new">Select an item</target>
         <note>key: ibexa.dropdown.placeholder</note>
       </trans-unit>
+      <trans-unit id="76d66565af68ef5661fd39cae7ec7830a2f0f4ff" resname="ibexa.dropdown.placeholder.all">
+        <source>All</source>
+        <target state="new">All</target>
+        <note>key: ibexa.dropdown.placeholder.all</note>
+      </trans-unit>
       <trans-unit id="3a9a0c14a5a935a76adbed08e80fbe1392d8eb6a" resname="ibexa.dropdown.search.placeholder">
         <source>Search...</source>
         <target state="new">Search...</target>

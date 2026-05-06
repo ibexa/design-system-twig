@@ -201,6 +201,20 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testEmptyPlaceholderFallsBackToAll(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'placeholder' => '   ',
+            'value' => [],
+        ]))->crawler();
+
+        self::assertSame(
+            'All',
+            trim($crawler->filter('.ids-dropdown__placeholder')->first()->text('')),
+            'Empty placeholder prop should use the DS All fallback.'
+        );
+    }
+
     public function testInvalidValueTypeCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);

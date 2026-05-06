@@ -156,7 +156,7 @@ export abstract class BaseDropdown extends Base {
     public getItemFromNode(itemNode: HTMLLIElement): BaseDropdownItem | undefined {
         const { id, label } = itemNode.dataset;
 
-        if (!id || !label) {
+        if (id === undefined || label === undefined) {
             return;
         }
 
@@ -233,7 +233,6 @@ export abstract class BaseDropdown extends Base {
         const nextHeight = getItemsHeight(availableHeight, {
             itemsContainer: this._itemsContainerNode,
             itemsList: this._itemsNode,
-            popperOffset: POPPER_OFFSET,
         });
 
         return nextHeight;
@@ -252,6 +251,7 @@ export abstract class BaseDropdown extends Base {
 
             this._itemsContainerNode.removeAttribute('hidden');
             this._itemsContainerNode.style.setProperty('visibility', 'hidden');
+            this._itemsNode.style.removeProperty('height');
             this._itemsNodeOriginalHeight = this._itemsContainerNode.offsetHeight;
 
             const nextHeight = this.calculateItemsNodeHeight();
@@ -263,6 +263,7 @@ export abstract class BaseDropdown extends Base {
             void this._itemsContainerPopperInstance?.update();
         } else {
             this._itemsContainerNode.setAttribute('hidden', '');
+            this._itemsNode.style.removeProperty('height');
             this._searchInstance.changeValue('');
             document.removeEventListener('click', this.clickOutsideItemsContainerHandler);
         }

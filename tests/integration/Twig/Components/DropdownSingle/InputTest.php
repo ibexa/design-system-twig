@@ -104,6 +104,25 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testEmptyPlaceholderFallsBackToAll(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'placeholder' => '   ',
+            'value' => '',
+            'items' => [
+                ['id' => '', 'label' => 'All'],
+                ['id' => 'a', 'label' => 'Alpha'],
+                ['id' => 'b', 'label' => 'Beta'],
+            ],
+        ]))->crawler();
+
+        self::assertSame(
+            'All',
+            trim($crawler->filter('.ids-dropdown__selection-info-items')->first()->text('')),
+            'Selected empty option should display the DS fallback label.'
+        );
+    }
+
     public function testOptionsAreRenderedAndOneIsMarkedSelected(): void
     {
         $crawler = $this->renderTwigComponent(Input::class, $this->baseProps(['value' => 'a']))->crawler();

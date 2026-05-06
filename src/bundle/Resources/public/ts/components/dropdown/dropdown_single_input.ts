@@ -121,7 +121,7 @@ export class DropdownSingleInput extends BaseDropdown {
         if (event.currentTarget instanceof HTMLLIElement) {
             const { id } = event.currentTarget.dataset;
 
-            if (!id || id === this._value) {
+            if (id === undefined || id === this._value) {
                 return;
             }
 
