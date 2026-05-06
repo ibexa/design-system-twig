@@ -36,8 +36,8 @@ export abstract class BaseDropdown extends Base {
     protected _isExpanded = false;
     protected _keyboard = new Keyboard();
     protected _itemsContainerPopperInstance: ReturnType<typeof createPopper> | null = null;
-    private _itemsNodeOriginalHeight = 0;
 
+    /* eslint-disable-next-line max-lines-per-function */
     constructor(container: HTMLDivElement) {
         super(container);
 
@@ -225,17 +225,35 @@ export abstract class BaseDropdown extends Base {
                 itemNode.setAttribute('hidden', '');
             }
         });
+
+        if (this._isExpanded) {
+            this.updateItemsNodeHeight();
+            void this._itemsContainerPopperInstance?.update();
+        }
+    }
+
+    private getNaturalItemsContainerHeight(): number {
+        this._itemsNode.style.removeProperty('height');
+
+        return this._itemsContainerNode.offsetHeight;
     }
 
     private calculateItemsNodeHeight(): number {
+        const naturalItemsContainerHeight = this.getNaturalItemsContainerHeight();
         const availableSpace = getBottomAndTopAvailableSpace(this._widgetNode);
-        const availableHeight = getBetterFittingPlacementHeight(this._itemsNodeOriginalHeight, availableSpace);
+        const availableHeight = getBetterFittingPlacementHeight(naturalItemsContainerHeight, availableSpace);
         const nextHeight = getItemsHeight(availableHeight, {
             itemsContainer: this._itemsContainerNode,
             itemsList: this._itemsNode,
         });
 
         return nextHeight;
+    }
+
+    private updateItemsNodeHeight(): void {
+        const nextHeight = this.calculateItemsNodeHeight();
+
+        this._itemsNode.style.height = `${Math.max(nextHeight, 0)}px`;
     }
 
     public toggleItemsContainer(nextIsExpanded?: boolean) {
@@ -251,12 +269,7 @@ export abstract class BaseDropdown extends Base {
 
             this._itemsContainerNode.removeAttribute('hidden');
             this._itemsContainerNode.style.setProperty('visibility', 'hidden');
-            this._itemsNode.style.removeProperty('height');
-            this._itemsNodeOriginalHeight = this._itemsContainerNode.offsetHeight;
-
-            const nextHeight = this.calculateItemsNodeHeight();
-
-            this._itemsNode.style.height = `${nextHeight}px`;
+            this.updateItemsNodeHeight();
             this._itemsContainerNode.style.removeProperty('visibility');
             searchInput.focus();
             document.addEventListener('click', this.clickOutsideItemsContainerHandler);
@@ -291,9 +304,7 @@ export abstract class BaseDropdown extends Base {
                     return;
                 }
 
-                const nextHeight = this.calculateItemsNodeHeight();
-
-                this._itemsNode.style.height = `${nextHeight}px`;
+                this.updateItemsNodeHeight();
             },
             name: 'recalculateHeight',
             phase: 'write' as const,
