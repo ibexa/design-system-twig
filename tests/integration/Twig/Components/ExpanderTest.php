@@ -119,6 +119,24 @@ final class ExpanderTest extends KernelTestCase
         self::assertStringEndsWith('#arrow-chevron-down', $href, 'Chevron type should map to arrow-chevron-down');
     }
 
+    public function testChevronVariantWithoutLabelStillRendersIcon(): void
+    {
+        $rendered = $this->renderTwigComponent(
+            'ibexa:expander',
+            [
+                'type' => 'chevron',
+                'hasIcon' => true,
+            ]
+        );
+
+        $crawler = $rendered->crawler();
+        $button = $this->getButton($crawler);
+        $use = $button->filter('svg use')->first();
+
+        self::assertSame(1, $use->count(), 'Icon should be rendered for icon-only chevron expander');
+        self::assertSame(0, $button->filter('.ids-expander__label')->count(), 'Label should not be rendered when not provided');
+    }
+
     public function testNoIconWhenHasIconIsFalse(): void
     {
         $rendered = $this->renderTwigComponent(

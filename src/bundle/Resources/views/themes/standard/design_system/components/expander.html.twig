@@ -16,6 +16,7 @@
 <twig:ibexa:button
     type="tertiary-alt"
     size="small"
+    icon="{{ has_icon ? icon_name : '' }}"
     data-expand-label="{{ expand_label }}"
     data-collapse-label="{{ collapse_label }}"
     aria-expanded="{{ is_expanded ? 'true' : 'false' }}"
@@ -23,9 +24,6 @@
 >
     {% if has_label %}
         <span class="ids-expander__label">{{ expander_label }}</span>
-    {% endif %}
-    {% if has_icon %}
-        <twig:ibexa:icon name="{{ icon_name }}" size="small" />
     {% endif %}
 </twig:ibexa:button>
 
