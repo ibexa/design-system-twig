@@ -1,5 +1,7 @@
 {% trans_default_domain 'ibexa_design_system_twig' %}
+{% import '@IbexaDesignSystemTwig/themes/standard/design_system/macros/html.html.twig' as html %}
 
+{% set root_attributes = attributes|default({}) %}
 {% set classes =
     html_classes(
         'ids-dropdown',
@@ -20,7 +22,7 @@
     )
 %}
 
-<div class="{{ classes }}">
+<div class="{{ classes }}"{% if root_attributes is iterable %}{{ html.attributes(root_attributes|merge({ class: false })) }}{% else %} {{ root_attributes }}{% endif %}>
     <div class="ids-dropdown__source">
         {% block source %}
         {% endblock source %}
