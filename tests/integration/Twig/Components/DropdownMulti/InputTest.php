@@ -136,7 +136,7 @@ final class InputTest extends KernelTestCase
         );
     }
 
-    public function testSelectionInfoDisplaysSelectedLabels(): void
+    public function testSelectionInfoDisplaysSelectedItemsAsChips(): void
     {
         $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
             'value' => ['opt-a', 'opt-b'],
@@ -150,14 +150,20 @@ final class InputTest extends KernelTestCase
             $selectionInfo->count(),
             'Selection info container should render.'
         );
-        $selectionText = preg_replace('/\s+/', ' ', $selectionInfo->text(''));
-        self::assertIsString($selectionText, 'Selection text normalisation should yield a string.');
-        $selectionText = trim($selectionText);
-        self::assertSame(
-            'Pick A, Pick B',
-            $selectionText,
-            'Selection info should list chosen labels.'
-        );
+
+        $overflowList = $selectionInfo->filter('.ids-overflow-list')->first();
+        self::assertGreaterThan(0, $overflowList->count(), 'Selection info should render an overflow list.');
+
+        $chips = $overflowList->filter('.ids-chip');
+        self::assertSame(3, $chips->count(), 'Overflow list should render selected chips plus the overflow placeholder chip.');
+
+        $chipLabels = $overflowList->filter('.ids-chip .ids-chip__content');
+        self::assertSame('Pick A', trim($chipLabels->eq(0)->text('')), 'First selected item should render as a chip.');
+        self::assertSame('Pick B', trim($chipLabels->eq(1)->text('')), 'Second selected item should render as a chip.');
+        self::assertSame('+0', trim($chipLabels->eq(2)->text('')), 'Overflow chip template should be rendered.');
+
+        $deleteButtons = $overflowList->filter('.ids-chip__delete');
+        self::assertSame(2, $deleteButtons->count(), 'Selected item chips should be deletable.');
         self::assertNull(
             $selectionInfo->attr('hidden'),
             'Selection info should be visible when there are selections.'
@@ -173,6 +179,18 @@ final class InputTest extends KernelTestCase
             $placeholder->attr('hidden'),
             'Placeholder should be hidden when selections are present.'
         );
+    }
+
+    public function testSelectedItemsFollowItemsOrderInsteadOfSelectionOrder(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'value' => ['opt-b', 'opt-a'],
+        ]))->crawler();
+
+        $chipLabels = $crawler->filter('.ids-dropdown__selection-info-items .ids-chip .ids-chip__content');
+
+        self::assertSame('Pick A', trim($chipLabels->eq(0)->text('')), 'First chip should follow original items order.');
+        self::assertSame('Pick B', trim($chipLabels->eq(1)->text('')), 'Second chip should follow original items order.');
     }
 
     public function testEmptyValueShowsPlaceholder(): void

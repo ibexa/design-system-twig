@@ -20,21 +20,15 @@ final class Input extends AbstractDropdown
     public array $value = [];
 
     /**
-     * @return array<int, array{id: string, label: string}|null>
+     * @return list<array{id: string, label: string}>
      */
     #[ExposeInTemplate('selected_items')]
     public function getSelectedItems(): array
     {
-        $items = $this->items;
-
-        return array_map(
-            static function (string $id) use ($items): ?array {
-                return array_find($items, static function (array $item) use ($id): bool {
-                    return $item['id'] === $id;
-                });
-            },
-            $this->value
-        );
+        return array_values(array_filter(
+            $this->items,
+            fn (array $item): bool => in_array($item['id'], $this->value, true)
+        ));
     }
 
     #[ExposeInTemplate('is_empty')]

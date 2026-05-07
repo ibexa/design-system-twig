@@ -1,5 +1,8 @@
 import { BaseDropdown, BaseDropdownItem } from '../../partials';
+import { OverflowList } from '../overflow_list';
 import { createNodesFromTemplate } from '../../utils/dom';
+import { getInstance, hasInstance } from '../../helpers/object.instances';
+import { HTMLElementIDSInstance } from '../../shared/types';
 
 export enum DropdownMultiInputAction {
     Check = 'check',
@@ -9,6 +12,7 @@ export enum DropdownMultiInputAction {
 export class DropdownMultiInput extends BaseDropdown {
     public canSelectOnlyOne = false;
     private _sourceInputNode: HTMLSelectElement;
+    private _overflowListInstance: OverflowList | null = null;
     private _value: string[];
 
     constructor(container: HTMLDivElement) {
@@ -69,6 +73,25 @@ export class DropdownMultiInput extends BaseDropdown {
         this._sourceInputNode.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
+    protected getOverflowListInstance(): OverflowList | null {
+        const overflowListNode = this._selectionInfoItemsNode.querySelector<HTMLElementIDSInstance<OverflowList>>('.ids-overflow-list');
+
+        if (!overflowListNode) {
+            return null;
+        }
+
+        if (!this._overflowListInstance) {
+            if (hasInstance(overflowListNode)) {
+                this._overflowListInstance = getInstance<OverflowList>(overflowListNode);
+            } else {
+                this._overflowListInstance = new OverflowList(overflowListNode as HTMLDivElement);
+                this._overflowListInstance.init();
+            }
+        }
+
+        return this._overflowListInstance;
+    }
+
     protected setSelectedItem(id: string, actionPerformed: DropdownMultiInputAction) {
         const listItemNode = this._itemsContainerNode.querySelector<HTMLLIElement>(`.ids-dropdown__item[data-id="${id}"]`);
         const checkboxNode = listItemNode?.querySelector<HTMLInputElement>('.ids-input--checkbox');
@@ -81,15 +104,17 @@ export class DropdownMultiInput extends BaseDropdown {
     }
 
     protected setSelectionInfo(values: string[]) {
-        const items = values.map((value) => this.getItemById(value)).filter((item): item is BaseDropdownItem => item !== undefined);
+        const selectedValues = new Set(values);
+        const items = Array.from(this._itemsMap.values()).filter((item) => selectedValues.has(item.id));
+        const overflowItems = items.map(({ id, label }) => ({ id, label }));
+        const overflowListInstance = this.getOverflowListInstance();
 
         if (items.length) {
-            // TODO: implement OverflowList when merged
-            this._selectionInfoItemsNode.textContent = items.map(({ label }) => label).join(', ');
             this._selectionInfoItemsNode.removeAttribute('hidden');
             this._placeholderNode.setAttribute('hidden', '');
+            overflowListInstance?.setItems(overflowItems);
         } else {
-            this._selectionInfoItemsNode.textContent = '';
+            overflowListInstance?.setItems([]);
             this._selectionInfoItemsNode.setAttribute('hidden', '');
             this._placeholderNode.removeAttribute('hidden');
         }
@@ -162,4 +187,33 @@ export class DropdownMultiInput extends BaseDropdown {
             this.dispatchChangeEvent();
         }
     };
+
+    protected initSelectedItemsDeletion() {
+        this._selectionInfoItemsNode.addEventListener('click', (event: MouseEvent) => {
+            const deleteButton = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('.ids-chip__delete') : null;
+
+            if (!deleteButton) {
+                return;
+            }
+
+            const chipNode = deleteButton.closest<HTMLElement>('.ids-chip[data-id]');
+            const id = chipNode?.dataset.id;
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (!id || !this.isSelected(id)) {
+                return;
+            }
+
+            this.setValue(id);
+            this.dispatchChangeEvent();
+        });
+    }
+
+    public init() {
+        this.initSelectedItemsDeletion();
+
+        super.init();
+    }
 }
