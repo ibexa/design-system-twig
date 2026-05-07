@@ -65,7 +65,7 @@ final class ExpanderTest extends KernelTestCase
         self::assertStringContainsString('ids-expander--is-expanded', $classAttr, 'is-expanded class is missing');
 
         self::assertSame('true', $button->attr('aria-expanded'), 'aria-expanded should be "true" in expanded state');
-        self::assertSame('Hide', trim($button->filter('.ids-expander__label')->text()), 'Label should match collapse_label');
+        self::assertSame('Hide', trim($button->filter('.ids-btn__label')->text('')), 'Label should match collapse_label');
 
         $use = $button->filter('svg use')->first();
         self::assertSame(1, $use->count(), 'Icon <use> element should be present');
@@ -94,7 +94,7 @@ final class ExpanderTest extends KernelTestCase
         self::assertStringContainsString('ids-expander', $classAttr, 'Base class should be present');
         self::assertStringNotContainsString('ids-expander--is-expanded', $classAttr, 'is-expanded class should not be present');
         self::assertSame('false', $button->attr('aria-expanded'), 'aria-expanded should be "false" in collapsed state');
-        self::assertSame('Show', trim($button->filter('.ids-expander__label')->text()), 'Label should match expand_label');
+        self::assertSame('Show', trim($button->filter('.ids-btn__label')->text('')), 'Label should match expand_label');
     }
 
     public function testChevronVariantRendersChevronIcon(): void
@@ -134,7 +134,7 @@ final class ExpanderTest extends KernelTestCase
         $use = $button->filter('svg use')->first();
 
         self::assertSame(1, $use->count(), 'Icon should be rendered for icon-only chevron expander');
-        self::assertSame(0, $button->filter('.ids-expander__label')->count(), 'Label should not be rendered when not provided');
+        self::assertSame(0, $button->filter('.ids-btn__label')->count(), 'Label should not be rendered when not provided');
     }
 
     public function testNoIconWhenHasIconIsFalse(): void

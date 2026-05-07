@@ -154,15 +154,15 @@ final class InputTest extends KernelTestCase
         $overflowList = $selectionInfo->filter('.ids-overflow-list')->first();
         self::assertGreaterThan(0, $overflowList->count(), 'Selection info should render an overflow list.');
 
-        $chips = $overflowList->filter('.ids-chip');
+        $chips = $overflowList->filter('.ids-overflow-list__items > .ids-chip');
         self::assertSame(3, $chips->count(), 'Overflow list should render selected chips plus the overflow placeholder chip.');
 
-        $chipLabels = $overflowList->filter('.ids-chip .ids-chip__content');
+        $chipLabels = $overflowList->filter('.ids-overflow-list__items > .ids-chip .ids-chip__content');
         self::assertSame('Pick A', trim($chipLabels->eq(0)->text('')), 'First selected item should render as a chip.');
         self::assertSame('Pick B', trim($chipLabels->eq(1)->text('')), 'Second selected item should render as a chip.');
         self::assertSame('+0', trim($chipLabels->eq(2)->text('')), 'Overflow chip template should be rendered.');
 
-        $deleteButtons = $overflowList->filter('.ids-chip__delete');
+        $deleteButtons = $overflowList->filter('.ids-overflow-list__items > .ids-chip .ids-chip__delete');
         self::assertSame(2, $deleteButtons->count(), 'Selected item chips should be deletable.');
         self::assertNull(
             $selectionInfo->attr('hidden'),

@@ -17,14 +17,11 @@
     type="tertiary-alt"
     size="small"
     icon="{{ has_icon ? icon_name : '' }}"
+    label="{{ has_label ? expander_label : '' }}"
     data-expand-label="{{ expand_label }}"
     data-collapse-label="{{ collapse_label }}"
     aria-expanded="{{ is_expanded ? 'true' : 'false' }}"
     class="{{ button_classes }}"
->
-    {% if has_label %}
-        <span class="ids-expander__label">{{ expander_label }}</span>
-    {% endif %}
-</twig:ibexa:button>
+/>
 
 {{ encore_entry_script_tags('ibexa-design-system-expander-js', null, 'ibexa') }}

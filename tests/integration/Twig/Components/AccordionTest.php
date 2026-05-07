@@ -80,7 +80,7 @@ final class AccordionTest extends KernelTestCase
         $button = $this->getButton($crawler);
         self::assertSame(
             'Hide',
-            trim($button->filter('.ids-expander__label')->text()),
+            trim($button->filter('.ids-btn__label')->text('')),
             'Expander label text should match expanded state ("Hide")'
         );
     }
