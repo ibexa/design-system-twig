@@ -10,7 +10,6 @@ export enum DropdownMultiInputAction {
 }
 
 export class DropdownMultiInput extends BaseDropdown {
-    public canSelectOnlyOne = false;
     private _sourceInputNode: HTMLSelectElement;
     private _overflowListInstance: OverflowList | null = null;
     private _value: string[];
@@ -74,19 +73,21 @@ export class DropdownMultiInput extends BaseDropdown {
     }
 
     protected getOverflowListInstance(): OverflowList | null {
+        if (this._overflowListInstance) {
+            return this._overflowListInstance;
+        }
+
         const overflowListNode = this._selectionInfoItemsNode.querySelector<HTMLElementIDSInstance<OverflowList>>('.ids-overflow-list');
 
         if (!overflowListNode) {
             return null;
         }
 
-        if (!this._overflowListInstance) {
-            if (hasInstance(overflowListNode)) {
-                this._overflowListInstance = getInstance<OverflowList>(overflowListNode);
-            } else {
-                this._overflowListInstance = new OverflowList(overflowListNode as HTMLDivElement);
-                this._overflowListInstance.init();
-            }
+        if (hasInstance(overflowListNode)) {
+            this._overflowListInstance = getInstance<OverflowList>(overflowListNode);
+        } else {
+            this._overflowListInstance = new OverflowList(overflowListNode as HTMLDivElement);
+            this._overflowListInstance.init();
         }
 
         return this._overflowListInstance;
@@ -190,13 +191,13 @@ export class DropdownMultiInput extends BaseDropdown {
 
     protected initSelectedItemsDeletion() {
         this._selectionInfoItemsNode.addEventListener('click', (event: MouseEvent) => {
-            const deleteButton = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('.ids-chip__delete') : null;
+            const deleteBtn = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('.ids-chip__delete') : null;
 
-            if (!deleteButton) {
+            if (!deleteBtn) {
                 return;
             }
 
-            const chipNode = deleteButton.closest<HTMLElement>('.ids-chip[data-id]');
+            const chipNode = deleteBtn.closest<HTMLElement>('.ids-chip[data-id]');
             const id = chipNode?.dataset.id;
 
             event.preventDefault();

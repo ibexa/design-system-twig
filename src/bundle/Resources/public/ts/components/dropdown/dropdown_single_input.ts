@@ -1,7 +1,6 @@
 import { BaseDropdown, BaseDropdownItem } from '../../partials';
 
 export class DropdownSingleInput extends BaseDropdown {
-    public canSelectOnlyOne = true;
     private _sourceInputNode: HTMLSelectElement;
     private _value?: string;
 
