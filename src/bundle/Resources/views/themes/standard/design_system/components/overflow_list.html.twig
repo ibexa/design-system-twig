@@ -6,7 +6,7 @@
             {{ block('item') }}
         {% endfor %}
 
-        {{ block('more_item') }}
+        {{ block('more_item_current') is defined ? block('more_item_current') : block('more_item') }}
     </div>
     <template class="ids-overflow-list__template" data-id="item">
         {% with { item: item_template_props } %}
@@ -14,6 +14,7 @@
         {% endwith %}
     </template>
     <template class="ids-overflow-list__template" data-id="item_more">
-        {{ block('more_item') }}
+        {{ block('more_item_template') is defined ? block('more_item_template') : block('more_item') }}
     </template>
 </div>
+{% block more_item %}{% endblock more_item %}
