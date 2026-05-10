@@ -32,6 +32,8 @@ abstract class AbstractDropdown
     /** @var array<string, mixed> */
     public array $sourceAttributes = [];
 
+    public string $size = 'medium';
+
     public bool $disabled = false;
 
     public bool $error = false;
@@ -74,6 +76,10 @@ abstract class AbstractDropdown
             ->define('sourceAttributes')
             ->allowedTypes('array')
             ->default([]);
+        $resolver
+            ->define('size')
+            ->allowedValues('small', 'medium')
+            ->default('medium');
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')
