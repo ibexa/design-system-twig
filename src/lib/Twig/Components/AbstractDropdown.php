@@ -15,6 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
+use Twig\Markup;
 
 /**
  * @phpstan-type TDropdownItem array{
@@ -25,6 +26,11 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 abstract class AbstractDropdown
 {
     public string $name;
+
+    public ?string $source = null;
+
+    /** @var array<string, mixed> */
+    public array $sourceAttributes = [];
 
     public bool $disabled = false;
 
@@ -59,6 +65,15 @@ abstract class AbstractDropdown
             ->define('name')
             ->required()
             ->allowedTypes('string');
+        $resolver
+            ->define('source')
+            ->allowedTypes('null', 'string', Markup::class)
+            ->normalize(static fn (Options $options, string|Markup|null $source): ?string => $source !== null ? (string) $source : null)
+            ->default(null);
+        $resolver
+            ->define('sourceAttributes')
+            ->allowedTypes('array')
+            ->default([]);
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')
