@@ -13,9 +13,12 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 use Twig\Markup;
+use Twig\Environment;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * @phpstan-type TDropdownItem array{
@@ -47,9 +50,10 @@ abstract class AbstractDropdown
     #[ExposeInTemplate('max_visible_items')]
     public int $maxVisibleItems = 10;
 
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
-    }
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly Environment $twig,
+    ) {}
 
     /**
      * @param array<string, mixed> $props
@@ -122,6 +126,12 @@ abstract class AbstractDropdown
         );
 
         return array_combine($this->itemTemplateProps, $itemPropsPatterns);
+    }
+
+    #[ExposeInTemplate('source_attributes')]
+    public function getSourceAttributes(): ComponentAttributes
+    {
+        return new ComponentAttributes($this->sourceAttributes, $this->twig->getRuntime(EscaperRuntime::class));
     }
 
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;

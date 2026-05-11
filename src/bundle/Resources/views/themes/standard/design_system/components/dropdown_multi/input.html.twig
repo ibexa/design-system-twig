@@ -13,12 +13,12 @@
     {% if source is defined and source is not empty %}
         {{ source|raw }}
     {% else %}
-        <select{% for attr_name, attr_value in sourceAttributes|default({
+        <select{{ source_attributes.defaults({
             name: name,
             disabled: disabled,
             required: required|default(false),
             multiple: 'multiple',
-        })|merge({ multiple: 'multiple' }) %}{% if attr_value is same as(true) %} {{ attr_name }}{% elseif attr_value is not same as(false) and attr_value is not null %} {{ attr_name }}="{{ attr_value|e('html_attr') }}"{% endif %}{% endfor %}>
+        }) }}>
             {% for item in items %}
                 <option value="{{ item.id }}"{% if item.id in value %} selected{% endif %}>{{ item.label }}</option>
             {% endfor %}
