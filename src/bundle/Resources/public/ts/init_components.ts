@@ -31,7 +31,9 @@ altRadiosListContainers.forEach((altRadiosListContainer: HTMLDivElement) => {
     altRadiosListInstance.init();
 });
 
-const checkboxContainers = document.querySelectorAll<HTMLInputElement>('.ids-input--checkbox:not([data-ids-custom-init])');
+const checkboxContainers = Array.from(
+    document.querySelectorAll<HTMLInputElement>('.ids-input--checkbox:not([data-ids-custom-init])')
+).filter((checkboxContainer: HTMLInputElement) => !checkboxContainer.closest('.ids-toggle__source'));
 
 checkboxContainers.forEach((checkboxContainer: HTMLInputElement) => {
     const checkboxInstance = new CheckboxInput(checkboxContainer);
@@ -79,7 +81,9 @@ inputTextContainers.forEach((inputTextContainer: HTMLDivElement) => {
     inputTextInstance.init();
 });
 
-const radioButtonContainers = document.querySelectorAll<HTMLInputElement>('.ids-input--radio:not([data-ids-custom-init])');
+const radioButtonContainers = Array.from(
+    document.querySelectorAll<HTMLInputElement>('.ids-input--radio:not([data-ids-custom-init])')
+).filter((radioButtonContainer: HTMLInputElement) => !radioButtonContainer.closest('.ids-toggle__source'));
 
 radioButtonContainers.forEach((radioButtonContainer: HTMLInputElement) => {
     const radioButtonInstance = new RadioButtonInput(radioButtonContainer);
