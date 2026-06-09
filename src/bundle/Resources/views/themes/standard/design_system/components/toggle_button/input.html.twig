@@ -18,15 +18,17 @@
 
 <div class="{{ component_classes.apply({ size }, attributes.render('class')) }}" {{ attributes }}>
     <div class="ids-toggle__source">
-        <twig:ibexa:checkbox:input
-            :id="id"
-            :name="name"
-            :value="value"
-            :checked="checked"
-            :disabled="disabled"
-            :required="required"
-            data-ids-custom-init="1"
-        />
+        {% block input %}
+            <twig:ibexa:checkbox:input
+                :id="id"
+                :name="name"
+                :value="value"
+                :checked="checked"
+                :disabled="disabled"
+                :required="required"
+                data-ids-custom-init="1"
+            />
+        {% endblock input %}
     </div>
     <div class="ids-toggle__widget" role="button">
         <div class="ids-toggle__indicator"></div>
