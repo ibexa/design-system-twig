@@ -20,6 +20,9 @@ final class Button
 
     public string $type = 'primary';
 
+    #[ExposeInTemplate('html_type')]
+    public string $htmlType = 'button';
+
     public bool $disabled = false;
 
     public string $icon = '';
@@ -40,6 +43,11 @@ final class Button
     #[PreMount]
     public function validate(array $props): array
     {
+        if (isset($props['html_type']) && !isset($props['htmlType'])) {
+            $props['htmlType'] = $props['html_type'];
+            unset($props['html_type']);
+        }
+
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined();
         $resolver
@@ -50,6 +58,10 @@ final class Button
             ->define('type')
             ->allowedValues('primary', 'secondary', 'tertiary', 'secondary-alt', 'tertiary-alt')
             ->default('primary');
+        $resolver
+            ->define('htmlType')
+            ->allowedValues('button', 'submit', 'reset')
+            ->default('button');
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')
