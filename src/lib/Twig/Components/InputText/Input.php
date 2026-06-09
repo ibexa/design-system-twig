@@ -11,6 +11,7 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\InputText;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
+use Twig\Markup;
 
 #[AsTwigComponent('ibexa:input_text:input')]
 final class Input
@@ -18,6 +19,14 @@ final class Input
     public string $type = 'text';
 
     public string $size = 'medium';
+
+    public string|Markup|null $actions_after = null;
+
+    public bool $has_search_action = false;
+
+    public string $search_button_type = 'submit';
+
+    public bool $send_form_after_clearing = false;
 
     public bool $disabled = false;
 
@@ -43,6 +52,22 @@ final class Input
             ->define('size')
             ->allowedValues('small', 'medium')
             ->default('medium');
+        $resolver
+            ->define('actions_after')
+            ->allowedTypes('null', 'string', Markup::class)
+            ->default(null);
+        $resolver
+            ->define('has_search_action')
+            ->allowedTypes('bool')
+            ->default(false);
+        $resolver
+            ->define('search_button_type')
+            ->allowedValues('button', 'reset', 'submit')
+            ->default('submit');
+        $resolver
+            ->define('send_form_after_clearing')
+            ->allowedTypes('bool')
+            ->default(false);
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')
