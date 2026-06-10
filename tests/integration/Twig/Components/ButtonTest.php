@@ -24,6 +24,7 @@ final class ButtonTest extends KernelTestCase
             [
                 'size' => 'small',
                 'type' => 'secondary',
+                'htmlType' => 'submit',
                 'disabled' => true,
                 'icon' => 'arrow-right',
             ]
@@ -32,6 +33,7 @@ final class ButtonTest extends KernelTestCase
         self::assertInstanceOf(Button::class, $component);
         self::assertSame('small', $component->size, 'Size should be resolved to "small"');
         self::assertSame('secondary', $component->type, 'Type should be resolved to "secondary"');
+        self::assertSame('submit', $component->htmlType, 'HTML type should be resolved to "submit"');
         self::assertTrue($component->disabled, 'Disabled should be true');
         self::assertSame('arrow-right', $component->icon, 'Icon name should be passed through');
         self::assertSame('tiny-small', $component->iconSize(), 'iconSize() should map "small" to "tiny-small"');
@@ -70,6 +72,18 @@ final class ButtonTest extends KernelTestCase
 
         self::assertStringContainsString('ids-btn--disabled', $classAttr, 'Disabled class should be present');
         self::assertNotNull($button->attr('disabled'), 'Disabled attribute should be present');
+    }
+
+    public function testHtmlTypeRender(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:button', [
+            'htmlType' => 'submit',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $button = $this->getButton($crawler);
+
+        self::assertSame('submit', $button->attr('type'), 'Button should render custom HTML type');
     }
 
     public function testVariantAndSizeClasses(): void
@@ -117,6 +131,18 @@ final class ButtonTest extends KernelTestCase
         $button = $this->getButton($crawler);
 
         self::assertSame(1, $button->filter('.ids-btn__icon')->count(), 'Icon container should be present when icon is set');
+    }
+
+    public function testResetHtmlTypeRender(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:button', [
+            'htmlType' => 'reset',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $button = $this->getButton($crawler);
+
+        self::assertSame('reset', $button->attr('type'), 'Button should render reset HTML type');
     }
 
     private function getButton(Crawler $crawler): Crawler
