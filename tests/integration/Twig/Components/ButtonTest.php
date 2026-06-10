@@ -70,7 +70,7 @@ final class ButtonTest extends KernelTestCase
         $button = $this->getButton($crawler);
         $classAttr = (string) $button->attr('class');
 
-        self::assertStringContainsString('ids-btn--disabled', $classAttr, 'Disabled class should be present');
+        self::assertStringNotContainsString('ids-btn--disabled', $classAttr, 'Disabled class should NOT be present');
         self::assertNotNull($button->attr('disabled'), 'Disabled attribute should be present');
     }
 
@@ -143,6 +143,38 @@ final class ButtonTest extends KernelTestCase
         $button = $this->getButton($crawler);
 
         self::assertSame('reset', $button->attr('type'), 'Button should render reset HTML type');
+    }
+
+    public function testIconPositionStart(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:button', [
+            'icon' => 'arrow-right',
+            'icon_position' => 'start',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $button = $this->getButton($crawler);
+        $children = $button->children();
+
+        self::assertSame(2, $children->count(), 'Button should have icon and label');
+        self::assertStringContainsString('ids-btn__icon', $children->first()->attr('class'), 'Icon should be first child when position is "start"');
+        self::assertStringContainsString('ids-btn__label', $children->eq(1)->attr('class'), 'Label should be second child when position is "start"');
+    }
+
+    public function testIconPositionEnd(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:button', [
+            'icon' => 'caret-next',
+            'icon_position' => 'end',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $button = $this->getButton($crawler);
+        $children = $button->children();
+
+        self::assertSame(2, $children->count(), 'Button should have label and icon');
+        self::assertStringContainsString('ids-btn__label', $children->first()->attr('class'), 'Label should be first child when position is "end"');
+        self::assertStringContainsString('ids-btn__icon', $children->eq(1)->attr('class'), 'Icon should be second child when position is "end"');
     }
 
     private function getButton(Crawler $crawler): Crawler
