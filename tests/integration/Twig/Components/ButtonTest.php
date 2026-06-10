@@ -24,7 +24,7 @@ final class ButtonTest extends KernelTestCase
             [
                 'size' => 'small',
                 'type' => 'secondary',
-                'html_type' => 'submit',
+                'htmlType' => 'submit',
                 'disabled' => true,
                 'icon' => 'arrow-right',
             ]
@@ -77,7 +77,7 @@ final class ButtonTest extends KernelTestCase
     public function testHtmlTypeRender(): void
     {
         $rendered = $this->renderTwigComponent('ibexa:button', [
-            'html_type' => 'submit',
+            'htmlType' => 'submit',
         ]);
         $crawler = $rendered->crawler();
 
@@ -136,7 +136,7 @@ final class ButtonTest extends KernelTestCase
     public function testResetHtmlTypeRender(): void
     {
         $rendered = $this->renderTwigComponent('ibexa:button', [
-            'html_type' => 'reset',
+            'htmlType' => 'reset',
         ]);
         $crawler = $rendered->crawler();
 

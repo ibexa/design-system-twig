@@ -43,11 +43,6 @@ final class Button
     #[PreMount]
     public function validate(array $props): array
     {
-        if (isset($props['html_type']) && !isset($props['htmlType'])) {
-            $props['htmlType'] = $props['html_type'];
-            unset($props['html_type']);
-        }
-
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined();
         $resolver
