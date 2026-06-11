@@ -14,9 +14,25 @@ export class DropdownSingleInput extends BaseDropdown {
         }
 
         this._sourceInputNode = sourceInputNode;
+
         this._value = this._sourceInputNode.value;
 
         this.onItemClick = this.onItemClick.bind(this);
+    }
+
+    protected syncFromSourceValue() {
+        const value = this._sourceInputNode.value;
+
+        this._itemsContainerNode.querySelectorAll<HTMLLIElement>('.ids-dropdown__item--selected').forEach((itemNode) => {
+            itemNode.classList.remove('ids-dropdown__item--selected');
+        });
+
+        this._itemsContainerNode
+            .querySelector<HTMLLIElement>(`.ids-dropdown__item[data-id="${value}"]`)
+            ?.classList.add('ids-dropdown__item--selected');
+
+        this.setSelectionInfo(value);
+        this._value = value;
     }
 
     protected setSource() {
@@ -114,6 +130,11 @@ export class DropdownSingleInput extends BaseDropdown {
 
     public clearCurrentSelection() {
         this.selectFirstOption();
+    }
+
+    public init() {
+        super.init();
+        this.syncFromSourceValue();
     }
 
     public onItemClick = (event: MouseEvent) => {
