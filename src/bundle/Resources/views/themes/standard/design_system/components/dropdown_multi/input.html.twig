@@ -28,7 +28,6 @@
 
 {% block item_content %}
     <twig:ibexa:checkbox:input
-        name="{{ name }}-checkbox"
         :checked="item.id in value"
         value="{{ item.id ~ '' }}"
         data-ids-custom-init="true"
