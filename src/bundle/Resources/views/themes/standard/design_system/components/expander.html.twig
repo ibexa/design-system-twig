@@ -1,5 +1,5 @@
 {% set expander_label = is_expanded ? collapse_label : expand_label %}
-{% set has_label = expander_label is not empty %}
+{% set rendered_label = has_label ? expander_label : '' %}
 
 {% set button_classes =
     html_classes(
@@ -17,7 +17,7 @@
     type="tertiary-alt"
     size="small"
     icon="{{ has_icon ? icon_name : '' }}"
-    label="{{ has_label ? expander_label : '' }}"
+    label="{{ rendered_label }}"
     data-expand-label="{{ expand_label }}"
     data-collapse-label="{{ collapse_label }}"
     aria-expanded="{{ is_expanded ? 'true' : 'false' }}"
