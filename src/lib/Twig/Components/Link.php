@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -27,6 +28,8 @@ final class Link
     public bool $disabled = false;
 
     public string $icon = '';
+
+    public string $icon_url = '';
 
     public string $label = '';
 
@@ -71,8 +74,17 @@ final class Link
         $resolver
             ->define('icon')
             ->allowedTypes('string');
+        $resolver
+            ->define('icon_url')
+            ->allowedTypes('string');
 
-        return $resolver->resolve($props) + $props;
+        $resolvedProps = $resolver->resolve($props) + $props;
+
+        if (($resolvedProps['icon'] ?? '') !== '' && ($resolvedProps['icon_url'] ?? '') !== '') {
+            throw new InvalidOptionsException("Options 'icon' and 'icon_url' cannot be used together.");
+        }
+
+        return $resolvedProps;
     }
 
     #[ExposeInTemplate('icon_size')]
