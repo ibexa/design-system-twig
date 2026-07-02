@@ -1,5 +1,7 @@
 import { BaseChoiceInput } from '../../partials';
 
+const TOGGLE_RADIO_INPUTS_COUNT = 2;
+
 export class ToggleButtonInput extends BaseChoiceInput {
     private labels: { on: string; off: string };
     private inputType: 'checkbox' | 'radio';
@@ -68,7 +70,7 @@ export class ToggleButtonInput extends BaseChoiceInput {
         onInputElement: HTMLInputElement;
         offInputElement: HTMLInputElement;
     } {
-        if (radioInputs.length !== 2) {
+        if (radioInputs.length !== TOGGLE_RADIO_INPUTS_COUNT) {
             throw new Error('ToggleButtonInput: Toggle radio mode requires exactly two radio inputs.');
         }
 
@@ -86,13 +88,11 @@ export class ToggleButtonInput extends BaseChoiceInput {
             throw new Error('ToggleButtonInput: Could not resolve the off radio input.');
         }
 
-        return { onInputElement, offInputElement };
+        return { offInputElement, onInputElement };
     }
 
     protected getInputElements(): HTMLInputElement[] {
-        return this.inputType === 'radio' && this.offInputElement
-            ? [this.onInputElement, this.offInputElement]
-            : [this.onInputElement];
+        return this.inputType === 'radio' && this.offInputElement ? [this.onInputElement, this.offInputElement] : [this.onInputElement];
     }
 
     protected isChecked(): boolean {

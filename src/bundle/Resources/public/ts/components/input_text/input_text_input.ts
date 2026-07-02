@@ -84,11 +84,7 @@ export class InputTextInput extends Base {
                 const form = this._clearBtnElement.closest('form');
 
                 if (form) {
-                    form.requestSubmit?.();
-
-                    if (!form.requestSubmit) {
-                        form.submit();
-                    }
+                    form.requestSubmit();
                 }
             }
         });
