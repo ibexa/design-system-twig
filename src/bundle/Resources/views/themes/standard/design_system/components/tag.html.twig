@@ -4,6 +4,7 @@
             'ids-tag',
             {
                 'ids-tag--dark': isDark,
+                'ids-tag--custom-colors': customTextColor and customBackgroundColor,
             },
         ),
         variants: {
@@ -27,6 +28,11 @@
         },
     )
 %}
+{% set custom_colors_style = '' %}
+{% if customTextColor and customBackgroundColor %}
+    {% set custom_colors_style = '--ids-tag-custom-text-color: ' ~ customTextColor ~ '; --ids-tag-custom-bg-color: ' ~ customBackgroundColor ~ '; --ids-tag-custom-border-color: ' ~ customBorderColor|default(customTextColor) ~ ';' %}
+{% endif %}
+{% set tag_style = (custom_colors_style ~ ' ' ~ attributes.render('style')|default(''))|trim %}
 
 <div
     class="{{
@@ -38,6 +44,7 @@
             attributes.render('class')
         )
     }}"
+    {% if tag_style %}style="{{ tag_style }}"{% endif %}
     {{ attributes }}
 >
     {% if is_ghost_type %}
@@ -48,7 +55,7 @@
             <twig:ibexa:icon name="{{ icon }}" size="small" />
         </div>
     {% endif %}
-    <div className="ids-tag__content">
+    <div class="ids-tag__content">
         {{ block('content') }}
     </div>
 </div>
