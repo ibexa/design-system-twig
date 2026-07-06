@@ -1,5 +1,6 @@
 {% set value = attributes.render('value') %}
 {% set custom_init = attributes.render('data-ids-custom-init') is not null %}
+{% set root_class = root_class|default('') %}
 
 {% set input_classes =
     html_cva(
@@ -102,7 +103,7 @@
     ]) %}
 {% endif %}
 
-<div class="ids-input-text"{{ custom_init ? ' data-ids-custom-init' : '' }}>
+<div class="{{ html_classes('ids-input-text', root_class) }}"{{ custom_init ? ' data-ids-custom-init' : '' }}>
     <div class="ids-input-text__source">
         <input
             class="{{
@@ -116,6 +117,7 @@
             }}"
             {{
                 attributes.defaults({
+                    type,
                     disabled,
                     required
                 })

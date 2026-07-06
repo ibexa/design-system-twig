@@ -36,6 +36,16 @@
         <target state="new">Show</target>
         <note>key: ibexa.expander.label.expand</note>
       </trans-unit>
+      <trans-unit id="f82d773e018ca106a6cf9c2dd2cdc9034a98d3ea" resname="ibexa.search-button.label">
+        <source>Search</source>
+        <target state="new">Search</target>
+        <note>key: ibexa.search-button.label</note>
+      </trans-unit>
+      <trans-unit id="21106b675508e56be8de23e1545db8275c228ef8" resname="ibexa.show-password.label">
+        <source>Toggle password visibility</source>
+        <target state="new">Toggle password visibility</target>
+        <note>key: ibexa.show-password.label</note>
+      </trans-unit>
       <trans-unit id="0af0c0b3e944e524dba4b327905685b9300f40e4" resname="ids.dropdown.placeholder">
         <source>Select an item</source>
         <target state="new">Select an item</target>

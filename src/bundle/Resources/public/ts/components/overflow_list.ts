@@ -145,9 +145,9 @@ export class OverflowList extends Base {
         const fragment = document.createDocumentFragment();
 
         items.forEach((item) => {
-            const filledItem = Object.entries(item).reduce((acc, [key, value]) => {
+            const filledItem = Object.entries(item).reduce<string>((acc, [key, value]) => {
                 const pattern = `{{ ${key} }}`;
-                const escapedValue = escapeHTML(value);
+                const escapedValue = String(escapeHTML(value));
 
                 return acc.replaceAll(pattern, escapedValue);
             }, this._templates.item);

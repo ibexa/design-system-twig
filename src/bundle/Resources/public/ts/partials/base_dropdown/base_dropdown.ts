@@ -19,7 +19,6 @@ interface TemplatesType {
 const MAX_VISIBLE_ITEMS_DEFAULT = 10;
 const POPPER_OFFSET = 4;
 
-/* eslint-disable max-lines */
 export abstract class BaseDropdown extends Base {
     protected _expanderInstance: Expander;
     protected _searchInstance: InputTextInput;
@@ -39,7 +38,6 @@ export abstract class BaseDropdown extends Base {
     protected _itemsContainerPopperInstance: ReturnType<typeof createPopper> | null = null;
     private _itemsNodeOriginalHeight = 0;
 
-    /* eslint-disable-next-line max-lines-per-function */
     constructor(container: HTMLDivElement) {
         super(container);
 

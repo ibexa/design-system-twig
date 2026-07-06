@@ -32,7 +32,7 @@ altRadiosListContainers.forEach((altRadiosListContainer: HTMLDivElement) => {
 });
 
 const checkboxContainers = Array.from(
-    document.querySelectorAll<HTMLInputElement>('.ids-input--checkbox:not([data-ids-custom-init])')
+    document.querySelectorAll<HTMLInputElement>('.ids-input--checkbox:not([data-ids-custom-init])'),
 ).filter((checkboxContainer: HTMLInputElement) => !checkboxContainer.closest('.ids-toggle__source'));
 
 checkboxContainers.forEach((checkboxContainer: HTMLInputElement) => {
@@ -82,7 +82,7 @@ inputTextContainers.forEach((inputTextContainer: HTMLDivElement) => {
 });
 
 const radioButtonContainers = Array.from(
-    document.querySelectorAll<HTMLInputElement>('.ids-input--radio:not([data-ids-custom-init])')
+    document.querySelectorAll<HTMLInputElement>('.ids-input--radio:not([data-ids-custom-init])'),
 ).filter((radioButtonContainer: HTMLInputElement) => !radioButtonContainer.closest('.ids-toggle__source'));
 
 radioButtonContainers.forEach((radioButtonContainer: HTMLInputElement) => {
@@ -91,7 +91,9 @@ radioButtonContainers.forEach((radioButtonContainer: HTMLInputElement) => {
     radioButtonInstance.init();
 });
 
-const radioButtonsListFieldContainers = document.querySelectorAll<HTMLDivElement>('.ids-radio-buttons-list-field:not([data-ids-custom-init])');
+const radioButtonsListFieldContainers = document.querySelectorAll<HTMLDivElement>(
+    '.ids-radio-buttons-list-field:not([data-ids-custom-init])',
+);
 
 radioButtonsListFieldContainers.forEach((radioButtonsListFieldContainer: HTMLDivElement) => {
     const radioButtonsListFieldInstance = new RadioButtonsListField(radioButtonsListFieldContainer);
