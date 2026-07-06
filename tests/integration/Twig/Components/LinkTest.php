@@ -11,6 +11,7 @@ namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components;
 use Ibexa\DesignSystemTwig\Twig\Components\Link;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
 
 final class LinkTest extends KernelTestCase
@@ -133,6 +134,33 @@ final class LinkTest extends KernelTestCase
         $link = $this->getButtonLink($crawler);
 
         self::assertSame(1, $link->filter('.ids-btn__icon')->count(), 'Icon container should be present when icon is set');
+    }
+
+    public function testButtonVariantWithIconUrl(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:link', [
+            'href' => '/test',
+            'variant' => 'button',
+            'icon_url' => '/assets/icons.svg#calendar-schedule',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $link = $this->getButtonLink($crawler);
+
+        self::assertSame(1, $link->filter('.ids-btn__icon')->count(), 'Icon container should be present when icon_url is set');
+        self::assertSame('/assets/icons.svg#calendar-schedule', $link->filter('.ids-btn__icon use')->attr('xlink:href'));
+    }
+
+    public function testIconAndIconUrlAreMutuallyExclusive(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage("Options 'icon' and 'icon_url' cannot be used together.");
+
+        $this->mountTwigComponent('ibexa:link', [
+            'href' => '/test',
+            'icon' => 'arrow-right',
+            'icon_url' => '/assets/icons.svg#calendar-schedule',
+        ]);
     }
 
     public function testButtonVariantIconOnly(): void
