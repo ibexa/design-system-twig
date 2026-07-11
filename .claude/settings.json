@@ -1,0 +1,11 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(composer test *)",
+            "Bash(composer phpstan *)",
+            "Bash(composer check-cs *)",
+            "Bash(vendor/bin/phpunit *)",
+            "Bash(yarn test)"
+        ]
+    }
+}
