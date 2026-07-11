@@ -6,6 +6,7 @@ import { RadioButtonInput, RadioButtonsListField } from './components/radio_butt
 import { ToggleButtonField, ToggleButtonInput } from './components/toggle_button';
 import { Accordion } from './components/accordion';
 import { OverflowList } from './components/overflow_list';
+import { Switcher } from './components/switcher';
 
 const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
 
@@ -123,4 +124,12 @@ toggleButtonContainers.forEach((toggleButtonContainer: HTMLDivElement) => {
     const toggleButtonInstance = new ToggleButtonInput(toggleButtonContainer);
 
     toggleButtonInstance.init();
+});
+
+const switcherContainers = document.querySelectorAll<HTMLDivElement>('.ids-switcher:not([data-ids-custom-init])');
+
+switcherContainers.forEach((switcherContainer: HTMLDivElement) => {
+    const switcherInstance = new Switcher(switcherContainer);
+
+    switcherInstance.init();
 });

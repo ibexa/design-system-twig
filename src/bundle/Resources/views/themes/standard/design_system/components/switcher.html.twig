@@ -1,0 +1,75 @@
+{% set switcher_classes =
+    html_cva(
+        base: html_classes(
+            'ids-switcher',
+            {
+                'ids-switcher--overflow': overflow,
+            },
+        ),
+        variants: {
+            size: {
+                large: 'ids-switcher--large',
+                small: 'ids-switcher--small',
+            },
+            type: {
+                backoffice: 'ids-switcher--backoffice',
+                builders: 'ids-switcher--builders',
+            },
+        },
+    )
+%}
+
+<div
+    class="{{
+        switcher_classes.apply(
+            {
+                size,
+                type
+            },
+            attributes.render('class')
+        )
+    }}"
+    role="radiogroup"
+    data-ids-more-label="{{ moreLabel }}"
+    {{ attributes }}
+>
+    {% for item in items %}
+        {% set is_selected = item.value == selectedValue %}
+        {% set item_classes =
+            html_classes(
+                'ids-switcher__item',
+                {
+                    'ids-switcher__item--selected': is_selected,
+                    'ids-switcher__item--disabled': item.disabled|default(false),
+                    'ids-switcher__item--error': item.error|default(false),
+                },
+            )
+        %}
+        <button
+            class="{{ item_classes }}"
+            type="button"
+            role="radio"
+            aria-checked="{{ is_selected ? 'true' : 'false' }}"
+            tabindex="{{ item.value == active_value ? '0' : '-1' }}"
+            data-value="{{ item.value }}"
+            {% if item.disabled|default(false) %}disabled{% endif %}
+            {% if name %}name="{{ name }}"{% endif %}
+        >
+            <span class="ids-switcher__item-label">{{ item.label }}</span>
+            {% if item.error|default(false) %}
+                <span class="ids-switcher__item-icon">
+                    <twig:ibexa:icon name="alert-error" size="tiny-small" />
+                </span>
+            {% endif %}
+        </button>
+    {% endfor %}
+
+    {% if overflow %}
+        <button class="ids-switcher__item ids-switcher__item--more" type="button" aria-haspopup="menu" aria-expanded="false">
+            <span class="ids-switcher__item-label">{{ moreLabel }}</span>
+            <span class="ids-switcher__item-icon">
+                <twig:ibexa:icon name="arrow-double-right" size="tiny-small" />
+            </span>
+        </button>
+    {% endif %}
+</div>
