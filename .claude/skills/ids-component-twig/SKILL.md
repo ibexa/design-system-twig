@@ -5,8 +5,8 @@ description: Implement or change an Ibexa Design System Twig component in this r
 
 # Twig DS component (pointer)
 
-The canonical skill suite lives in the **React design-system repo** (`design-system-60`),
-`.claude/skills/`. Locate that repo:
+The canonical skill suite lives in the **React design-system repo** (`@ibexa/design-system`
+— checkout folder name varies per developer), under `.claude/skills/`. Locate that repo:
 
 1. `$IDS_REACT_ROOT` env var, if set (developers define it in `.claude/settings.local.json`).
 2. Otherwise follow the DS symlinks of the surrounding DXP checkout:

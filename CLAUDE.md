@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Overview
 
 `ibexa/design-system-twig` is a Symfony bundle that mirrors the React Ibexa Design System
-(`@ibexa/design-system`, the `design-system-60` repo) as **Symfony UX Twig Components**.
+(the `@ibexa/design-system` repo) as **Symfony UX Twig Components**.
 Each component is a PHP class + a Twig template emitting the same BEM `ids-*` classes as its
 React counterpart, plus (when interactive) a vanilla-TS behavior. The two implementations
 are kept in parity component-by-component.
@@ -68,12 +68,13 @@ classes and slots.
   mutually exclusive.
 - Translated internal defaults use constructor-injected `TranslatorInterface` +
   `/** @Desc(...) */`; components otherwise receive already-translated strings via props.
-- Adding a whole new component? Follow the `ids-component-twig` skill in the React repo:
-  `<design-system-60>/.claude/skills/ids-component-twig/`.
+- Adding a whole new component? Follow the `ids-component-twig` skill in the React DS repo:
+  `<react-ds-repo>/.claude/skills/ids-component-twig/` (locate the repo via the pointer
+  skill in this repo's `.claude/skills/`).
 
 ## Git
 
 - Do NOT commit unless explicitly asked.
 - Feature branches: `IBX-<ticket>-<slug>` from `ds-development` (the DS integration branch).
-- Cross-repo work (component here + SCSS in design-system-60 + usage in a DXP package)
+- Cross-repo work (component here + SCSS in the React DS repo + usage in a DXP package)
   means coordinated same-named branches in each repo.
