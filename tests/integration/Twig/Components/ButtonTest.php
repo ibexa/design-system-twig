@@ -182,8 +182,14 @@ final class ButtonTest extends KernelTestCase
         $children = $button->children();
 
         self::assertSame(2, $children->count(), 'Button should have icon and label');
-        self::assertStringContainsString('ids-btn__icon', $children->first()->attr('class'), 'Icon should be first child when position is "start"');
-        self::assertStringContainsString('ids-btn__label', $children->eq(1)->attr('class'), 'Label should be second child when position is "start"');
+
+        $firstChildClass = $children->first()->attr('class');
+        self::assertNotNull($firstChildClass);
+        self::assertStringContainsString('ids-btn__icon', $firstChildClass, 'Icon should be first child when position is "start"');
+
+        $secondChildClass = $children->eq(1)->attr('class');
+        self::assertNotNull($secondChildClass);
+        self::assertStringContainsString('ids-btn__label', $secondChildClass, 'Label should be second child when position is "start"');
     }
 
     public function testIconPositionEnd(): void
@@ -198,8 +204,14 @@ final class ButtonTest extends KernelTestCase
         $children = $button->children();
 
         self::assertSame(2, $children->count(), 'Button should have label and icon');
-        self::assertStringContainsString('ids-btn__label', $children->first()->attr('class'), 'Label should be first child when position is "end"');
-        self::assertStringContainsString('ids-btn__icon', $children->eq(1)->attr('class'), 'Icon should be second child when position is "end"');
+
+        $firstChildClass = $children->first()->attr('class');
+        self::assertNotNull($firstChildClass);
+        self::assertStringContainsString('ids-btn__label', $firstChildClass, 'Label should be first child when position is "end"');
+
+        $secondChildClass = $children->eq(1)->attr('class');
+        self::assertNotNull($secondChildClass);
+        self::assertStringContainsString('ids-btn__icon', $secondChildClass, 'Icon should be second child when position is "end"');
     }
 
     private function getButton(Crawler $crawler): Crawler
