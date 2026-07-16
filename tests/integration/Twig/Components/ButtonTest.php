@@ -175,6 +175,7 @@ final class ButtonTest extends KernelTestCase
         $rendered = $this->renderTwigComponent('ibexa:button', [
             'icon' => 'arrow-right',
             'icon_position' => 'start',
+            'label' => 'Click me',
         ]);
         $crawler = $rendered->crawler();
 
@@ -197,6 +198,7 @@ final class ButtonTest extends KernelTestCase
         $rendered = $this->renderTwigComponent('ibexa:button', [
             'icon' => 'caret-next',
             'icon_position' => 'end',
+            'label' => 'Click me',
         ]);
         $crawler = $rendered->crawler();
 
