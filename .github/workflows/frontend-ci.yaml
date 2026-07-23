@@ -21,6 +21,12 @@ jobs:
 
         steps:
             -   uses: actions/checkout@v4
+            -   name: Setup PHP Action
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.3'
+                    coverage: none
+                    extensions: 'pdo_sqlite, gd'
             -   uses: actions/setup-node@v4
                 with:
                     node-version: '20'
