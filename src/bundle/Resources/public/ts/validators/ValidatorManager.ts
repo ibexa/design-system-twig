@@ -19,7 +19,7 @@ export default class ValidatorManager<T> {
     validate(value: T): ValidationResult {
         const errors = this._validators.reduce((errorsAcc: string[], validator) => {
             if (!validator.validate(value)) {
-                return [...errorsAcc, String(validator.getErrorMessage())];
+                return [...errorsAcc, validator.getErrorMessage()];
             }
 
             return errorsAcc;
