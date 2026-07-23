@@ -15,11 +15,3 @@ webpack_encore:
     strict_mode: false
     builds:
         ibexa: '%kernel.project_dir%/public/build/ibexa'
-
-ibexa:
-    system:
-        default:
-            assets:
-                icon_sets:
-                    ids_icons: /bundles/ibexaadminuiassets/vendors/ids-assets/dist/img/all-icons.svg
-                default_icon_set: ids_icons
