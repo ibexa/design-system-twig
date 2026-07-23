@@ -2,8 +2,6 @@
     "name": "ibexa/design-system-twig",
     "license": "(GPL-2.0-only or proprietary)",
     "type": "ibexa-bundle",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "keywords": [
         "ibexa-dxp"
     ],
