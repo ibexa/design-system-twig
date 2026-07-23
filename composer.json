@@ -7,7 +7,6 @@
     ],
     "require": {
         "php": ">=8.3",
-        "ibexa/admin-ui": "~6.0.x-dev",
         "ibexa/core": "~6.0.x-dev",
         "ibexa/design-engine": "~6.0.x-dev",
         "symfony/config": "^7.4",
@@ -17,10 +16,12 @@
         "symfony/http-kernel": "^7.4",
         "symfony/uid": "^7.4",
         "symfony/ux-twig-component": "^2.32",
+        "symfony/webpack-encore-bundle": "^2.2",
         "symfony/yaml": "^7.4",
         "twig/html-extra": "^3.20"
     },
     "require-dev": {
+        "ibexa/admin-ui": "~6.0.x-dev",
         "ibexa/behat": "~6.0.x-dev",
         "ibexa/code-style": "~2.0.0",
         "ibexa/doctrine-schema": "~6.0.x-dev",
