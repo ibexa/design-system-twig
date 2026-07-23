@@ -41,6 +41,7 @@
                 attributes.render('class')
             )
         }}"
+        aria-disabled="{{ disabled ? 'true' : 'false' }}"
         {{ attributes }}
     >
         {% block link_button_inner %}
@@ -64,6 +65,7 @@
     <a
         href="{{ href }}"
         class="{{ html_classes('ids-link', {'ids-link--disabled': disabled}, attributes.render('class')|default('')) }}"
+        aria-disabled="{{ disabled ? 'true' : 'false' }}"
         {{ attributes }}
     >
         {% block link_text_inner %}

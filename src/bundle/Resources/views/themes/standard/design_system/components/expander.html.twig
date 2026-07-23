@@ -1,5 +1,5 @@
-{% set label = is_expanded ? collapse_label : expand_label %}
-{% set has_label = label is not empty %}
+{% set expander_label = is_expanded ? collapse_label : expand_label %}
+{% set has_label = expander_label is not empty %}
 
 {% set button_classes =
     html_classes(
@@ -22,7 +22,7 @@
     class="{{ button_classes }}"
 >
     {% if has_label %}
-        <span class="ids-expander__label">{{ label }}</span>
+        <span class="ids-expander__label">{{ expander_label }}</span>
     {% endif %}
     {% if has_icon %}
         <twig:ibexa:icon name="{{ icon_name }}" size="small" />
