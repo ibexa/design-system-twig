@@ -1,26 +1,35 @@
 import { Base } from '../partials';
 
-interface ChipConfig {
-    onDelete?: (event: MouseEvent) => void;
-}
-
 export default class Chip extends Base {
     private deleteButton: HTMLButtonElement | null;
-    private onDelete?: (event: MouseEvent) => void;
 
-    constructor(container: HTMLDivElement, config: ChipConfig = {}) {
+    constructor(container: HTMLDivElement) {
         super(container);
 
         this.deleteButton = this._container.querySelector('.ids-chip__delete');
-        this.onDelete = config.onDelete;
     }
 
     protected handleDelete(event: MouseEvent): void {
         event.stopPropagation();
 
-        if (this.onDelete) {
-            this.onDelete(event);
+        this.delete();
+    }
+
+    public delete(): void {
+        const deleteEvent = new CustomEvent('ids:chip:delete:before', {
+            cancelable: true,
+            detail: {
+                component: this,
+            },
+        });
+
+        this._container.dispatchEvent(deleteEvent);
+
+        if (deleteEvent.defaultPrevented) {
+            return;
         }
+
+        this._container.remove();
     }
 
     protected initDeleteButton(): void {

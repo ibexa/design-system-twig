@@ -1,12 +1,13 @@
 {% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_choice_input.html.twig' %}
 
-{% set class = html_classes('ids-radio-button', attributes.render('class') ?? '') %}
+{% set class = html_classes(class, attributes.render('class') ?? '') %}
 
 {% block content %}
     <input
-        class="{{ input_classes }}"
+        class="{{ class }}"
         {{
             attributes.defaults({
+                checked,
                 disabled,
                 name,
                 required,

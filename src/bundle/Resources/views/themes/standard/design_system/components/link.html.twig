@@ -1,0 +1,75 @@
+{% set _content %}{% block content %}{% endblock %}{% endset %}
+{% set _content = _content|striptags|trim is not empty ? _content : label %}
+{% set has_content = _content|striptags|trim is not empty %}
+{% set has_icon = icon is not empty or icon_url is not empty %}
+
+{% if variant == 'button' %}
+    {% set icon_only = (not has_content) and has_icon %}
+    {% set link_classes =
+        html_cva(
+            base: html_classes(
+                'ids-btn',
+                {
+                    'ids-btn--icon-only': icon_only,
+                    'ids-link--disabled': disabled,
+                },
+            ),
+            variants: {
+                type: {
+                    primary: 'ids-btn--primary',
+                    secondary: 'ids-btn--secondary',
+                    tertiary: 'ids-btn--tertiary',
+                    'secondary-alt': 'ids-btn--secondary-alt',
+                    'tertiary-alt': 'ids-btn--tertiary-alt',
+                },
+                size: {
+                    medium: 'ids-btn--medium',
+                    small: 'ids-btn--small',
+                },
+            },
+        )
+    %}
+
+    <a
+        href="{{ href }}"
+        class="{{
+            link_classes.apply(
+                {
+                    type,
+                    size
+                },
+                attributes.render('class')
+            )
+        }}"
+        aria-disabled="{{ disabled ? 'true' : 'false' }}"
+        {{ attributes }}
+    >
+        {% block link_button_inner %}
+            {% if has_icon %}
+                <div class="ids-btn__icon">
+                    {% if icon_url is not empty %}
+                        <twig:ibexa:icon path="{{ icon_url }}" size="{{ icon_size }}" />
+                    {% else %}
+                        <twig:ibexa:icon name="{{ icon }}" size="{{ icon_size }}" />
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if not icon_only %}
+                <div class="ids-btn__label">
+                    {{ _content|raw }}
+                </div>
+            {% endif %}
+        {% endblock link_button_inner %}
+    </a>
+{% else %}
+    <a
+        href="{{ href }}"
+        class="{{ html_classes('ids-link', {'ids-link--disabled': disabled}, attributes.render('class')|default('')) }}"
+        aria-disabled="{{ disabled ? 'true' : 'false' }}"
+        {{ attributes }}
+    >
+        {% block link_text_inner %}
+            {{ _content|raw }}
+        {% endblock link_text_inner %}
+    </a>
+{% endif %}

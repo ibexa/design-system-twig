@@ -59,7 +59,7 @@ final class ClearButtonTest extends KernelTestCase
         $class = $this->getClassAttr($button);
 
         self::assertNotNull($button->attr('disabled'), 'Disabled prop should render native "disabled" attribute on <button>.');
-        self::assertStringContainsString('ids-btn--disabled', $class, 'Disabled prop should add "ids-btn--disabled" class.');
+        self::assertStringNotContainsString('ids-btn--disabled', $class, 'Disabled prop should not add "ids-btn--disabled" class.');
     }
 
     public function testInvalidDisabledTypeCausesResolverErrorOnMount(): void

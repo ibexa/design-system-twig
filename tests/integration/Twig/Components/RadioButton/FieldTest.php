@@ -130,8 +130,8 @@ final class FieldTest extends KernelTestCase
 
     private function getRadioInput(Crawler $crawler): Crawler
     {
-        $node = $crawler->filter('.ids-radio-button > input')->first();
-        self::assertGreaterThan(0, $node->count(), 'Radio input should be present under ".ids-radio-button > input".');
+        $node = $crawler->filter('input.ids-input--radio')->first();
+        self::assertGreaterThan(0, $node->count(), 'Radio input should be present.');
 
         return $node;
     }

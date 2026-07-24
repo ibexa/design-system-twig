@@ -141,8 +141,8 @@ final class ListFieldTest extends KernelTestCase
 
     private function getRadioInput(Crawler $scope): Crawler
     {
-        $node = $scope->filter('.ids-radio-button > input')->first();
-        self::assertGreaterThan(0, $node->count(), 'Radio input should be present under ".ids-radio-button > input".');
+        $node = $scope->filter('input.ids-input--radio')->first();
+        self::assertGreaterThan(0, $node->count(), 'Radio input should be present.');
 
         return $node;
     }

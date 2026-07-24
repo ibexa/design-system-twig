@@ -11,6 +11,7 @@ namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components;
 use Ibexa\DesignSystemTwig\Twig\Components\Button;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
 
 final class ButtonTest extends KernelTestCase
@@ -24,6 +25,7 @@ final class ButtonTest extends KernelTestCase
             [
                 'size' => 'small',
                 'type' => 'secondary',
+                'htmlType' => 'submit',
                 'disabled' => true,
                 'icon' => 'arrow-right',
             ]
@@ -32,6 +34,7 @@ final class ButtonTest extends KernelTestCase
         self::assertInstanceOf(Button::class, $component);
         self::assertSame('small', $component->size, 'Size should be resolved to "small"');
         self::assertSame('secondary', $component->type, 'Type should be resolved to "secondary"');
+        self::assertSame('submit', $component->htmlType, 'HTML type should be resolved to "submit"');
         self::assertTrue($component->disabled, 'Disabled should be true');
         self::assertSame('arrow-right', $component->icon, 'Icon name should be passed through');
         self::assertSame('tiny-small', $component->iconSize(), 'iconSize() should map "small" to "tiny-small"');
@@ -68,8 +71,20 @@ final class ButtonTest extends KernelTestCase
         $button = $this->getButton($crawler);
         $classAttr = (string) $button->attr('class');
 
-        self::assertStringContainsString('ids-btn--disabled', $classAttr, 'Disabled class should be present');
+        self::assertStringNotContainsString('ids-btn--disabled', $classAttr, 'Disabled class should NOT be present');
         self::assertNotNull($button->attr('disabled'), 'Disabled attribute should be present');
+    }
+
+    public function testHtmlTypeRender(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:button', [
+            'htmlType' => 'submit',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $button = $this->getButton($crawler);
+
+        self::assertSame('submit', $button->attr('type'), 'Button should render custom HTML type');
     }
 
     public function testVariantAndSizeClasses(): void
@@ -117,6 +132,88 @@ final class ButtonTest extends KernelTestCase
         $button = $this->getButton($crawler);
 
         self::assertSame(1, $button->filter('.ids-btn__icon')->count(), 'Icon container should be present when icon is set');
+    }
+
+    public function testIconUrlRenderingIsConditional(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:button', [
+            'icon_url' => '/assets/icons.svg#calendar-schedule',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $button = $this->getButton($crawler);
+
+        self::assertSame(1, $button->filter('.ids-btn__icon')->count(), 'Icon container should be present when icon_url is set');
+        self::assertSame('/assets/icons.svg#calendar-schedule', $button->filter('.ids-btn__icon use')->attr('xlink:href'));
+    }
+
+    public function testIconAndIconUrlAreMutuallyExclusive(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage("Options 'icon' and 'icon_url' cannot be used together.");
+
+        $this->mountTwigComponent('ibexa:button', [
+            'icon' => 'arrow-right',
+            'icon_url' => '/assets/icons.svg#calendar-schedule',
+        ]);
+    }
+
+    public function testResetHtmlTypeRender(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:button', [
+            'htmlType' => 'reset',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $button = $this->getButton($crawler);
+
+        self::assertSame('reset', $button->attr('type'), 'Button should render reset HTML type');
+    }
+
+    public function testIconPositionStart(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:button', [
+            'icon' => 'arrow-right',
+            'icon_position' => 'start',
+            'label' => 'Click me',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $button = $this->getButton($crawler);
+        $children = $button->children();
+
+        self::assertSame(2, $children->count(), 'Button should have icon and label');
+
+        $firstChildClass = $children->first()->attr('class');
+        self::assertNotNull($firstChildClass);
+        self::assertStringContainsString('ids-btn__icon', $firstChildClass, 'Icon should be first child when position is "start"');
+
+        $secondChildClass = $children->eq(1)->attr('class');
+        self::assertNotNull($secondChildClass);
+        self::assertStringContainsString('ids-btn__label', $secondChildClass, 'Label should be second child when position is "start"');
+    }
+
+    public function testIconPositionEnd(): void
+    {
+        $rendered = $this->renderTwigComponent('ibexa:button', [
+            'icon' => 'caret-next',
+            'icon_position' => 'end',
+            'label' => 'Click me',
+        ]);
+        $crawler = $rendered->crawler();
+
+        $button = $this->getButton($crawler);
+        $children = $button->children();
+
+        self::assertSame(2, $children->count(), 'Button should have label and icon');
+
+        $firstChildClass = $children->first()->attr('class');
+        self::assertNotNull($firstChildClass);
+        self::assertStringContainsString('ids-btn__label', $firstChildClass, 'Label should be first child when position is "end"');
+
+        $secondChildClass = $children->eq(1)->attr('class');
+        self::assertNotNull($secondChildClass);
+        self::assertStringContainsString('ids-btn__icon', $secondChildClass, 'Icon should be second child when position is "end"');
     }
 
     private function getButton(Crawler $crawler): Crawler

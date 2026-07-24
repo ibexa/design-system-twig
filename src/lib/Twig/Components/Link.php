@@ -14,15 +14,16 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent('ibexa:button')]
-final class Button
+#[AsTwigComponent('ibexa:link')]
+final class Link
 {
+    public string $href;
+
+    public string $variant = 'button';
+
     public string $size = 'medium';
 
-    public string $type = 'primary';
-
-    #[ExposeInTemplate('html_type')]
-    public string $htmlType = 'button';
+    public string $type = 'tertiary';
 
     public bool $disabled = false;
 
@@ -31,8 +32,6 @@ final class Button
     public string $icon_url = '';
 
     public string $label = '';
-
-    public string $icon_position = 'start';
 
     /**
      * @var array{small: string, medium: string}
@@ -53,17 +52,21 @@ final class Button
         $resolver = new OptionsResolver();
         $resolver->setIgnoreUndefined();
         $resolver
+            ->define('href')
+            ->required()
+            ->allowedTypes('string');
+        $resolver
+            ->define('variant')
+            ->allowedValues('button', 'text')
+            ->default('button');
+        $resolver
             ->define('size')
             ->allowedValues('small', 'medium')
             ->default('medium');
         $resolver
             ->define('type')
             ->allowedValues('primary', 'secondary', 'tertiary', 'secondary-alt', 'tertiary-alt')
-            ->default('primary');
-        $resolver
-            ->define('htmlType')
-            ->allowedValues('button', 'submit', 'reset')
-            ->default('button');
+            ->default('tertiary');
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')
@@ -74,10 +77,6 @@ final class Button
         $resolver
             ->define('icon_url')
             ->allowedTypes('string');
-        $resolver
-            ->define('icon_position')
-            ->allowedValues('start', 'end')
-            ->default('start');
 
         $resolvedProps = $resolver->resolve($props) + $props;
 

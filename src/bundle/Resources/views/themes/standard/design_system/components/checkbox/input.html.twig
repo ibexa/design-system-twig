@@ -1,19 +1,12 @@
 {% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_choice_input.html.twig' %}
 
-{% set class = html_classes('ids-checkbox', attributes.render('class') ?? '') %}
+{% set class = html_classes(class, attributes.render('class') ?? '') %}
 
 {% block content %}
-    {% set input_classes =
-        html_classes(
-            input_classes,
-            {
-                'ids-input--indeterminate': indeterminate
-            },
-        )
-    %}
+    {% set class = html_classes(class, { 'ids-input--indeterminate': indeterminate }) %}
 
     <input
-        class="{{ input_classes }}"
+        class="{{ class }}"
         {{
             attributes.defaults({
                 checked,

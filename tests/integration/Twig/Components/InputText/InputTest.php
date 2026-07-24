@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
+use Twig\Markup;
 
 final class InputTest extends KernelTestCase
 {
@@ -132,6 +133,76 @@ final class InputTest extends KernelTestCase
         $this->assertClearActionHidden($crawler, false);
     }
 
+    public function testActionsAfterRendersCustomTrailingAction(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'actions_after' => '<button type="button" class="qa-extra-action">Extra</button>',
+        ])->crawler();
+
+        $customAction = $crawler->filter('.ids-input-text__action--custom')->first();
+        self::assertGreaterThan(0, $customAction->count(), 'Custom trailing action wrapper should be rendered.');
+
+        $button = $customAction->filter('.qa-extra-action')->first();
+        self::assertGreaterThan(0, $button->count(), 'Custom trailing action markup should be rendered inside the wrapper.');
+        self::assertSame('Extra', trim($button->text()), 'Custom trailing action content should be preserved.');
+    }
+
+    public function testActionsAfterAcceptsTwigMarkup(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'actions_after' => new Markup('<button type="button" class="qa-extra-action">Extra</button>', 'UTF-8'),
+        ])->crawler();
+
+        $button = $crawler->filter('.ids-input-text__action--custom .qa-extra-action')->first();
+        self::assertGreaterThan(0, $button->count(), 'Twig Markup actions_after should render custom trailing action markup.');
+    }
+
+    public function testPasswordTypeRendersToggleAction(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'type' => 'password',
+        ])->crawler();
+
+        $toggle = $crawler->filter('.ids-input-text__password-toggler')->first();
+        self::assertGreaterThan(0, $toggle->count(), 'Password inputs should render the password toggle action.');
+        self::assertSame('password', $this->getInput($crawler)->attr('type'), 'Password input type should be preserved.');
+    }
+
+    public function testSearchActionRendersWhenEnabled(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'has_search_action' => true,
+            'search_button_type' => 'button',
+        ])->crawler();
+
+        $button = $crawler->filter('.ids-input-text__search-btn')->first();
+        self::assertGreaterThan(0, $button->count(), 'Search action should be rendered when enabled.');
+        self::assertSame('button', $button->attr('type'), 'Search button type should be configurable.');
+    }
+
+    public function testPasswordTypeWithSearchActionRendersNoExtraBuiltInAction(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'type' => 'password',
+            'has_search_action' => true,
+        ])->crawler();
+
+        self::assertSame(0, $crawler->filter('.ids-input-text__password-toggler')->count(), 'Password search combination should not render the password toggle.');
+        self::assertSame(0, $crawler->filter('.ids-input-text__search-btn')->count(), 'Password search combination should not render the search button.');
+    }
+
+    public function testSendFormAfterClearingAddsClearButtonMarker(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'send_form_after_clearing' => true,
+            'attributes' => ['value' => 'x'],
+        ])->crawler();
+
+        $clearButton = $crawler->filter('.ids-clear-btn')->first();
+        self::assertGreaterThan(0, $clearButton->count(), 'Clear button should be rendered.');
+        self::assertNotNull($clearButton->attr('data-send-form-after-clearing'), 'Clear button should expose the form submission marker.');
+    }
+
     public function testInvalidTypeValueCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);
@@ -148,6 +219,18 @@ final class InputTest extends KernelTestCase
     {
         $this->expectException(InvalidOptionsException::class);
         $this->mountTwigComponent(Input::class, ['disabled' => 'yes']);
+    }
+
+    public function testInvalidActionsAfterTypeCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->mountTwigComponent(Input::class, ['actions_after' => ['unexpected']]);
+    }
+
+    public function testInvalidSearchButtonTypeCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->mountTwigComponent(Input::class, ['search_button_type' => 'link']);
     }
 
     private function getWrapper(Crawler $crawler): Crawler

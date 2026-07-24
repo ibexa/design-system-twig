@@ -1,12 +1,13 @@
 {% set _content %}{% block content %}{% endblock %}{% endset %}
+{% set _content = _content|striptags|trim is not empty ? _content : label %}
 {% set has_content = _content|striptags|trim is not empty %}
-{% set icon_only = (not has_content) and icon is not empty %}
+{% set has_icon = icon is not empty or icon_url is not empty %}
+{% set icon_only = (not has_content) and has_icon %}
 {% set button_classes =
     html_cva(
         base: html_classes(
             'ids-btn',
             {
-                'ids-btn--disabled': disabled,
                 'ids-btn--icon-only': icon_only,
             },
         ),
@@ -27,7 +28,7 @@
 %}
 
 <button
-    type="button"
+    type="{{ html_type }}"
     class="{{
         button_classes.apply(
             {
@@ -40,19 +41,44 @@
     {{ attributes.defaults({ disabled }) }}
 >
     {% block button_inner %}
-        {% block icon_outer %}
-            {% if icon %}
-                <div class="ids-btn__icon">
-                    {% block icon_inner %}
-                        <twig:ibexa:icon name="{{ icon }}" size="{{ icon_size }}" />
-                    {% endblock icon_inner %}
+        {% if icon_position == 'end' %}
+            {% if not icon_only %}
+                <div class="ids-btn__label">
+                    {{ _content|raw }}
                 </div>
             {% endif %}
-        {% endblock icon_outer %}
-        {% if not icon_only %}
-            <div class="ids-btn__label">
-                {{ _content|raw }}
-            </div>
+            {% block icon_outer %}
+                {% if has_icon %}
+                    <div class="ids-btn__icon">
+                        {% block icon_inner %}
+                            {% if icon_url is not empty %}
+                                <twig:ibexa:icon path="{{ icon_url }}" size="{{ icon_size }}" />
+                            {% else %}
+                                <twig:ibexa:icon name="{{ icon }}" size="{{ icon_size }}" />
+                            {% endif %}
+                        {% endblock icon_inner %}
+                    </div>
+                {% endif %}
+            {% endblock icon_outer %}
+        {% else %}
+            {% block icon_outer_start %}
+                {% if has_icon %}
+                    <div class="ids-btn__icon">
+                        {% block icon_inner_start %}
+                            {% if icon_url is not empty %}
+                                <twig:ibexa:icon path="{{ icon_url }}" size="{{ icon_size }}" />
+                            {% else %}
+                                <twig:ibexa:icon name="{{ icon }}" size="{{ icon_size }}" />
+                            {% endif %}
+                        {% endblock icon_inner_start %}
+                    </div>
+                {% endif %}
+            {% endblock icon_outer_start %}
+            {% if not icon_only %}
+                <div class="ids-btn__label">
+                    {{ _content|raw }}
+                </div>
+            {% endif %}
         {% endif %}
     {% endblock button_inner %}
 </button>
