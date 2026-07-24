@@ -50,7 +50,7 @@ export class InputTextField extends Base {
 
     setError(validationResult: ValidationResult): void {
         const { isValid, messages } = validationResult;
-        const errorMessage = String(messages.join(', '));
+        const errorMessage = messages.join(', ');
         const isError = !isValid;
 
         if (this._hasError !== isError) {
