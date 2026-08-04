@@ -13,11 +13,11 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
-use Twig\Markup;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
+use Twig\Markup;
 use Twig\Runtime\EscaperRuntime;
 
 /**
@@ -53,7 +53,8 @@ abstract class AbstractDropdown
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly Environment $twig,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<string, mixed> $props

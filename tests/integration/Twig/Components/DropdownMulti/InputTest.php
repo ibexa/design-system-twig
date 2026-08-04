@@ -42,10 +42,6 @@ final class InputTest extends KernelTestCase
             $selectedItems,
             'getSelectedItems() should return one entry for selected ID.'
         );
-        self::assertNotNull(
-            $selectedItems[0],
-            'Selected items array should contain the original item data.'
-        );
         self::assertSame(
             'opt-a',
             $selectedItems[0]['id'],

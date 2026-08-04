@@ -43,7 +43,8 @@ trait LabelledChoiceInputTrait
     /**
      * @return array{
      *     id: string,
-     *     name: string,
+     *     name: ?string,
+     *     checked: bool,
      *     disabled: bool,
      *     error: bool,
      *     required: bool,
