@@ -12,7 +12,6 @@ use Ibexa\DesignSystemTwig\Twig\Components\AltRadio\Input;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
 
 final class InputTest extends KernelTestCase
@@ -125,14 +124,22 @@ final class InputTest extends KernelTestCase
         ]);
     }
 
-    public function testMissingRequiredOptionsCauseResolverErrorOnMount(): void
+    public function testNameIsOptional(): void
     {
-        $this->expectException(MissingOptionsException::class);
-
-        $this->mountTwigComponent(Input::class, [
+        $component = $this->mountTwigComponent(Input::class, [
             'value' => 'A',
             'label' => 'Pick A',
         ]);
+
+        self::assertInstanceOf(Input::class, $component, 'Component should mount without a "name" prop.');
+        self::assertNull($component->name, 'Prop "name" should default to null.');
+
+        $crawler = $this->renderTwigComponent(Input::class, [
+            'value' => 'A',
+            'label' => 'Pick A',
+        ])->crawler();
+
+        self::assertNull($this->getInput($crawler)->attr('name'), 'Input should not render a "name" attribute.');
     }
 
     private function getWrapper(Crawler $crawler): Crawler

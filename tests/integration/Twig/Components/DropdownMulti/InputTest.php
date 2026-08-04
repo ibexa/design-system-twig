@@ -116,10 +116,9 @@ final class InputTest extends KernelTestCase
             $checkboxes->count(),
             'Dropdown list should include a checkbox per item.'
         );
-        self::assertSame(
-            'group-checkbox',
+        self::assertNull(
             $checkboxes->eq(0)->attr('name'),
-            'Checkbox name should derive from component name.'
+            'List checkboxes should not be named, so they are not submitted with the form.'
         );
         self::assertNotNull(
             $checkboxes->eq(1)->attr('checked'),
