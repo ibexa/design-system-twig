@@ -21,7 +21,7 @@ export class DropdownSingleInput extends BaseDropdown {
     }
 
     protected syncFromSourceValue() {
-        const value = this._sourceInputNode.value;
+        const { value } = this._sourceInputNode;
 
         this._itemsContainerNode.querySelectorAll<HTMLLIElement>('.ids-dropdown__item--selected').forEach((itemNode) => {
             itemNode.classList.remove('ids-dropdown__item--selected');

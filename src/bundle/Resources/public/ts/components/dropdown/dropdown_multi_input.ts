@@ -1,8 +1,8 @@
 import { BaseDropdown, BaseDropdownItem } from '../../partials';
-import { OverflowList } from '../overflow_list';
-import { createNodesFromTemplate } from '../../utils/dom';
 import { getInstance, hasInstance } from '../../helpers/object.instances';
 import { HTMLElementIDSInstance } from '../../shared/types';
+import { OverflowList } from '../overflow_list';
+import { createNodesFromTemplate } from '../../utils/dom';
 
 export enum DropdownMultiInputAction {
     Check = 'check',
@@ -77,7 +77,9 @@ export class DropdownMultiInput extends BaseDropdown {
             return this._overflowListInstance;
         }
 
-        const overflowListNode = this._selectionInfoItemsNode.querySelector<HTMLElementIDSInstance<OverflowList>>('.ids-overflow-list');
+        const overflowListNode = this._selectionInfoItemsNode.querySelector<HTMLDivElement & HTMLElementIDSInstance<OverflowList>>(
+            '.ids-overflow-list',
+        );
 
         if (!overflowListNode) {
             return null;
@@ -86,7 +88,7 @@ export class DropdownMultiInput extends BaseDropdown {
         if (hasInstance(overflowListNode)) {
             this._overflowListInstance = getInstance<OverflowList>(overflowListNode);
         } else {
-            this._overflowListInstance = new OverflowList(overflowListNode as HTMLDivElement);
+            this._overflowListInstance = new OverflowList(overflowListNode);
             this._overflowListInstance.init();
         }
 
