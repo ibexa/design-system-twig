@@ -1,18 +1,33 @@
 {% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_dropdown.html.twig' %}
 
+{% trans_default_domain 'ibexa_design_system_twig' %}
+
 {% set class = html_classes('ids-dropdown--multi', attributes.render('class') ?? '') %}
+{% set selected_item_template_props = {
+    id: '{{ id }}',
+    label: '{{ label }}',
+} %}
+{% set hidden_count_template = '{{ hidden_count }}' %}
 
 {% block source %}
-    <select multiple="multiple" name="{{ name }}"{% if disabled %} disabled{% endif %}>
-        {% for item in items %}
-            <option value="{{ item.id }}"{% if item.id in value %} selected{% endif %}>{{ item.label }}</option>
-        {% endfor %}
-    </select>
+    {% if source is defined and source is not empty %}
+        {{ source|raw }}
+    {% else %}
+        <select{{ source_attributes.defaults({
+            name: name,
+            disabled: disabled,
+            required: required|default(false),
+            multiple: 'multiple',
+        }) }}>
+            {% for item in items %}
+                <option value="{{ item.id }}"{% if item.id in value %} selected{% endif %}>{{ item.label }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
 {% endblock source %}
 
 {% block item_content %}
     <twig:ibexa:checkbox:input
-        name="{{ name }}-checkbox"
         :checked="item.id in value"
         value="{{ item.id ~ '' }}"
         data-ids-custom-init="true"
@@ -21,5 +36,31 @@
 {% endblock item_content %}
 
 {% block selected_items %}
-    {{ selected_items|map(item => item.label)|join(', ') }}
+    {% embed '@IbexaDesignSystemTwig/themes/standard/design_system/components/overflow_list.html.twig' with {
+        items: selected_items,
+        item_template_props: selected_item_template_props,
+        hidden_count_template: hidden_count_template,
+    } only %}
+        {% block item %}
+            <twig:ibexa:chip data-id="{{ item.id }}" class="ids-dropdown__selected-item">
+                {{ item.label }}
+            </twig:ibexa:chip>
+        {% endblock item %}
+
+        {% block more_item_current %}
+            <twig:ibexa:chip
+                :isDeletable="false"
+                class="ids-dropdown__selected-item ids-dropdown__selected-item--more"
+                hidden
+            >
+                +0
+            </twig:ibexa:chip>
+        {% endblock more_item_current %}
+
+        {% block more_item_template %}
+            <twig:ibexa:chip :isDeletable="false" class="ids-dropdown__selected-item ids-dropdown__selected-item--more">
+                +{{ hidden_count_template }}
+            </twig:ibexa:chip>
+        {% endblock more_item_template %}
+    {% endembed %}
 {% endblock selected_items %}

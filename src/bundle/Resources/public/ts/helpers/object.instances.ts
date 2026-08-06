@@ -6,6 +6,7 @@ const setInstance = <InstanceType>(domElement: HTMLElementIDSInstance<InstanceTy
     }
 
     domElement.idsInstance = instance; // eslint-disable-line no-param-reassign
+    (domElement as HTMLElementIDSInstance<InstanceType> & { ibexaInstance?: InstanceType }).ibexaInstance = instance; // eslint-disable-line no-param-reassign
 };
 const hasInstance = <InstanceType>(domElement: HTMLElementIDSInstance<InstanceType>): boolean => {
     return !!domElement.idsInstance;

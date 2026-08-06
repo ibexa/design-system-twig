@@ -30,9 +30,9 @@ export class OverflowList extends Base {
         super(container);
 
         const itemsNode = container.querySelector<HTMLDivElement>('.ids-overflow-list__items');
-        const moreItemNode = itemsNode?.querySelector<HTMLDivElement>(':scope *:last-child');
+        const moreItemNode = itemsNode?.lastElementChild;
 
-        if (!itemsNode || !moreItemNode) {
+        if (!itemsNode || !(moreItemNode instanceof HTMLDivElement)) {
             throw new Error('OverflowList: OverflowList elements are missing in the container.');
         }
 
@@ -68,52 +68,70 @@ export class OverflowList extends Base {
         return templateNode.innerHTML.trim();
     }
 
-    private updateMoreItem() {
-        const hiddenCount = this._numberOfItems - this._numberOfVisibleItems;
-
+    private setMoreItemHiddenCount(hiddenCount: number) {
         if (hiddenCount > 0) {
             const tempMoreItem = document.createElement('div');
 
             tempMoreItem.innerHTML = this._templates.itemMore.replace('{{ hidden_count }}', hiddenCount.toString());
+            const nextMoreItemNode = tempMoreItem.firstElementChild;
 
-            if (!tempMoreItem.firstElementChild) {
+            if (!(nextMoreItemNode instanceof HTMLDivElement)) {
                 throw new Error('OverflowList: Error while creating more item element from template.');
             }
 
-            this._moreItemNode.replaceWith(tempMoreItem.firstElementChild);
+            this._moreItemNode.replaceWith(nextMoreItemNode);
+            this._moreItemNode = nextMoreItemNode;
+            this._moreItemNode.removeAttribute('hidden');
         } else {
             this._moreItemNode.setAttribute('hidden', 'true');
         }
     }
 
-    private hideOverflowItems() {
-        const itemsNodes = this.getItems(true, false);
+    private setVisibleItemsCount(visibleItemsCount: number) {
+        const itemsNodes = this.getItems(false, false);
 
-        itemsNodes.slice(this._numberOfVisibleItems).forEach((itemNode) => {
-            itemNode.setAttribute('hidden', 'true');
+        itemsNodes.forEach((itemNode, index) => {
+            if (index < visibleItemsCount) {
+                itemNode.removeAttribute('hidden');
+            } else {
+                itemNode.setAttribute('hidden', 'true');
+            }
+        });
+    }
+
+    private fitsInContainer(): boolean {
+        const itemsNodes = this.getItems(true);
+        const { right: listRightPosition } = this._itemsNode.getBoundingClientRect();
+
+        return itemsNodes.every((itemNode) => {
+            const { right: itemRightPosition } = itemNode.getBoundingClientRect();
+
+            return itemRightPosition <= listRightPosition;
         });
     }
 
     private recalculateVisibleItems() {
-        const itemsNodes = this.getItems(true);
-        const { right: listRightPosition } = this._itemsNode.getBoundingClientRect();
-        const newNumberOfVisibleItems = itemsNodes.findIndex((itemNode) => {
-            const { right: itemRightPosition } = itemNode.getBoundingClientRect();
+        for (let visibleItemsCount = this._numberOfItems; visibleItemsCount >= 0; visibleItemsCount--) {
+            const hiddenCount = this._numberOfItems - visibleItemsCount;
 
-            return itemRightPosition > listRightPosition;
-        });
+            this.setVisibleItemsCount(visibleItemsCount);
+            this.setMoreItemHiddenCount(hiddenCount);
 
-        if (newNumberOfVisibleItems === -1 || newNumberOfVisibleItems === this._numberOfItems) {
-            return true;
+            if (this.fitsInContainer()) {
+                this._numberOfVisibleItems = visibleItemsCount;
+
+                return;
+            }
         }
 
-        if (newNumberOfVisibleItems === this._numberOfVisibleItems) {
-            this._numberOfVisibleItems = newNumberOfVisibleItems - 1; // eslint-disable-line no-magic-numbers
+        if (this._numberOfItems > 0) {
+            this._numberOfVisibleItems = 0;
+            this.setVisibleItemsCount(0);
+            this.setMoreItemHiddenCount(this._numberOfItems);
         } else {
-            this._numberOfVisibleItems = newNumberOfVisibleItems;
+            this._numberOfVisibleItems = 0;
+            this.setMoreItemHiddenCount(0);
         }
-
-        return false;
     }
 
     private initResizeListener() {
@@ -131,14 +149,7 @@ export class OverflowList extends Base {
     }
 
     public rerender() {
-        let stopRecalculating = true;
-
-        do {
-            stopRecalculating = this.recalculateVisibleItems();
-
-            this.hideOverflowItems();
-            this.updateMoreItem();
-        } while (!stopRecalculating);
+        this.recalculateVisibleItems();
     }
 
     private setItemsContainer(items: Record<string, string>[]) {
@@ -178,6 +189,7 @@ export class OverflowList extends Base {
 
     public setItems(items: Record<string, string>[]) {
         this.setItemsContainer(items);
+        this.setItemsContainerWidth();
         this.resetState();
         this.rerender();
     }

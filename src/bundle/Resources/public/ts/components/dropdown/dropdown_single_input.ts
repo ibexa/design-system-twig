@@ -14,9 +14,25 @@ export class DropdownSingleInput extends BaseDropdown {
         }
 
         this._sourceInputNode = sourceInputNode;
+
         this._value = this._sourceInputNode.value;
 
         this.onItemClick = this.onItemClick.bind(this);
+    }
+
+    protected syncFromSourceValue() {
+        const { value } = this._sourceInputNode;
+
+        this._itemsContainerNode.querySelectorAll<HTMLLIElement>('.ids-dropdown__item--selected').forEach((itemNode) => {
+            itemNode.classList.remove('ids-dropdown__item--selected');
+        });
+
+        this._itemsContainerNode
+            .querySelector<HTMLLIElement>(`.ids-dropdown__item[data-id="${value}"]`)
+            ?.classList.add('ids-dropdown__item--selected');
+
+        this.setSelectionInfo(value);
+        this._value = value;
     }
 
     protected setSource() {
@@ -40,6 +56,10 @@ export class DropdownSingleInput extends BaseDropdown {
 
     protected setSourceValue(id: string) {
         this._sourceInputNode.value = id;
+    }
+
+    protected dispatchChangeEvent() {
+        this._sourceInputNode.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
     protected setSelectedItem(id: string) {
@@ -89,15 +109,50 @@ export class DropdownSingleInput extends BaseDropdown {
         this._value = value;
     }
 
+    public getSelectedItems(): HTMLOptionElement[] {
+        return this._sourceInputNode.selectedIndex === -1 ? [] : [this._sourceInputNode.selectedOptions[0]];
+    }
+
+    public selectOption(value: string) {
+        this.setValue(value);
+        this.dispatchChangeEvent();
+    }
+
+    public selectFirstOption() {
+        const firstOption = this._sourceInputNode.querySelector<HTMLOptionElement>('option');
+
+        if (!firstOption) {
+            return;
+        }
+
+        this.selectOption(firstOption.value);
+    }
+
+    public clearCurrentSelection() {
+        this.selectFirstOption();
+    }
+
+    public init() {
+        super.init();
+        this.syncFromSourceValue();
+    }
+
     public onItemClick = (event: MouseEvent) => {
         if (event.currentTarget instanceof HTMLLIElement) {
             const { id } = event.currentTarget.dataset;
 
-            if (!id || id === this._value) {
+            if (id === undefined) {
+                return;
+            }
+
+            if (id === this._value) {
+                this.toggleItemsContainer(false);
+
                 return;
             }
 
             this.setValue(id);
+            this.dispatchChangeEvent();
             this.toggleItemsContainer(false);
         }
     };

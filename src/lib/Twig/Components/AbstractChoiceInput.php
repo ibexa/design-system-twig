@@ -14,7 +14,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 abstract class AbstractChoiceInput
 {
-    public string $name;
+    public ?string $name = null;
 
     public bool $checked = false;
 
@@ -43,10 +43,9 @@ abstract class AbstractChoiceInput
         $resolver->setIgnoreUndefined();
         $resolver
             ->define('name')
-            ->required()
-            ->allowedTypes('string')
-            ->allowedValues(static function (string $value): bool {
-                return trim($value) !== '';
+            ->allowedTypes('null', 'string')
+            ->allowedValues(static function (?string $value): bool {
+                return $value === null || trim($value) !== '';
             });
         $resolver
             ->define('checked')

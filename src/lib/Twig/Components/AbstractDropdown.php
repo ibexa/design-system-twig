@@ -15,6 +15,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
+use Symfony\UX\TwigComponent\ComponentAttributes;
+use Twig\Environment;
+use Twig\Markup;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * @phpstan-type TDropdownItem array{
@@ -25,6 +29,11 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 abstract class AbstractDropdown
 {
     public string $name;
+
+    public ?string $source = null;
+
+    /** @var array<string, mixed> */
+    public array $sourceAttributes = [];
 
     public bool $disabled = false;
 
@@ -41,8 +50,10 @@ abstract class AbstractDropdown
     #[ExposeInTemplate('max_visible_items')]
     public int $maxVisibleItems = 10;
 
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly Environment $twig,
+    ) {
     }
 
     /**
@@ -59,6 +70,15 @@ abstract class AbstractDropdown
             ->define('name')
             ->required()
             ->allowedTypes('string');
+        $resolver
+            ->define('source')
+            ->allowedTypes('null', 'string', Markup::class)
+            ->normalize(static fn (Options $options, string|Markup|null $source): ?string => $source !== null ? (string) $source : null)
+            ->default(null);
+        $resolver
+            ->define('sourceAttributes')
+            ->allowedTypes('array')
+            ->default([]);
         $resolver
             ->define('disabled')
             ->allowedTypes('bool')
@@ -107,6 +127,12 @@ abstract class AbstractDropdown
         );
 
         return array_combine($this->itemTemplateProps, $itemPropsPatterns);
+    }
+
+    #[ExposeInTemplate('source_attributes')]
+    public function getSourceAttributes(): ComponentAttributes
+    {
+        return new ComponentAttributes($this->sourceAttributes, $this->twig->getRuntime(EscaperRuntime::class));
     }
 
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;

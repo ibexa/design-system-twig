@@ -11,10 +11,13 @@
             attributes.defaults({
                 checked,
                 disabled,
-                name,
                 required,
                 type,
                 value,
+            })
+            .defaults(name is not null ? {
+                name,
+            } : {
             })
         }}
     />

@@ -19,8 +19,14 @@
         }
     )
 %}
+{% set default_placeholder = 'ibexa.dropdown.placeholder'|trans|desc('Select an item') %}
+{% set all_placeholder = 'ibexa.dropdown.placeholder.all'|trans|desc('All') %}
+{% set normalized_placeholder = placeholder is defined
+    ? placeholder|trim|default(all_placeholder)
+    : default_placeholder
+%}
 
-<div class="{{ classes }}">
+<div class="{{ classes }}" {{ attributes.without('class') }}>
     <div class="ids-dropdown__source">
         {% block source %}
         {% endblock source %}
@@ -30,7 +36,7 @@
             {% block selection_info %}
                 {% block placeholder %}
                     <div class="ids-dropdown__placeholder"{% if not is_empty %} hidden{% endif %}>
-                        {{ 'ibexa.dropdown.placeholder'|trans|desc('Select an item') }}
+                        {{ normalized_placeholder }}
                     </div>
                 {% endblock placeholder %}
                 <div class="ids-dropdown__selection-info-items"{% if is_empty %} hidden{% endif %}>
@@ -54,7 +60,7 @@
                 data-ids-custom-init="true"
             />
         </div>
-        <ul class="ids-dropdown__items" style="--max-visible-items: {{ max_visible_items }}">
+        <ul class="ids-dropdown__items" data-max-visible-items="{{ max_visible_items }}" style="--max-visible-items: {{ max_visible_items }}">
             {% for item in items %}
                 {% set item_content %}
                     {% with { item } %}

@@ -3,11 +3,19 @@
 {% set class = html_classes('ids-dropdown--single', attributes.render('class') ?? '') %}
 
 {% block source %}
-    <select name="{{ name }}"{% if disabled %} disabled{% endif %}>
-        {% for item in items %}
-            <option value="{{ item.id }}"{% if item.id == value %} selected{% endif %}>{{ item.label }}</option>
-        {% endfor %}
-    </select>
+    {% if source is defined and source is not empty %}
+        {{ source|raw }}
+    {% else %}
+        <select{{ source_attributes.defaults({
+            name: name,
+            disabled: disabled,
+            required: required|default(false),
+        }) }}>
+            {% for item in items %}
+                <option value="{{ item.id }}"{% if item.id == value %} selected{% endif %}>{{ item.label }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
 {% endblock source %}
 
 {% block selected_items %}

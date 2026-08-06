@@ -42,10 +42,6 @@ final class InputTest extends KernelTestCase
             $selectedItems,
             'getSelectedItems() should return one entry for selected ID.'
         );
-        self::assertNotNull(
-            $selectedItems[0],
-            'Selected items array should contain the original item data.'
-        );
         self::assertSame(
             'opt-a',
             $selectedItems[0]['id'],
@@ -120,10 +116,9 @@ final class InputTest extends KernelTestCase
             $checkboxes->count(),
             'Dropdown list should include a checkbox per item.'
         );
-        self::assertSame(
-            'group-checkbox',
+        self::assertNull(
             $checkboxes->eq(0)->attr('name'),
-            'Checkbox name should derive from component name.'
+            'List checkboxes should not be named, so they are not submitted with the form.'
         );
         self::assertNotNull(
             $checkboxes->eq(1)->attr('checked'),
@@ -136,7 +131,7 @@ final class InputTest extends KernelTestCase
         );
     }
 
-    public function testSelectionInfoDisplaysSelectedLabels(): void
+    public function testSelectionInfoDisplaysSelectedItemsAsChips(): void
     {
         $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
             'value' => ['opt-a', 'opt-b'],
@@ -150,14 +145,20 @@ final class InputTest extends KernelTestCase
             $selectionInfo->count(),
             'Selection info container should render.'
         );
-        $selectionText = preg_replace('/\s+/', ' ', $selectionInfo->text(''));
-        self::assertIsString($selectionText, 'Selection text normalisation should yield a string.');
-        $selectionText = trim($selectionText);
-        self::assertSame(
-            'Pick A, Pick B',
-            $selectionText,
-            'Selection info should list chosen labels.'
-        );
+
+        $overflowList = $selectionInfo->filter('.ids-overflow-list')->first();
+        self::assertGreaterThan(0, $overflowList->count(), 'Selection info should render an overflow list.');
+
+        $chips = $overflowList->filter('.ids-overflow-list__items > .ids-chip');
+        self::assertSame(3, $chips->count(), 'Overflow list should render selected chips plus the overflow placeholder chip.');
+
+        $chipLabels = $overflowList->filter('.ids-overflow-list__items > .ids-chip .ids-chip__content');
+        self::assertSame('Pick A', trim($chipLabels->eq(0)->text('')), 'First selected item should render as a chip.');
+        self::assertSame('Pick B', trim($chipLabels->eq(1)->text('')), 'Second selected item should render as a chip.');
+        self::assertSame('+0', trim($chipLabels->eq(2)->text('')), 'Overflow chip template should be rendered.');
+
+        $deleteButtons = $overflowList->filter('.ids-overflow-list__items > .ids-chip .ids-chip__delete');
+        self::assertSame(2, $deleteButtons->count(), 'Selected item chips should be deletable.');
         self::assertNull(
             $selectionInfo->attr('hidden'),
             'Selection info should be visible when there are selections.'
@@ -173,6 +174,18 @@ final class InputTest extends KernelTestCase
             $placeholder->attr('hidden'),
             'Placeholder should be hidden when selections are present.'
         );
+    }
+
+    public function testSelectedItemsFollowItemsOrderInsteadOfSelectionOrder(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'value' => ['opt-b', 'opt-a'],
+        ]))->crawler();
+
+        $chipLabels = $crawler->filter('.ids-dropdown__selection-info-items .ids-chip .ids-chip__content');
+
+        self::assertSame('Pick A', trim($chipLabels->eq(0)->text('')), 'First chip should follow original items order.');
+        self::assertSame('Pick B', trim($chipLabels->eq(1)->text('')), 'Second chip should follow original items order.');
     }
 
     public function testEmptyValueShowsPlaceholder(): void
@@ -198,6 +211,20 @@ final class InputTest extends KernelTestCase
         self::assertNotNull(
             $selectionInfo->attr('hidden'),
             'Selection info should be hidden when there are no selections.'
+        );
+    }
+
+    public function testEmptyPlaceholderFallsBackToAll(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'placeholder' => '   ',
+            'value' => [],
+        ]))->crawler();
+
+        self::assertSame(
+            'All',
+            trim($crawler->filter('.ids-dropdown__placeholder')->first()->text('')),
+            'Empty placeholder prop should use the DS All fallback.'
         );
     }
 
