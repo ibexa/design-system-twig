@@ -24,6 +24,12 @@ final class Tag
 
     public string $icon = '';
 
+    public string $customTextColor = '';
+
+    public string $customBackgroundColor = '';
+
+    public string $customBorderColor = '';
+
     /** @var string[] */
     private static array $ghostTypes = ['success-ghost', 'error-ghost', 'neutral-ghost'];
 
@@ -51,6 +57,18 @@ final class Tag
             ->define('isDark')
             ->allowedTypes('bool')
             ->default(false);
+        $resolver
+            ->define('customTextColor')
+            ->allowedTypes('string')
+            ->default('');
+        $resolver
+            ->define('customBackgroundColor')
+            ->allowedTypes('string')
+            ->default('');
+        $resolver
+            ->define('customBorderColor')
+            ->allowedTypes('string')
+            ->default('');
 
         return $resolver->resolve($props) + $props;
     }
