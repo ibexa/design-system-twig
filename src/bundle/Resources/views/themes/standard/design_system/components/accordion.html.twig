@@ -18,11 +18,12 @@
             {% endblock header %}
         </div>
         <twig:ibexa:expander
-            type="caret"
-            :hasIcon="true"
+            :type="expander_type"
+            :hasIcon="expander_has_icon"
+            :hasLabel="expander_has_label"
             :isExpanded="initially_expanded"
-            :collapseLabel="'ibexa.expander.label.collapse'|trans|desc('Hide')"
-            :expandLabel="'ibexa.expander.label.expand'|trans|desc('Show')"
+            collapseLabel="{{ expander_collapse_label ?: 'ibexa.expander.label.collapse'|trans|desc('Hide') }}"
+            expandLabel="{{ expander_expand_label ?: 'ibexa.expander.label.expand'|trans|desc('Show') }}"
         />
     </div>
     <div class="ids-accordion__content">

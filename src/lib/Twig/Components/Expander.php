@@ -30,6 +30,9 @@ final class Expander
     #[ExposeInTemplate('has_icon')]
     public bool $hasIcon = true;
 
+    #[ExposeInTemplate('has_label')]
+    public bool $hasLabel = true;
+
     /**
      * @var array{caret: string, chevron: string}
      */
@@ -66,6 +69,10 @@ final class Expander
             ->default('');
         $resolver
             ->define('hasIcon')
+            ->allowedTypes('bool')
+            ->default(true);
+        $resolver
+            ->define('hasLabel')
             ->allowedTypes('bool')
             ->default(true);
 
