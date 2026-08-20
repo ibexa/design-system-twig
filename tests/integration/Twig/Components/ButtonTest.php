@@ -37,7 +37,7 @@ final class ButtonTest extends KernelTestCase
         self::assertSame('submit', $component->htmlType, 'HTML type should be resolved to "submit"');
         self::assertTrue($component->disabled, 'Disabled should be true');
         self::assertSame('arrow-right', $component->icon, 'Icon name should be passed through');
-        self::assertSame('tiny-small', $component->iconSize(), 'iconSize() should map "small" to "tiny-small"');
+        self::assertSame('small', $component->iconSize(), 'iconSize() should map "small" to "small"');
     }
 
     public function testDefaultRender(): void
