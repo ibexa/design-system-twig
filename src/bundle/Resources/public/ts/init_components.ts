@@ -5,6 +5,7 @@ import { InputTextField, InputTextInput } from './components/input_text';
 import { RadioButtonInput, RadioButtonsListField } from './components/radio_button';
 import { ToggleButtonField, ToggleButtonInput } from './components/toggle_button';
 import { Accordion } from './components/accordion';
+import { Alert } from './components/alert';
 import { OverflowList } from './components/overflow_list';
 
 const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
@@ -13,6 +14,14 @@ accordionContainers.forEach((accordionContainer: HTMLDivElement) => {
     const accordionInstance = new Accordion(accordionContainer);
 
     accordionInstance.init();
+});
+
+const alertContainers = document.querySelectorAll<HTMLDivElement>('.ids-alert:not([data-ids-custom-init])');
+
+alertContainers.forEach((alertContainer: HTMLDivElement) => {
+    const alertInstance = new Alert(alertContainer);
+
+    alertInstance.init();
 });
 
 const altRadioContainers = document.querySelectorAll<HTMLDivElement>('.ids-alt-radio:not([data-ids-custom-init])');
