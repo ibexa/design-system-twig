@@ -17,6 +17,7 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
 use Twig\Environment;
+use Twig\Markup;
 
 final class AlertTest extends KernelTestCase
 {
@@ -194,6 +195,18 @@ final class AlertTest extends KernelTestCase
     {
         $this->expectException(MissingOptionsException::class);
         $this->mountTwigComponent(Alert::class, ['title' => 'No type']);
+    }
+
+    public function testMarkupTitleIsRenderedRaw(): void
+    {
+        $crawler = $this->renderTwigComponent(
+            Alert::class,
+            ['type' => 'info', 'title' => new Markup('Exit with <svg class="test-icon"></svg> or Esc', 'UTF-8')]
+        )->crawler();
+        $title = $crawler->filter('.ids-alert__title')->first();
+
+        self::assertGreaterThan(0, $title->count(), 'Markup titles should render the title element.');
+        self::assertCount(1, $title->filter('svg.test-icon'), 'Markup titles should be rendered unescaped, like legacy alert titles.');
     }
 
     public function testDescriptionOnlyRendersNoTitle(): void

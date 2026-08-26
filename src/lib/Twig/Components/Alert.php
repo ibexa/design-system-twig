@@ -34,7 +34,7 @@ final class Alert
 
     public string $variant = 'floating';
 
-    public string $title = '';
+    public string|\Stringable $title = '';
 
     public string $icon = '';
 
@@ -66,7 +66,7 @@ final class Alert
             ->default('floating');
         $resolver
             ->define('title')
-            ->allowedTypes('string')
+            ->allowedTypes('string', \Stringable::class)
             ->default('');
         $resolver
             ->define('icon')

@@ -41,7 +41,7 @@
         <twig:ibexa:icon name="{{ icon_name }}" size="small" class="ids-alert__icon" />
     {% endif %}
     <div class="ids-alert__content">
-        {% if title is not empty %}
+        {% if (title ~ '') is not empty %}
             <div class="ids-alert__title">{{ title }}</div>
         {% endif %}
         {% if has_description %}
