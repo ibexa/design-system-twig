@@ -64,7 +64,11 @@
             {% for item in items %}
                 {% set item_content %}
                     {% with { item } %}
-                        {{ block('item_content') is defined ? block('item_content') : item.label }}
+                        {% if block('item_content') is defined %}
+                            {{ block('item_content') }}
+                        {% else %}
+                            <span class="ids-dropdown__item-label">{{ item.label }}</span>
+                        {% endif %}
                     {% endwith %}
                 {% endset %}
 

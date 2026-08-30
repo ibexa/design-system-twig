@@ -2,6 +2,8 @@ import { Base } from '../partials';
 import { escapeHTML } from '@ids-core/helpers/escape';
 
 const RESIZE_TIMEOUT = 200;
+const MIN_VISIBLE_ITEMS = 1;
+const CLASS_SHRINK_FIRST = 'ids-overflow-list__items--shrink-first';
 
 export class OverflowList extends Base {
     private _itemsNode: HTMLDivElement;
@@ -110,8 +112,19 @@ export class OverflowList extends Base {
         });
     }
 
+    private toggleShrinkFirstItem(shouldShrink: boolean) {
+        this._itemsNode.classList.toggle(CLASS_SHRINK_FIRST, shouldShrink);
+    }
+
     private recalculateVisibleItems() {
-        for (let visibleItemsCount = this._numberOfItems; visibleItemsCount >= 0; visibleItemsCount--) {
+        if (this._numberOfItems === 0) {
+            this._numberOfVisibleItems = 0;
+            this.setMoreItemHiddenCount(0);
+
+            return;
+        }
+
+        for (let visibleItemsCount = this._numberOfItems; visibleItemsCount >= MIN_VISIBLE_ITEMS; visibleItemsCount--) {
             const hiddenCount = this._numberOfItems - visibleItemsCount;
 
             this.setVisibleItemsCount(visibleItemsCount);
@@ -119,19 +132,18 @@ export class OverflowList extends Base {
 
             if (this.fitsInContainer()) {
                 this._numberOfVisibleItems = visibleItemsCount;
+                this.toggleShrinkFirstItem(false);
 
                 return;
             }
         }
 
-        if (this._numberOfItems > 0) {
-            this._numberOfVisibleItems = 0;
-            this.setVisibleItemsCount(0);
-            this.setMoreItemHiddenCount(this._numberOfItems);
-        } else {
-            this._numberOfVisibleItems = 0;
-            this.setMoreItemHiddenCount(0);
-        }
+        // Not even a single item fits at its natural width - keep the first one visible and let it shrink instead of
+        // showing the overflow counter alone.
+        this._numberOfVisibleItems = MIN_VISIBLE_ITEMS;
+        this.setVisibleItemsCount(MIN_VISIBLE_ITEMS);
+        this.setMoreItemHiddenCount(this._numberOfItems - MIN_VISIBLE_ITEMS);
+        this.toggleShrinkFirstItem(true);
     }
 
     private initResizeListener() {
@@ -140,6 +152,8 @@ export class OverflowList extends Base {
 
     public resetState() {
         this._numberOfVisibleItems = this._numberOfItems;
+
+        this.toggleShrinkFirstItem(false);
 
         const itemsNodes = this.getItems(false);
 
