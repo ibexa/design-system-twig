@@ -8,6 +8,10 @@ export class InputTextInput extends Base {
     private _passwordShowIconElement: HTMLElement | null;
     private _passwordHideIconElement: HTMLElement | null;
 
+    private _actionsResizeObserver = new ResizeObserver(() => {
+        this._updateInputPadding();
+    });
+
     constructor(container: HTMLDivElement) {
         super(container);
 
@@ -42,6 +46,10 @@ export class InputTextInput extends Base {
 
     private _updateInputPadding() {
         const actionsWidth = this._actionsElement.offsetWidth;
+
+        if (actionsWidth === 0) {
+            return;
+        }
 
         this._inputElement.style.paddingRight = `${actionsWidth}px`;
     }
@@ -119,5 +127,6 @@ export class InputTextInput extends Base {
         this.initClearBtn();
         this.initPasswordToggler();
         this._updateInputPadding();
+        this._actionsResizeObserver.observe(this._actionsElement);
     }
 }
