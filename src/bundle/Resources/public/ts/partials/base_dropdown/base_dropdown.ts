@@ -265,7 +265,7 @@ export abstract class BaseDropdown extends Base {
         if (isExpanded) {
             const searchInput = this._searchInstance.getInputElement();
 
-            this._itemsContainerNode.style.width = `${this._widgetNode.offsetWidth.toString()}px`;
+            this._itemsContainerNode.style.minWidth = `${this._widgetNode.offsetWidth.toString()}px`;
 
             this._itemsContainerNode.removeAttribute('hidden');
             this._itemsContainerNode.style.setProperty('visibility', 'hidden');

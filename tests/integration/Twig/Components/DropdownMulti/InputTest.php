@@ -129,6 +129,18 @@ final class InputTest extends KernelTestCase
             $checkboxes->eq(0)->attr('data-ids-custom-init'),
             'Checkbox should opt-in for custom JS init.'
         );
+
+        $itemLabels = $wrapper->filter('.ids-dropdown__items .ids-dropdown__item-label');
+        self::assertSame(
+            2,
+            $itemLabels->count(),
+            'Every list item label should be wrapped in its own element so it can be truncated.'
+        );
+        self::assertSame(
+            'Pick A',
+            trim($itemLabels->eq(0)->text('')),
+            'Item label element should carry the item label.'
+        );
     }
 
     public function testSelectionInfoDisplaysSelectedItemsAsChips(): void
