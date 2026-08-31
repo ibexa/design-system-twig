@@ -138,8 +138,6 @@ export class OverflowList extends Base {
             }
         }
 
-        // Not even a single item fits at its natural width - keep the first one visible and let it shrink instead of
-        // showing the overflow counter alone.
         this._numberOfVisibleItems = MIN_VISIBLE_ITEMS;
         this.setVisibleItemsCount(MIN_VISIBLE_ITEMS);
         this.setMoreItemHiddenCount(this._numberOfItems - MIN_VISIBLE_ITEMS);
