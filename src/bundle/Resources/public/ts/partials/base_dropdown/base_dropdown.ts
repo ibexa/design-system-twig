@@ -267,11 +267,10 @@ export abstract class BaseDropdown extends Base {
             const searchInput = this._searchInstance.getInputElement();
 
             const { left: widgetLeft } = this._widgetNode.getBoundingClientRect();
-            const widgetWidth = this._widgetNode.offsetWidth;
             const availableWidth = document.documentElement.clientWidth - widgetLeft - VIEWPORT_MARGIN;
 
-            this._itemsContainerNode.style.minWidth = `${widgetWidth.toString()}px`;
-            this._itemsContainerNode.style.maxWidth = `${Math.max(availableWidth, widgetWidth).toString()}px`;
+            this._itemsContainerNode.style.minWidth = `${this._widgetNode.offsetWidth.toString()}px`;
+            this._itemsContainerNode.style.setProperty('--ids-dropdown-available-width', `${availableWidth.toString()}px`);
 
             this._itemsContainerNode.removeAttribute('hidden');
             this._itemsContainerNode.style.setProperty('visibility', 'hidden');
