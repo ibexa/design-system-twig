@@ -266,7 +266,6 @@ export abstract class BaseDropdown extends Base {
         if (isExpanded) {
             const searchInput = this._searchInstance.getInputElement();
 
-            // The container may grow past the widget to fit its items, but never past the viewport.
             const { left: widgetLeft } = this._widgetNode.getBoundingClientRect();
             const widgetWidth = this._widgetNode.offsetWidth;
             const availableWidth = document.documentElement.clientWidth - widgetLeft - VIEWPORT_MARGIN;
