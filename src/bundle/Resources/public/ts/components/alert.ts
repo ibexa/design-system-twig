@@ -1,7 +1,7 @@
 import { Base } from '../partials';
 
 const EVENT_DISMISS_BEFORE = 'ids:alert:dismiss:before';
-const EVENT_DISMISSED = 'ids:alert:dismissed';
+const EVENT_DISMISS_AFTER = 'ids:alert:dismiss:after';
 
 export class Alert extends Base {
     private closeBtn: HTMLButtonElement | null;
@@ -34,7 +34,7 @@ export class Alert extends Base {
 
         this._container.remove();
         this._container.dispatchEvent(
-            new CustomEvent(EVENT_DISMISSED, {
+            new CustomEvent(EVENT_DISMISS_AFTER, {
                 detail: {
                     component: this,
                 },
