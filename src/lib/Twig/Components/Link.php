@@ -37,7 +37,7 @@ final class Link
      * @var array{small: string, medium: string}
      */
     private static array $iconSizeMap = [
-        'small' => 'tiny-small',
+        'small' => 'small',
         'medium' => 'small',
     ];
 
