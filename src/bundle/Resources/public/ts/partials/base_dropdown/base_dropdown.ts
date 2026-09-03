@@ -18,6 +18,7 @@ interface TemplatesType {
 
 const MAX_VISIBLE_ITEMS_DEFAULT = 10;
 const POPPER_OFFSET = 4;
+const VIEWPORT_MARGIN = 16;
 
 export abstract class BaseDropdown extends Base {
     protected _expanderInstance: Expander;
@@ -265,7 +266,11 @@ export abstract class BaseDropdown extends Base {
         if (isExpanded) {
             const searchInput = this._searchInstance.getInputElement();
 
-            this._itemsContainerNode.style.width = `${this._widgetNode.offsetWidth.toString()}px`;
+            const { left: widgetLeft } = this._widgetNode.getBoundingClientRect();
+            const availableWidth = document.documentElement.clientWidth - widgetLeft - VIEWPORT_MARGIN;
+
+            this._itemsContainerNode.style.minWidth = `${this._widgetNode.offsetWidth.toString()}px`;
+            this._itemsContainerNode.style.setProperty('--ids-dropdown-available-width', `${availableWidth.toString()}px`);
 
             this._itemsContainerNode.removeAttribute('hidden');
             this._itemsContainerNode.style.setProperty('visibility', 'hidden');
