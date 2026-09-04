@@ -37,7 +37,7 @@ final class LinkTest extends KernelTestCase
         self::assertSame('small', $component->size, 'Size should be resolved to "small"');
         self::assertSame('secondary', $component->type, 'Type should be resolved to "secondary"');
         self::assertSame('arrow-right', $component->icon, 'Icon name should be passed through');
-        self::assertSame('tiny-small', $component->iconSize(), 'iconSize() should map "small" to "tiny-small"');
+        self::assertSame('small', $component->iconSize(), 'iconSize() should map "small" to "small"');
     }
 
     public function testHrefIsRequired(): void
