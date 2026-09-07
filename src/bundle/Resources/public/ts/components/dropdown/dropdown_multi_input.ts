@@ -1,4 +1,4 @@
-import { BaseDropdown, BaseDropdownItem } from '../../partials';
+import { BaseDropdown, BaseDropdownEntry, BaseDropdownItem, isDropdownItemGroup } from '../../partials';
 import { getInstance, hasInstance } from '../../helpers/object.instances';
 import { HTMLElementIDSInstance } from '../../shared/types';
 import { OverflowList } from '../overflow_list';
@@ -39,20 +39,33 @@ export class DropdownMultiInput extends BaseDropdown {
         return this._value.includes(id);
     }
 
+    protected createOptionNode(item: BaseDropdownItem): HTMLOptionElement {
+        const option = document.createElement('option');
+
+        option.value = item.id;
+        option.textContent = item.label;
+        option.selected = this._value.includes(item.id);
+
+        return option;
+    }
+
     protected setSource() {
         this._sourceInputNode.innerHTML = '';
 
-        this._itemsMap.forEach((item) => {
-            const option = document.createElement('option');
+        this._entries.forEach((entry) => {
+            if (!isDropdownItemGroup(entry)) {
+                this._sourceInputNode.appendChild(this.createOptionNode(entry));
 
-            option.value = item.id;
-            option.textContent = item.label;
-
-            if (this._value.includes(item.id)) {
-                option.selected = true;
+                return;
             }
 
-            this._sourceInputNode.appendChild(option);
+            const optgroup = document.createElement('optgroup');
+
+            optgroup.label = entry.label;
+            entry.items.forEach((item) => {
+                optgroup.appendChild(this.createOptionNode(item));
+            });
+            this._sourceInputNode.appendChild(optgroup);
         });
 
         this.setValues(this.getSelectedValuesFromSource());
@@ -134,8 +147,8 @@ export class DropdownMultiInput extends BaseDropdown {
         return itemContent instanceof NodeList ? itemContent : item.label;
     }
 
-    public setItems(items: BaseDropdownItem[]) {
-        super.setItems(items);
+    public setItems(entries: BaseDropdownEntry[]) {
+        super.setItems(entries);
 
         const tempValue = this._value;
 
