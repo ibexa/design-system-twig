@@ -1,0 +1,92 @@
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_dropdown.html.twig' %}
+
+{% trans_default_domain 'ibexa_design_system_twig' %}
+
+{% set is_icon_only = type == 'more-filters-small' %}
+{% set has_trigger_icon = type in ['more-filters', 'more-filters-small'] %}
+{% set has_chevron = type in ['default', 'dashboard'] %}
+{% set class = html_classes(
+    'ids-dropdown--filter',
+    'ids-dropdown--filter-' ~ type,
+    {
+        'ids-dropdown--selected': not is_empty,
+    },
+    attributes.render('class') ?? ''
+) %}
+
+{% block source %}
+    {% if source is defined and source is not empty %}
+        {{ source|raw }}
+    {% else %}
+        <select{{ source_attributes.defaults({
+            name: name,
+            disabled: disabled,
+            required: required|default(false),
+            multiple: 'multiple',
+        }) }}>
+            {% for entry in items %}
+                {% if entry.items is defined %}
+                    <optgroup label="{{ entry.label }}">
+                        {% for item in entry.items %}
+                            <option value="{{ item.id }}"{% if item.id in value %} selected{% endif %}>{{ item.label }}</option>
+                        {% endfor %}
+                    </optgroup>
+                {% else %}
+                    <option value="{{ entry.id }}"{% if entry.id in value %} selected{% endif %}>{{ entry.label }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    {% endif %}
+{% endblock source %}
+
+{% block widget %}
+    <button
+        type="button"
+        class="ids-dropdown__trigger"
+        aria-expanded="false"
+        aria-haspopup="true"
+        data-label="{{ label }}"
+        {% if is_icon_only %} aria-label="{{ label }}"{% endif %}
+        {% if disabled %} disabled{% endif %}
+    >
+        {% if has_trigger_icon %}
+            <span class="ids-dropdown__trigger-icon" aria-hidden="true">
+                <twig:ibexa:icon name="filters" size="small" />
+            </span>
+        {% endif %}
+        {% if not is_icon_only %}
+            <span class="ids-dropdown__trigger-label">{{ label }}{% if summary.mode == 'value' %}:{% endif %}</span>
+        {% endif %}
+        <span class="ids-dropdown__value"{% if summary.mode != 'value' %} hidden{% endif %}>{{ summary.mode == 'value' ? summary.text : '' }}</span>
+        <span class="ids-dropdown__counter"{% if summary.mode != 'counter' %} hidden{% endif %}>{{ summary.mode == 'counter' ? summary.text : '' }}</span>
+        {% if has_chevron %}
+            <span class="ids-dropdown__chevron" aria-hidden="true">
+                <twig:ibexa:icon name="arrow-chevron-down" size="tiny-small" />
+            </span>
+        {% endif %}
+    </button>
+{% endblock widget %}
+
+{% block item_content %}
+    <twig:ibexa:checkbox:input
+        :checked="item.id in value"
+        value="{{ item.id ~ '' }}"
+        data-ids-custom-init="true"
+    />
+    <span class="ids-dropdown__item-label">{{ item.label }}</span>
+{% endblock item_content %}
+
+{% block footer %}
+    <div class="ids-dropdown__footer">
+        <hr class="ids-dropdown__divider">
+        <twig:ibexa:button
+            type="tertiary-alt"
+            size="small"
+            icon="discard"
+            :disabled="is_empty"
+            class="ids-dropdown__clear-btn"
+        >
+            {{ 'ibexa.filter_dropdown.clear.label'|trans({}, 'ibexa_design_system_twig')|desc('Clear') }}
+        </twig:ibexa:button>
+    </div>
+{% endblock footer %}
