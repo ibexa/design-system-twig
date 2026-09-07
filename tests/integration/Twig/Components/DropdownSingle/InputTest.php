@@ -222,6 +222,112 @@ final class InputTest extends KernelTestCase
         $this->mountTwigComponent(Input::class);
     }
 
+    public function testGroupedItemsRenderGroupMarkup(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'value' => 'banana',
+            'items' => [
+                ['id' => 'a', 'label' => 'Alpha'],
+                [
+                    'id' => 'fruits',
+                    'label' => 'Fruits',
+                    'items' => [
+                        ['id' => 'apple', 'label' => 'Apple'],
+                        ['id' => 'banana', 'label' => 'Banana'],
+                    ],
+                ],
+            ],
+        ]))->crawler();
+
+        $groups = $crawler->filter('.ids-dropdown__items > .ids-dropdown__group');
+        self::assertSame(1, $groups->count(), 'One group node should be rendered for the grouped entry.');
+
+        $group = $groups->first();
+        $groupLabel = $group->filter('.ids-dropdown__group-label')->first();
+        self::assertSame('group', $group->attr('role'), 'Group node should carry role="group".');
+        self::assertSame('fruits', $groupLabel->attr('id'), 'Group label id should come from the group id.');
+        self::assertSame($groupLabel->attr('id'), $group->attr('aria-labelledby'), 'Group should be labelled by its label node.');
+        self::assertSame('Fruits', trim($groupLabel->text('')), 'Group label should render the group label.');
+        self::assertNull($groupLabel->attr('tabindex'), 'Group label must not be focusable.');
+        self::assertSame(
+            2,
+            $group->filter('.ids-dropdown__group-items > .ids-dropdown__item')->count(),
+            'Grouped items should be nested inside the group items list.'
+        );
+        self::assertSame(
+            1,
+            $crawler->filter('.ids-dropdown__items > .ids-dropdown__item')->count(),
+            'Ungrouped items should stay direct children of the items list.'
+        );
+
+        $select = $this->getSelect($crawler);
+        self::assertSame(2, $select->filter('optgroup[label="Fruits"] > option')->count(), 'Source select should render an optgroup with the grouped options.');
+        self::assertSame('banana', $select->filter('option[selected]')->attr('value'), 'Selected option inside a group should be marked selected.');
+        self::assertSame(
+            'Banana',
+            trim($crawler->filter('.ids-dropdown__selection-info-items')->first()->text('')),
+            'Selected label should resolve for an item inside a group.'
+        );
+
+        $noResults = $crawler->filter('.ids-dropdown__no-results')->first();
+        self::assertGreaterThan(0, $noResults->count(), 'No-results node should be rendered.');
+        self::assertNotNull($noResults->attr('hidden'), 'No-results node should start hidden.');
+    }
+
+    public function testSearchVisibilityCountsLeafItems(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'maxVisibleItems' => 2,
+            'items' => [
+                ['id' => 'a', 'label' => 'Alpha'],
+                [
+                    'id' => 'fruits',
+                    'label' => 'Fruits',
+                    'items' => [
+                        ['id' => 'apple', 'label' => 'Apple'],
+                        ['id' => 'banana', 'label' => 'Banana'],
+                    ],
+                ],
+            ],
+        ]))->crawler();
+
+        self::assertNull(
+            $crawler->filter('.ids-dropdown__search')->first()->attr('hidden'),
+            'Three leaf items over a limit of two should make the search visible even though there are only two top-level entries.'
+        );
+    }
+
+    public function testGroupMissingLabelCausesResolverError(): void
+    {
+        $this->expectException(MissingOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps([
+            'items' => [['id' => 'g', 'items' => [['id' => 'a', 'label' => 'Alpha']]]],
+        ]));
+    }
+
+    public function testNestedGroupCausesResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps([
+            'items' => [['label' => 'Outer', 'items' => [['label' => 'Inner', 'items' => [['id' => 'a', 'label' => 'Alpha']]]]]],
+        ]));
+    }
+
+    public function testEmptyGroupIsDropped(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'items' => [
+                ['label' => 'Empty', 'items' => []],
+                ['id' => 'a', 'label' => 'Alpha'],
+            ],
+        ]))->crawler();
+
+        self::assertSame(0, $crawler->filter('.ids-dropdown__items > .ids-dropdown__group')->count(), 'A group without items should not be rendered.');
+        self::assertSame(1, $this->getSelect($crawler)->filter('option')->count(), 'Only the ungrouped option should remain in the source select.');
+    }
+
     /**
      * @param array<string, mixed> $overrides
      *
