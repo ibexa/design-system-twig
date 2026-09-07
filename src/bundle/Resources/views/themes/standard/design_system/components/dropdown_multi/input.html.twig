@@ -19,8 +19,16 @@
             required: required|default(false),
             multiple: 'multiple',
         }) }}>
-            {% for item in items %}
-                <option value="{{ item.id }}"{% if item.id in value %} selected{% endif %}>{{ item.label }}</option>
+            {% for entry in items %}
+                {% if entry.items is defined %}
+                    <optgroup label="{{ entry.label }}">
+                        {% for item in entry.items %}
+                            <option value="{{ item.id }}"{% if item.id in value %} selected{% endif %}>{{ item.label }}</option>
+                        {% endfor %}
+                    </optgroup>
+                {% else %}
+                    <option value="{{ entry.id }}"{% if entry.id in value %} selected{% endif %}>{{ entry.label }}</option>
+                {% endif %}
             {% endfor %}
         </select>
     {% endif %}

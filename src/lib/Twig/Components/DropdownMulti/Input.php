@@ -26,7 +26,7 @@ final class Input extends AbstractDropdown
     public function getSelectedItems(): array
     {
         return array_values(array_filter(
-            $this->items,
+            $this->getFlatItems(),
             fn (array $item): bool => in_array($item['id'], $this->value, true)
         ));
     }
