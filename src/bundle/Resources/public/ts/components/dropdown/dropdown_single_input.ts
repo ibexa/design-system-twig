@@ -85,6 +85,10 @@ export class DropdownSingleInput extends BaseDropdown {
     }
 
     protected setSelectionInfo(id: string) {
+        if (!this._selectionInfoItemsNode || !this._placeholderNode) {
+            return;
+        }
+
         const item = this.getItemById(id);
 
         if (item) {

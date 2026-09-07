@@ -1,4 +1,4 @@
-export const getBottomAndTopAvailableSpace = (referenceElement: HTMLDivElement): { bottom: number; top: number } => {
+export const getBottomAndTopAvailableSpace = (referenceElement: HTMLElement): { bottom: number; top: number } => {
     const { innerHeight: windowHeight } = window;
     const { top: referenceTop, bottom: referenceBottom } = referenceElement.getBoundingClientRect();
 
