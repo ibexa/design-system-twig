@@ -89,7 +89,7 @@ export class DropdownMultiInput extends BaseDropdown {
             return this._overflowListInstance;
         }
 
-        const overflowListNode = this._selectionInfoItemsNode.querySelector<HTMLDivElement & HTMLElementIDSInstance<OverflowList>>(
+        const overflowListNode = this._selectionInfoItemsNode?.querySelector<HTMLDivElement & HTMLElementIDSInstance<OverflowList>>(
             '.ids-overflow-list',
         );
 
@@ -119,6 +119,10 @@ export class DropdownMultiInput extends BaseDropdown {
     }
 
     protected setSelectionInfo(values: string[]) {
+        if (!this._selectionInfoItemsNode || !this._placeholderNode) {
+            return;
+        }
+
         const selectedValues = new Set(values);
         const items = Array.from(this._itemsMap.values()).filter((item) => selectedValues.has(item.id));
         const overflowItems = items.map(({ id, label }) => ({ id, label }));
@@ -193,7 +197,7 @@ export class DropdownMultiInput extends BaseDropdown {
     };
 
     protected initSelectedItemsDeletion() {
-        this._selectionInfoItemsNode.addEventListener('click', (event: MouseEvent) => {
+        this._selectionInfoItemsNode?.addEventListener('click', (event: MouseEvent) => {
             const deleteBtn = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('.ids-chip__delete') : null;
 
             if (!deleteBtn) {
