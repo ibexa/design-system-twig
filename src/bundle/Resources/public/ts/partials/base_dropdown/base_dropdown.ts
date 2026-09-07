@@ -22,6 +22,13 @@ interface TemplatesType {
     group?: HTMLTemplateElement;
     item?: HTMLTemplateElement;
 }
+export interface BaseDropdownWidgetNodes {
+    placeholderNode: HTMLDivElement | null;
+    selectionInfoItemsNode: HTMLDivElement | null;
+    selectionInfoNode: HTMLDivElement | null;
+    togglerNode: HTMLElementIDSInstance<Expander> | null;
+    widgetNode: HTMLElement;
+}
 
 export const isDropdownItemGroup = (entry: BaseDropdownEntry): entry is BaseDropdownItemGroup =>
     'items' in entry && Array.isArray(entry.items);
@@ -35,18 +42,18 @@ const POPPER_OFFSET = 4;
 const VIEWPORT_MARGIN = 16;
 
 export abstract class BaseDropdown extends Base {
-    protected _expanderInstance: Expander;
+    protected _expanderInstance: Expander | null;
     protected _searchInstance: InputTextInput;
     protected _itemsContainerNode: HTMLDivElement;
     protected _itemsNode: HTMLUListElement;
     protected _noResultsNode: HTMLDivElement | null;
-    protected _placeholderNode: HTMLDivElement;
+    protected _placeholderNode: HTMLDivElement | null;
     protected _searchNode: HTMLDivElement;
     protected _searchWidgetNode: HTMLDivElement;
-    protected _selectionInfoNode: HTMLDivElement;
-    protected _selectionInfoItemsNode: HTMLDivElement;
+    protected _selectionInfoNode: HTMLDivElement | null;
+    protected _selectionInfoItemsNode: HTMLDivElement | null;
     protected _sourceNode: HTMLDivElement;
-    protected _widgetNode: HTMLDivElement;
+    protected _widgetNode: HTMLElement;
     protected _templates: TemplatesType = {};
     protected _itemsMap = new Map<string, BaseDropdownItem>();
     protected _entries: BaseDropdownEntry[] = [];
@@ -59,34 +66,19 @@ export abstract class BaseDropdown extends Base {
     constructor(container: HTMLDivElement) {
         super(container);
 
-        const togglerNode = this._container.querySelector<HTMLElementIDSInstance<Expander>>('.ids-expander');
         const itemsContainerNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__items-container');
         const itemsNode = itemsContainerNode?.querySelector<HTMLUListElement>('.ids-dropdown__items');
         const noResultsNode = itemsContainerNode?.querySelector<HTMLDivElement>('.ids-dropdown__no-results') ?? null;
-        const selectionInfoNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__selection-info');
-        const placeholderNode = selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__placeholder');
         const searchNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__search');
         const searchWidgetNode = searchNode?.querySelector<HTMLDivElement>('.ids-input-text');
-        const selectionInfoItemsNode = selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__selection-info-items');
         const sourceNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__source');
-        const widgetNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__widget');
+        const { placeholderNode, selectionInfoItemsNode, selectionInfoNode, togglerNode, widgetNode } = this.resolveWidgetNodes();
 
-        if (
-            !togglerNode ||
-            !itemsContainerNode ||
-            !itemsNode ||
-            !placeholderNode ||
-            !searchNode ||
-            !searchWidgetNode ||
-            !selectionInfoItemsNode ||
-            !selectionInfoNode ||
-            !sourceNode ||
-            !widgetNode
-        ) {
+        if (!itemsContainerNode || !itemsNode || !searchNode || !searchWidgetNode || !sourceNode) {
             throw new Error('Dropdown: Required elements are missing in the container.');
         }
 
-        this._expanderInstance = new Expander(togglerNode);
+        this._expanderInstance = togglerNode ? new Expander(togglerNode) : null;
         this._searchInstance = new InputTextInput(searchWidgetNode);
         this._itemsContainerNode = itemsContainerNode;
         this._itemsNode = itemsNode;
@@ -113,6 +105,20 @@ export abstract class BaseDropdown extends Base {
     }
 
     /******* DOM management ********/
+
+    protected resolveWidgetNodes(): BaseDropdownWidgetNodes {
+        const togglerNode = this._container.querySelector<HTMLElementIDSInstance<Expander>>('.ids-expander');
+        const widgetNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__widget');
+        const selectionInfoNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__selection-info');
+        const placeholderNode = selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__placeholder');
+        const selectionInfoItemsNode = selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__selection-info-items');
+
+        if (!togglerNode || !widgetNode || !selectionInfoNode || !placeholderNode || !selectionInfoItemsNode) {
+            throw new Error('Dropdown: Required elements are missing in the container.');
+        }
+
+        return { placeholderNode, selectionInfoItemsNode, selectionInfoNode, togglerNode, widgetNode };
+    }
 
     protected createItemNode(item: BaseDropdownItem, template: HTMLLIElement): HTMLLIElement | null {
         const listItem = template.cloneNode(true);
@@ -370,7 +376,7 @@ export abstract class BaseDropdown extends Base {
     public toggleItemsContainer(nextIsExpanded?: boolean) {
         const isExpanded = nextIsExpanded ?? !this._isExpanded;
 
-        this._expanderInstance.toggleIsExpanded(isExpanded);
+        this._expanderInstance?.toggleIsExpanded(isExpanded);
         this._isExpanded = isExpanded;
 
         if (isExpanded) {
@@ -402,7 +408,7 @@ export abstract class BaseDropdown extends Base {
     /******* Initializers ********/
 
     protected initExpander() {
-        this._expanderInstance.init();
+        this._expanderInstance?.init();
 
         this._widgetNode.addEventListener('click', () => {
             this.toggleItemsContainer(!this._isExpanded);

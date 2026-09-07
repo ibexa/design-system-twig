@@ -1,6 +1,6 @@
 import { AltRadioInput, AltRadiosListField } from './components/alt_radio';
 import { CheckboxInput, CheckboxesListField } from './components/checkbox';
-import { DropdownMultiInput, DropdownSingleInput } from './components/dropdown';
+import { DropdownMultiInput, DropdownSingleInput, FilterDropdown } from './components/dropdown';
 import { InputTextField, InputTextInput } from './components/input_text';
 import { RadioButtonInput, RadioButtonsListField } from './components/radio_button';
 import { ToggleButtonField, ToggleButtonInput } from './components/toggle_button';
@@ -55,6 +55,14 @@ dropdownMultiContainers.forEach((dropdownContainer: HTMLDivElement) => {
     const dropdownInstance = new DropdownMultiInput(dropdownContainer);
 
     dropdownInstance.init();
+});
+
+const filterDropdownContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown--filter:not([data-ids-custom-init])');
+
+filterDropdownContainers.forEach((filterDropdownContainer: HTMLDivElement) => {
+    const filterDropdownInstance = new FilterDropdown(filterDropdownContainer);
+
+    filterDropdownInstance.init();
 });
 
 const dropdownSingleContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown--single:not([data-ids-custom-init])');

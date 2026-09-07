@@ -31,6 +31,7 @@
         {% block source %}
         {% endblock source %}
     </div>
+    {% block widget %}
     <div class="{{ widget_classes }}" role="button" tabIndex="0">
         <div class="ids-dropdown__selection-info">
             {% block selection_info %}
@@ -51,6 +52,7 @@
             />
         </div>
     </div>
+    {% endblock widget %}
     <div class="ids-dropdown__items-container" hidden>
         <div class="ids-dropdown__search"{% if not is_search_visible %} hidden{% endif %}>
             <twig:ibexa:input_text:input
@@ -100,6 +102,7 @@
         <div class="ids-dropdown__no-results" aria-live="polite" hidden>
             {{ 'ibexa.dropdown.search.no_results'|trans|desc('No results found') }}
         </div>
+        {% block footer %}{% endblock footer %}
     </div>
     {% block templates %}
         {% set item_content %}
