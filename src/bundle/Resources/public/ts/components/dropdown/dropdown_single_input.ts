@@ -1,4 +1,4 @@
-import { BaseDropdown, BaseDropdownItem } from '../../partials';
+import { BaseDropdown, BaseDropdownEntry, BaseDropdownItem, flattenDropdownEntries, isDropdownItemGroup } from '../../partials';
 
 export class DropdownSingleInput extends BaseDropdown {
     private _sourceInputNode: HTMLSelectElement;
@@ -35,20 +35,33 @@ export class DropdownSingleInput extends BaseDropdown {
         this._value = value;
     }
 
+    protected createOptionNode(item: BaseDropdownItem): HTMLOptionElement {
+        const option = document.createElement('option');
+
+        option.value = item.id;
+        option.textContent = item.label;
+        option.selected = this._value === item.id;
+
+        return option;
+    }
+
     protected setSource() {
         this._sourceInputNode.innerHTML = '';
 
-        this._itemsMap.forEach((item) => {
-            const option = document.createElement('option');
+        this._entries.forEach((entry) => {
+            if (!isDropdownItemGroup(entry)) {
+                this._sourceInputNode.appendChild(this.createOptionNode(entry));
 
-            option.value = item.id;
-            option.textContent = item.label;
-
-            if (this._value === item.id) {
-                option.selected = true;
+                return;
             }
 
-            this._sourceInputNode.appendChild(option);
+            const optgroup = document.createElement('optgroup');
+
+            optgroup.label = entry.label;
+            entry.items.forEach((item) => {
+                optgroup.appendChild(this.createOptionNode(item));
+            });
+            this._sourceInputNode.appendChild(optgroup);
         });
 
         this.setValue(this._sourceInputNode.value);
@@ -87,13 +100,14 @@ export class DropdownSingleInput extends BaseDropdown {
         }
     }
 
-    public setItems(items: BaseDropdownItem[]) {
-        super.setItems(items);
+    public setItems(entries: BaseDropdownEntry[]) {
+        super.setItems(entries);
 
         const selectedItem = this.getItemById(this._value);
+        const [firstItem] = flattenDropdownEntries(entries);
 
-        if (!selectedItem && items.length > 0) {
-            this.setValue(items[0].id);
+        if (!selectedItem && firstItem) {
+            this.setValue(firstItem.id);
         }
     }
 
