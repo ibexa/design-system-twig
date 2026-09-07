@@ -12,11 +12,25 @@ export interface BaseDropdownItem {
     id: string;
     label: string;
 }
+export interface BaseDropdownItemGroup {
+    items: BaseDropdownItem[];
+    label: string;
+    id?: string;
+}
+export type BaseDropdownEntry = BaseDropdownItem | BaseDropdownItemGroup;
 interface TemplatesType {
+    group?: HTMLTemplateElement;
     item?: HTMLTemplateElement;
 }
 
+export const isDropdownItemGroup = (entry: BaseDropdownEntry): entry is BaseDropdownItemGroup =>
+    'items' in entry && Array.isArray(entry.items);
+
+export const flattenDropdownEntries = (entries: BaseDropdownEntry[]): BaseDropdownItem[] =>
+    entries.flatMap((entry) => (isDropdownItemGroup(entry) ? entry.items : [entry]));
+
 const MAX_VISIBLE_ITEMS_DEFAULT = 10;
+let dropdownInstancesCount = 0;
 const POPPER_OFFSET = 4;
 const VIEWPORT_MARGIN = 16;
 
@@ -25,6 +39,7 @@ export abstract class BaseDropdown extends Base {
     protected _searchInstance: InputTextInput;
     protected _itemsContainerNode: HTMLDivElement;
     protected _itemsNode: HTMLUListElement;
+    protected _noResultsNode: HTMLDivElement | null;
     protected _placeholderNode: HTMLDivElement;
     protected _searchNode: HTMLDivElement;
     protected _searchWidgetNode: HTMLDivElement;
@@ -34,6 +49,8 @@ export abstract class BaseDropdown extends Base {
     protected _widgetNode: HTMLDivElement;
     protected _templates: TemplatesType = {};
     protected _itemsMap = new Map<string, BaseDropdownItem>();
+    protected _entries: BaseDropdownEntry[] = [];
+    protected _groupIdPrefix: string;
     protected _isExpanded = false;
     protected _keyboard = new Keyboard();
     protected _itemsContainerPopperInstance: ReturnType<typeof createPopper> | null = null;
@@ -45,6 +62,7 @@ export abstract class BaseDropdown extends Base {
         const togglerNode = this._container.querySelector<HTMLElementIDSInstance<Expander>>('.ids-expander');
         const itemsContainerNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__items-container');
         const itemsNode = itemsContainerNode?.querySelector<HTMLUListElement>('.ids-dropdown__items');
+        const noResultsNode = itemsContainerNode?.querySelector<HTMLDivElement>('.ids-dropdown__no-results') ?? null;
         const selectionInfoNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__selection-info');
         const placeholderNode = selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__placeholder');
         const searchNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__search');
@@ -72,6 +90,7 @@ export abstract class BaseDropdown extends Base {
         this._searchInstance = new InputTextInput(searchWidgetNode);
         this._itemsContainerNode = itemsContainerNode;
         this._itemsNode = itemsNode;
+        this._noResultsNode = noResultsNode;
         this._placeholderNode = placeholderNode;
         this._searchNode = searchNode;
         this._searchWidgetNode = searchWidgetNode;
@@ -81,17 +100,74 @@ export abstract class BaseDropdown extends Base {
         this._widgetNode = widgetNode;
 
         this._templates = {
+            group: this._container.querySelector<HTMLTemplateElement>('template.ids-dropdown__template[data-id="group"]') ?? undefined,
             item: this._container.querySelector<HTMLTemplateElement>('template.ids-dropdown__template[data-id="item"]') ?? undefined,
         };
 
-        const itemsNodes = this.getItemsNodes();
-
-        this.setItemsMapFromNodes(itemsNodes);
+        dropdownInstancesCount += 1;
+        this._groupIdPrefix = `ids-dropdown-${dropdownInstancesCount.toString()}`;
+        this._entries = this.getEntriesFromNodes();
+        this.setItemsMapFromItems(flattenDropdownEntries(this._entries));
 
         this.toggleItemsContainer = this.toggleItemsContainer.bind(this);
     }
 
     /******* DOM management ********/
+
+    protected createItemNode(item: BaseDropdownItem, template: HTMLLIElement): HTMLLIElement | null {
+        const listItem = template.cloneNode(true);
+
+        if (!(listItem instanceof HTMLLIElement)) {
+            return null;
+        }
+
+        listItem.dataset.id = item.id;
+        listItem.dataset.label = item.label;
+
+        const itemContent = this.getItemContent(item, listItem);
+
+        if (itemContent instanceof NodeList) {
+            listItem.innerHTML = '';
+            Array.from(itemContent).forEach((childNode) => {
+                listItem.appendChild(childNode);
+            });
+        } else {
+            listItem.textContent = itemContent;
+        }
+
+        return listItem;
+    }
+
+    protected createGroupNode(group: BaseDropdownItemGroup, index: number, itemTemplate: HTMLLIElement): HTMLLIElement | null {
+        const groupTemplate = this._templates.group?.content.querySelector<HTMLLIElement>('li');
+        const groupNode = groupTemplate?.cloneNode(true);
+
+        if (!groupNode || !(groupNode instanceof HTMLLIElement) || group.items.length === 0) {
+            return null;
+        }
+
+        const groupLabelNode = groupNode.querySelector<HTMLElement>('.ids-dropdown__group-label');
+        const groupItemsNode = groupNode.querySelector<HTMLUListElement>('.ids-dropdown__group-items');
+        const groupId = group.id ?? `${this._groupIdPrefix}-group-${index.toString()}`;
+
+        if (!groupLabelNode || !groupItemsNode) {
+            return null;
+        }
+
+        groupNode.setAttribute('aria-labelledby', groupId);
+        groupLabelNode.id = groupId;
+        groupLabelNode.textContent = group.label;
+
+        group.items.forEach((item) => {
+            const itemNode = this.createItemNode(item, itemTemplate);
+
+            if (itemNode) {
+                groupItemsNode.appendChild(itemNode);
+            }
+        });
+
+        return groupNode;
+    }
 
     protected setItemsContainer() {
         const template = this._templates.item?.content.querySelector<HTMLLIElement>('li');
@@ -102,28 +178,14 @@ export abstract class BaseDropdown extends Base {
 
         this._itemsNode.innerHTML = '';
 
-        this._itemsMap.forEach((item) => {
-            const listItem = template.cloneNode(true);
+        this._entries.forEach((entry, index) => {
+            const entryNode = isDropdownItemGroup(entry)
+                ? this.createGroupNode(entry, index, template)
+                : this.createItemNode(entry, template);
 
-            if (!(listItem instanceof HTMLLIElement)) {
-                return;
+            if (entryNode) {
+                this._itemsNode.appendChild(entryNode);
             }
-
-            listItem.dataset.id = item.id;
-            listItem.dataset.label = item.label;
-
-            const itemContent = this.getItemContent(item, listItem);
-
-            if (itemContent instanceof NodeList) {
-                listItem.innerHTML = '';
-                Array.from(itemContent).forEach((childNode) => {
-                    listItem.appendChild(childNode);
-                });
-            } else {
-                listItem.textContent = itemContent;
-            }
-
-            this._itemsNode.appendChild(listItem);
         });
 
         this.initItems();
@@ -132,7 +194,7 @@ export abstract class BaseDropdown extends Base {
     protected toggleSearchVisibility(): void {
         const { maxVisibleItems: maxVisibleItemsString } = this._itemsNode.dataset;
         const maxVisibleItems = maxVisibleItemsString ? parseInt(maxVisibleItemsString, 10) : MAX_VISIBLE_ITEMS_DEFAULT;
-        const shouldBeVisible = this._itemsMap.size >= maxVisibleItems;
+        const shouldBeVisible = this._itemsMap.size > maxVisibleItems;
 
         if (shouldBeVisible) {
             this._searchNode.removeAttribute('hidden');
@@ -152,6 +214,41 @@ export abstract class BaseDropdown extends Base {
 
     public getItemsNodes() {
         return [...this._itemsNode.querySelectorAll<HTMLLIElement>('.ids-dropdown__item')];
+    }
+
+    public getVisibleItemsNodes() {
+        return this.getItemsNodes().filter((itemNode) => !itemNode.hasAttribute('hidden'));
+    }
+
+    public getGroupsNodes() {
+        return [...this._itemsNode.querySelectorAll<HTMLLIElement>('.ids-dropdown__group')];
+    }
+
+    protected getEntriesFromNodes(): BaseDropdownEntry[] {
+        return [...this._itemsNode.children].reduce<BaseDropdownEntry[]>((entries, node) => {
+            if (!(node instanceof HTMLLIElement)) {
+                return entries;
+            }
+
+            if (node.classList.contains('ids-dropdown__group')) {
+                const labelNode = node.querySelector<HTMLElement>('.ids-dropdown__group-label');
+                const items = [...node.querySelectorAll<HTMLLIElement>('.ids-dropdown__item')]
+                    .map((itemNode) => this.getItemFromNode(itemNode))
+                    .filter((item): item is BaseDropdownItem => item !== undefined);
+
+                entries.push({ id: labelNode?.id, items, label: labelNode?.textContent?.trim() ?? '' });
+
+                return entries;
+            }
+
+            const item = this.getItemFromNode(node);
+
+            if (item) {
+                entries.push(item);
+            }
+
+            return entries;
+        }, []);
     }
 
     public getItemFromNode(itemNode: HTMLLIElement): BaseDropdownItem | undefined {
@@ -188,8 +285,9 @@ export abstract class BaseDropdown extends Base {
         });
     }
 
-    public setItems(items: BaseDropdownItem[]) {
-        this.setItemsMapFromItems(items);
+    public setItems(entries: BaseDropdownEntry[]) {
+        this._entries = entries;
+        this.setItemsMapFromItems(flattenDropdownEntries(entries));
         this.setItemsContainer();
         this.setSource();
         this.toggleSearchVisibility();
@@ -226,6 +324,18 @@ export abstract class BaseDropdown extends Base {
                 itemNode.setAttribute('hidden', '');
             }
         });
+
+        this.getGroupsNodes().forEach((groupNode) => {
+            const hasVisibleItem = [...groupNode.querySelectorAll<HTMLLIElement>('.ids-dropdown__item')].some(
+                (itemNode) => !itemNode.hasAttribute('hidden'),
+            );
+
+            groupNode.toggleAttribute('hidden', !hasVisibleItem);
+        });
+
+        const hasVisibleItems = this.getVisibleItemsNodes().length > 0;
+
+        this._noResultsNode?.toggleAttribute('hidden', query === '' || hasVisibleItems);
 
         if (this._isExpanded) {
             this.updateItemsNodeHeight();
@@ -415,20 +525,28 @@ export abstract class BaseDropdown extends Base {
         );
     }
 
+    protected moveFocusBetweenItems(event: KeyboardEvent, isMovingDown: boolean) {
+        const { activeElement } = window.document;
+
+        if (!this._isExpanded || !(activeElement instanceof HTMLLIElement) || !activeElement.classList.contains('ids-dropdown__item')) {
+            return;
+        }
+
+        const visibleItemsNodes = this.getVisibleItemsNodes();
+        const offset = isMovingDown ? 1 : -1; // eslint-disable-line no-magic-numbers
+        const nextItemNode = visibleItemsNodes[visibleItemsNodes.indexOf(activeElement) + offset];
+
+        if (nextItemNode) {
+            event.preventDefault();
+            nextItemNode.focus();
+        }
+    }
+
     protected initKeyboardDropdownMoveEvents() {
         this._keyboard.bindKey(
             ['ArrowDown'],
             (event) => {
-                const { activeElement } = window.document;
-
-                if (this._isExpanded && activeElement?.classList.contains('ids-dropdown__item')) {
-                    const nextElement = activeElement.nextElementSibling;
-
-                    if (nextElement?.classList.contains('ids-dropdown__item') && nextElement instanceof HTMLElement) {
-                        event.preventDefault();
-                        nextElement.focus();
-                    }
-                }
+                this.moveFocusBetweenItems(event, true);
             },
             this._itemsContainerNode,
         );
@@ -436,16 +554,7 @@ export abstract class BaseDropdown extends Base {
         this._keyboard.bindKey(
             ['ArrowUp'],
             (event) => {
-                const { activeElement } = window.document;
-
-                if (this._isExpanded && activeElement?.classList.contains('ids-dropdown__item')) {
-                    const prevElement = activeElement.previousElementSibling;
-
-                    if (prevElement?.classList.contains('ids-dropdown__item') && prevElement instanceof HTMLElement) {
-                        event.preventDefault();
-                        prevElement.focus();
-                    }
-                }
+                this.moveFocusBetweenItems(event, false);
             },
             this._itemsContainerNode,
         );

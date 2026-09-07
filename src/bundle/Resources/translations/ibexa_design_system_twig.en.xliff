@@ -26,6 +26,11 @@
         <target state="new">All</target>
         <note>key: ibexa.dropdown.placeholder.all</note>
       </trans-unit>
+      <trans-unit id="5a279186d5a48afb6854a272d37dbae9ae181083" resname="ibexa.dropdown.search.no_results">
+        <source>No results found</source>
+        <target state="new">No results found</target>
+        <note>key: ibexa.dropdown.search.no_results</note>
+      </trans-unit>
       <trans-unit id="3a9a0c14a5a935a76adbed08e80fbe1392d8eb6a" resname="ibexa.dropdown.search.placeholder">
         <source>Search...</source>
         <target state="new">Search...</target>
