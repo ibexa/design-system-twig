@@ -1,0 +1,67 @@
+{% trans_default_domain 'ibexa_design_system_twig' %}
+
+{% set alert_classes =
+    html_cva(
+        base: 'ids-alert',
+        variants: {
+            type: {
+                success: 'ids-alert--success',
+                warning: 'ids-alert--warning',
+                error: 'ids-alert--error',
+                info: 'ids-alert--info',
+            },
+            variant: {
+                floating: 'ids-alert--floating',
+                local: 'ids-alert--local',
+                toast: 'ids-alert--toast',
+            },
+        },
+    )
+%}
+{% set close_msg = 'ibexa.alert.close-btn.label'|trans|desc('Close') %}
+{% set has_description = block('content') is defined and block('content')|trim is not empty %}
+{% set has_actions = block('actions') is defined and block('actions')|trim is not empty %}
+
+<div
+    class="{{
+        alert_classes.apply(
+            {
+                type,
+                variant
+            },
+            attributes.render('class')
+        )
+    }}"
+    role="{{ resolved_role }}"
+    {{ attributes }}
+>
+    {% if icon_path is not empty %}
+        <twig:ibexa:icon path="{{ icon_path }}" size="small" class="ids-alert__icon" />
+    {% else %}
+        <twig:ibexa:icon name="{{ icon_name }}" size="small" class="ids-alert__icon" />
+    {% endif %}
+    <div class="ids-alert__content">
+        {% if (title ~ '') is not empty %}
+            <div class="ids-alert__title">{{ title }}</div>
+        {% endif %}
+        {% if has_description %}
+            <div class="ids-alert__description">
+                {{ block('content') }}
+            </div>
+        {% endif %}
+        {% if has_actions %}
+            <div class="ids-alert__actions">
+                {{ block('actions') }}
+            </div>
+        {% endif %}
+    </div>
+    {% if is_dismissible %}
+        <twig:ibexa:button
+            type="tertiary-alt"
+            size="small"
+            icon="discard"
+            class="ids-alert__close-btn"
+            :aria-label="close_msg"
+        />
+    {% endif %}
+</div>
