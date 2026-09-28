@@ -10,6 +10,7 @@ namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components;
 
 use Generator;
 use Ibexa\DesignSystemTwig\Twig\Components\HelperText;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
@@ -86,13 +87,14 @@ final class HelperTextTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider iconByTypeProvider
-     *
      * @param array<string,mixed> $props
      * @param non-empty-string $expectedIconId
      */
-    public function testIconIsRenderedForType(array $props, string $expectedIconId): void
-    {
+    #[DataProvider('iconByTypeProvider')]
+    public function testIconIsRenderedForType(
+        array $props,
+        string $expectedIconId
+    ): void {
         $rendered = $this->renderTwigComponent('ibexa:helper_text', $props, 'This is some helper text');
 
         $iconUse = $rendered->crawler()->filter('.ids-helper-text__icon use')->first();

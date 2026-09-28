@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components;
 
 use Ibexa\Tests\Integration\DesignSystemTwig\Twig\Stub\DummyListFieldComponent;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -94,9 +95,8 @@ final class ListFieldTraitTest extends TestCase
 
     /**
      * @param array<string, mixed> $options
-     *
-     * @dataProvider invalidItemOptionsProvider
      */
+    #[DataProvider('invalidItemOptionsProvider')]
     public function testInvalidItemOptionsCauseResolverError(array $options): void
     {
         $this->expectException(InvalidOptionsException::class);
