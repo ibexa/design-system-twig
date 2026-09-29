@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components;
 
 use Ibexa\DesignSystemTwig\Twig\Components\Label;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
@@ -44,13 +45,14 @@ final class LabelTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider variantProvider
-     *
      * @param array<string, mixed> $props
      * @param list<string> $expectedPresent
      */
-    public function testVariantClasses(array $props, array $expectedPresent): void
-    {
+    #[DataProvider('variantProvider')]
+    public function testVariantClasses(
+        array $props,
+        array $expectedPresent
+    ): void {
         $rendered = $this->renderTwigComponent('ibexa:label', $props);
         $label = $this->getLabel($rendered->crawler());
         $classStr = (string) $label->attr('class');
