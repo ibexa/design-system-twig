@@ -55,7 +55,6 @@ export abstract class BaseDropdown extends Base {
     protected _keyboard = new Keyboard();
     protected _itemsContainerPopperInstance: ReturnType<typeof createPopper> | null = null;
 
-    /* eslint-disable-next-line max-lines-per-function */
     constructor(container: HTMLDivElement) {
         super(container);
 
@@ -104,7 +103,7 @@ export abstract class BaseDropdown extends Base {
             item: this._container.querySelector<HTMLTemplateElement>('template.ids-dropdown__template[data-id="item"]') ?? undefined,
         };
 
-        dropdownInstancesCount += 1;
+        dropdownInstancesCount++;
         this._groupIdPrefix = `ids-dropdown-${dropdownInstancesCount.toString()}`;
         this._entries = this.getEntriesFromNodes();
         this.setItemsMapFromItems(flattenDropdownEntries(this._entries));
@@ -534,7 +533,7 @@ export abstract class BaseDropdown extends Base {
 
         const visibleItemsNodes = this.getVisibleItemsNodes();
         const offset = isMovingDown ? 1 : -1; // eslint-disable-line no-magic-numbers
-        const nextItemNode = visibleItemsNodes[visibleItemsNodes.indexOf(activeElement) + offset];
+        const nextItemNode: HTMLLIElement | undefined = visibleItemsNodes[visibleItemsNodes.indexOf(activeElement) + offset];
 
         if (nextItemNode) {
             event.preventDefault();
