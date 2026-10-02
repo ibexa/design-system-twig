@@ -34,11 +34,12 @@ final class Link
     public string $label = '';
 
     /**
-     * @var array{small: string, medium: string}
+     * @var array{small: string, medium: string, inline: string}
      */
     private static array $iconSizeMap = [
         'small' => 'small',
         'medium' => 'small',
+        'inline' => 'small',
     ];
 
     /**
@@ -61,7 +62,7 @@ final class Link
             ->default('button');
         $resolver
             ->define('size')
-            ->allowedValues('small', 'medium')
+            ->allowedValues('small', 'medium', 'inline')
             ->default('medium');
         $resolver
             ->define('type')

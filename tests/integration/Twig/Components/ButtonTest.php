@@ -102,6 +102,26 @@ final class ButtonTest extends KernelTestCase
         self::assertStringContainsString('ids-btn--small', $classAttr, 'Size class should be applied');
     }
 
+    public function testInlineSize(): void
+    {
+        $component = $this->mountTwigComponent('ibexa:button', [
+            'type' => 'tertiary',
+            'size' => 'inline',
+        ]);
+
+        self::assertInstanceOf(Button::class, $component);
+        self::assertSame('small', $component->iconSize(), 'iconSize() should map "inline" to "small"');
+
+        $crawler = $this->renderTwigComponent('ibexa:button', [
+            'type' => 'tertiary',
+            'size' => 'inline',
+        ])->crawler();
+        $classAttr = (string) $this->getButton($crawler)->attr('class');
+
+        self::assertStringContainsString('ids-btn--inline', $classAttr, 'Inline size class should be applied');
+        self::assertStringNotContainsString('ids-btn--medium', $classAttr, 'Default size class should not be applied');
+    }
+
     public function testMergesCustomClassesFromAttributes(): void
     {
         $rendered = $this->renderTwigComponent('ibexa:button', [
