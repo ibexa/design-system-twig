@@ -1,0 +1,20 @@
+{% set panel_classes =
+    html_classes(
+        'ids-tabs__panel',
+        {
+            'ids-tabs__panel--selected': is_selected,
+        },
+        attributes.render('class') ?? ''
+    )
+%}
+
+<div
+    class="{{ panel_classes }}"
+    id="{{ id }}"
+    role="tabpanel"
+    {% if labelled_by is not empty %}aria-labelledby="{{ labelled_by }}"{% endif %}
+    {% if not is_selected %}hidden{% endif %}
+    {{ attributes }}
+>
+    {% block content %}{% endblock content %}
+</div>
