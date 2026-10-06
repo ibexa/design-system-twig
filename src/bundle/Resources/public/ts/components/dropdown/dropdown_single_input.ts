@@ -57,7 +57,7 @@ export class DropdownSingleInput extends BaseDropdown {
             const optgroup = document.createElement('optgroup');
 
             optgroup.label = entry.label;
-            entry.items.forEach((item) => {
+            flattenDropdownEntries(entry.items).forEach((item) => {
                 optgroup.appendChild(this.createOptionNode(item));
             });
             this._sourceInputNode.appendChild(optgroup);

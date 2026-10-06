@@ -1,4 +1,4 @@
-import { BaseDropdown, BaseDropdownEntry, BaseDropdownItem, isDropdownItemGroup } from '../../partials';
+import { BaseDropdown, BaseDropdownEntry, BaseDropdownItem, flattenDropdownEntries, isDropdownItemGroup } from '../../partials';
 import { getInstance, hasInstance } from '../../helpers/object.instances';
 import { HTMLElementIDSInstance } from '../../shared/types';
 import { OverflowList } from '../overflow_list';
@@ -62,7 +62,7 @@ export class DropdownMultiInput extends BaseDropdown {
             const optgroup = document.createElement('optgroup');
 
             optgroup.label = entry.label;
-            entry.items.forEach((item) => {
+            flattenDropdownEntries(entry.items).forEach((item) => {
                 optgroup.appendChild(this.createOptionNode(item));
             });
             this._sourceInputNode.appendChild(optgroup);
