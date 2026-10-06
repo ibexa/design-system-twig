@@ -13,7 +13,7 @@ export interface BaseDropdownItem {
     label: string;
 }
 export interface BaseDropdownItemGroup {
-    items: BaseDropdownItem[];
+    items: BaseDropdownEntry[];
     label: string;
     id?: string;
 }
@@ -27,7 +27,7 @@ export const isDropdownItemGroup = (entry: BaseDropdownEntry): entry is BaseDrop
     'items' in entry && Array.isArray(entry.items);
 
 export const flattenDropdownEntries = (entries: BaseDropdownEntry[]): BaseDropdownItem[] =>
-    entries.flatMap((entry) => (isDropdownItemGroup(entry) ? entry.items : [entry]));
+    entries.flatMap((entry) => (isDropdownItemGroup(entry) ? flattenDropdownEntries(entry.items) : [entry]));
 
 const MAX_VISIBLE_ITEMS_DEFAULT = 10;
 let dropdownInstancesCount = 0;
@@ -137,17 +137,16 @@ export abstract class BaseDropdown extends Base {
         return listItem;
     }
 
-    protected createGroupNode(group: BaseDropdownItemGroup, index: number, itemTemplate: HTMLLIElement): HTMLLIElement | null {
+    protected createGroupNode(group: BaseDropdownItemGroup, groupId: string, itemTemplate: HTMLLIElement): HTMLLIElement | null {
         const groupTemplate = this._templates.group?.content.querySelector<HTMLLIElement>('li');
         const groupNode = groupTemplate?.cloneNode(true);
 
-        if (!groupNode || !(groupNode instanceof HTMLLIElement) || group.items.length === 0) {
+        if (!groupNode || !(groupNode instanceof HTMLLIElement) || flattenDropdownEntries(group.items).length === 0) {
             return null;
         }
 
         const groupLabelNode = groupNode.querySelector<HTMLElement>('.ids-dropdown__group-label');
         const groupItemsNode = groupNode.querySelector<HTMLUListElement>('.ids-dropdown__group-items');
-        const groupId = group.id ?? `${this._groupIdPrefix}-group-${index.toString()}`;
 
         if (!groupLabelNode || !groupItemsNode) {
             return null;
@@ -156,16 +155,23 @@ export abstract class BaseDropdown extends Base {
         groupNode.setAttribute('aria-labelledby', groupId);
         groupLabelNode.id = groupId;
         groupLabelNode.textContent = group.label;
-
-        group.items.forEach((item) => {
-            const itemNode = this.createItemNode(item, itemTemplate);
-
-            if (itemNode) {
-                groupItemsNode.appendChild(itemNode);
-            }
-        });
+        groupItemsNode.replaceChildren(...this.createEntriesNodes(group.items, groupId, itemTemplate));
 
         return groupNode;
+    }
+
+    protected createEntriesNodes(entries: BaseDropdownEntry[], idPrefix: string, itemTemplate: HTMLLIElement): HTMLLIElement[] {
+        return entries.reduce<HTMLLIElement[]>((entriesNodes, entry, index) => {
+            const entryNode = isDropdownItemGroup(entry)
+                ? this.createGroupNode(entry, entry.id ?? `${idPrefix}-group-${index.toString()}`, itemTemplate)
+                : this.createItemNode(entry, itemTemplate);
+
+            if (entryNode) {
+                entriesNodes.push(entryNode);
+            }
+
+            return entriesNodes;
+        }, []);
     }
 
     protected setItemsContainer() {
@@ -175,18 +181,7 @@ export abstract class BaseDropdown extends Base {
             throw new Error('DropdownSingleInput: Item template is missing in the container.');
         }
 
-        this._itemsNode.innerHTML = '';
-
-        this._entries.forEach((entry, index) => {
-            const entryNode = isDropdownItemGroup(entry)
-                ? this.createGroupNode(entry, index, template)
-                : this.createItemNode(entry, template);
-
-            if (entryNode) {
-                this._itemsNode.appendChild(entryNode);
-            }
-        });
-
+        this._itemsNode.replaceChildren(...this.createEntriesNodes(this._entries, this._groupIdPrefix, template));
         this.initItems();
     }
 
@@ -224,16 +219,19 @@ export abstract class BaseDropdown extends Base {
     }
 
     protected getEntriesFromNodes(): BaseDropdownEntry[] {
-        return [...this._itemsNode.children].reduce<BaseDropdownEntry[]>((entries, node) => {
+        return this.getEntriesFromList(this._itemsNode);
+    }
+
+    protected getEntriesFromList(listNode: HTMLUListElement): BaseDropdownEntry[] {
+        return [...listNode.children].reduce<BaseDropdownEntry[]>((entries, node) => {
             if (!(node instanceof HTMLLIElement)) {
                 return entries;
             }
 
             if (node.classList.contains('ids-dropdown__group')) {
-                const labelNode = node.querySelector<HTMLElement>('.ids-dropdown__group-label');
-                const items = [...node.querySelectorAll<HTMLLIElement>('.ids-dropdown__item')]
-                    .map((itemNode) => this.getItemFromNode(itemNode))
-                    .filter((item): item is BaseDropdownItem => item !== undefined);
+                const labelNode = node.querySelector<HTMLElement>(':scope > .ids-dropdown__group-label');
+                const groupItemsNode = node.querySelector<HTMLUListElement>(':scope > .ids-dropdown__group-items');
+                const items = groupItemsNode ? this.getEntriesFromList(groupItemsNode) : [];
 
                 entries.push({ id: labelNode?.id, items, label: labelNode?.textContent?.trim() ?? '' });
 
