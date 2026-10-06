@@ -332,13 +332,70 @@ final class InputTest extends KernelTestCase
         ]));
     }
 
-    public function testNestedGroupCausesResolverError(): void
+    public function testNestedGroupsRenderNestedGroupMarkup(): void
     {
-        $this->expectException(InvalidOptionsException::class);
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'value' => 'cherry',
+            'maxVisibleItems' => 2,
+            'items' => [
+                ['id' => 'a', 'label' => 'Alpha'],
+                [
+                    'id' => 'fruits',
+                    'label' => 'Fruits',
+                    'items' => [
+                        ['id' => 'apple', 'label' => 'Apple'],
+                        [
+                            'label' => 'Berries',
+                            'items' => [
+                                ['id' => 'cherry', 'label' => 'Cherry'],
+                                ['label' => 'Empty', 'items' => []],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]))->crawler();
 
-        $this->mountTwigComponent(Input::class, $this->baseProps([
-            'items' => [['label' => 'Outer', 'items' => [['label' => 'Inner', 'items' => [['id' => 'a', 'label' => 'Alpha']]]]]],
-        ]));
+        $nestedGroups = $crawler->filter('.ids-dropdown__items > .ids-dropdown__group .ids-dropdown__group');
+        self::assertSame(1, $nestedGroups->count(), 'The nested group should render inside its parent and the empty nested group should be dropped.');
+
+        $nestedGroup = $nestedGroups->first();
+        $nestedLabel = $nestedGroup->filter('.ids-dropdown__group-label')->first();
+        self::assertSame('group', $nestedGroup->attr('role'), 'Nested group node should carry role="group".');
+        self::assertSame('fruits-group-1', $nestedLabel->attr('id'), 'A nested group without an id should build its id from the parent group id.');
+        self::assertSame($nestedLabel->attr('id'), $nestedGroup->attr('aria-labelledby'), 'Nested group should be labelled by its label node.');
+        self::assertSame(
+            1,
+            $nestedGroup->filter('.ids-dropdown__group-items > .ids-dropdown__item')->count(),
+            'Nested group items should be nested inside the nested group items list.'
+        );
+
+        $select = $this->getSelect($crawler);
+        self::assertSame(0, $select->filter('optgroup optgroup')->count(), 'Optgroups must not nest in the source select.');
+        self::assertSame(2, $select->filter('optgroup[label="Fruits"] > option')->count(), 'Nested leaves should be flattened into the top-level optgroup.');
+        self::assertSame('cherry', $select->filter('option[selected]')->attr('value'), 'Selected option inside a nested group should be marked selected.');
+        self::assertSame(
+            'Cherry',
+            trim($crawler->filter('.ids-dropdown__selection-info-items')->first()->text('')),
+            'Selected label should resolve for an item inside a nested group.'
+        );
+        self::assertNull(
+            $crawler->filter('.ids-dropdown__search')->first()->attr('hidden'),
+            'Search visibility should count the leaves of nested groups.'
+        );
+    }
+
+    public function testGroupWithoutIdGetsPrefixedId(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'items' => [['label' => 'Fruits', 'items' => [['id' => 'apple', 'label' => 'Apple']]]],
+        ]))->crawler();
+
+        self::assertMatchesRegularExpression(
+            '/^ids-dropdown-\d+-group-0$/',
+            (string) $crawler->filter('.ids-dropdown__group-label')->first()->attr('id'),
+            'A top-level group without an id should get a per-dropdown prefixed id instead of one built from the field name.'
+        );
     }
 
     public function testEmptyGroupIsDropped(): void

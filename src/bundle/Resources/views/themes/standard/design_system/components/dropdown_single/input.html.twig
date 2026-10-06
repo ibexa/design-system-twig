@@ -11,7 +11,7 @@
             disabled: disabled,
             required: required|default(false),
         }) }}>
-            {% for entry in items %}
+            {% for entry in source_entries %}
                 {% if entry.items is defined %}
                     <optgroup label="{{ entry.label }}">
                         {% for item in entry.items %}
