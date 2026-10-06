@@ -7,6 +7,7 @@ import { ToggleButtonField, ToggleButtonInput } from './components/toggle_button
 import { Accordion } from './components/accordion';
 import { Alert } from './components/alert';
 import { OverflowList } from './components/overflow_list';
+import { Tabs } from './components/tabs';
 
 const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
 
@@ -116,6 +117,14 @@ overflowListContainers.forEach((overflowListContainer: HTMLDivElement) => {
     const overflowListInstance = new OverflowList(overflowListContainer);
 
     overflowListInstance.init();
+});
+
+const tabsContainers = document.querySelectorAll<HTMLDivElement>('.ids-tabs:not([data-ids-custom-init])');
+
+tabsContainers.forEach((tabsContainer: HTMLDivElement) => {
+    const tabsInstance = new Tabs(tabsContainer);
+
+    tabsInstance.init();
 });
 
 const toggleButtonFieldContainers = document.querySelectorAll<HTMLDivElement>('.ids-toggle-field:not([data-ids-custom-init])');
