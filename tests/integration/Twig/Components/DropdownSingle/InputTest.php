@@ -150,6 +150,32 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testOnlySelectedItemShowsCheckIcon(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps(['value' => 'b']))->crawler();
+
+        $items = $crawler->filter('.ids-dropdown__items .ids-dropdown__item');
+        $iconStates = $items->each(static fn (Crawler $item): array => [
+            $item->attr('data-id'),
+            $item->filter('.ids-icon')->count(),
+            $item->filter('.ids-icon')->attr('hidden') !== null,
+        ]);
+
+        self::assertSame(
+            [['a', 1, true], ['b', 1, false], ['c', 1, true]],
+            $iconStates,
+            'Every item should render the check icon, visible only on the selected one.'
+        );
+
+        $templateIcon = $crawler->filter('template.ids-dropdown__template[data-id="item"]')->first();
+
+        self::assertStringContainsString(
+            'hidden',
+            (string) $templateIcon->html(''),
+            'The JS item template should render the check icon hidden.'
+        );
+    }
+
     public function testDisabledAndErrorAddClassesAndSelectDisabled(): void
     {
         $crawler = $this->renderTwigComponent(

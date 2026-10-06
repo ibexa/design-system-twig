@@ -26,6 +26,15 @@
     {% endif %}
 {% endblock source %}
 
+{% block item_content %}
+    <span class="ids-dropdown__item-label">{{ item.label }}</span>
+    <twig:ibexa:icon
+        name="check-circle"
+        size="tiny-small"
+        :hidden="item.id != value"
+    />
+{% endblock item_content %}
+
 {% block selected_items %}
     {{ selected_label }}
 {% endblock selected_items %}
