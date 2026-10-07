@@ -35,12 +35,12 @@ final class Button
     public string $icon_position = 'start';
 
     /**
-     * @var array{small: string, medium: string, inline: string}
+     * @var array{small: string, medium: string, none: string}
      */
     private static array $iconSizeMap = [
         'small' => 'small',
         'medium' => 'small',
-        'inline' => 'small',
+        'none' => 'small',
     ];
 
     /**
@@ -55,7 +55,7 @@ final class Button
         $resolver->setIgnoreUndefined();
         $resolver
             ->define('size')
-            ->allowedValues('small', 'medium', 'inline')
+            ->allowedValues('small', 'medium', 'none')
             ->default('medium');
         $resolver
             ->define('type')
