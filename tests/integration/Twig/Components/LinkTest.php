@@ -106,23 +106,23 @@ final class LinkTest extends KernelTestCase
         self::assertStringContainsString('ids-btn--small', $classAttr, 'Size class should be applied');
     }
 
-    public function testButtonVariantInlineSize(): void
+    public function testButtonVariantNoneSize(): void
     {
         $component = $this->mountTwigComponent('ibexa:link', [
             'href' => '/test',
-            'size' => 'inline',
+            'size' => 'none',
         ]);
 
         self::assertInstanceOf(Link::class, $component);
-        self::assertSame('small', $component->iconSize(), 'iconSize() should map "inline" to "small"');
+        self::assertSame('small', $component->iconSize(), 'iconSize() should map "none" to "small"');
 
         $crawler = $this->renderTwigComponent('ibexa:link', [
             'href' => '/test',
-            'size' => 'inline',
+            'size' => 'none',
         ])->crawler();
         $classAttr = (string) $this->getButtonLink($crawler)->attr('class');
 
-        self::assertStringContainsString('ids-btn--inline', $classAttr, 'Inline size class should be applied');
+        self::assertStringContainsString('ids-btn--none', $classAttr, 'None size class should be applied');
         self::assertStringNotContainsString('ids-btn--medium', $classAttr, 'Default size class should not be applied');
     }
 

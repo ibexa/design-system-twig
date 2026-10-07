@@ -102,23 +102,23 @@ final class ButtonTest extends KernelTestCase
         self::assertStringContainsString('ids-btn--small', $classAttr, 'Size class should be applied');
     }
 
-    public function testInlineSize(): void
+    public function testNoneSize(): void
     {
         $component = $this->mountTwigComponent('ibexa:button', [
             'type' => 'tertiary',
-            'size' => 'inline',
+            'size' => 'none',
         ]);
 
         self::assertInstanceOf(Button::class, $component);
-        self::assertSame('small', $component->iconSize(), 'iconSize() should map "inline" to "small"');
+        self::assertSame('small', $component->iconSize(), 'iconSize() should map "none" to "small"');
 
         $crawler = $this->renderTwigComponent('ibexa:button', [
             'type' => 'tertiary',
-            'size' => 'inline',
+            'size' => 'none',
         ])->crawler();
         $classAttr = (string) $this->getButton($crawler)->attr('class');
 
-        self::assertStringContainsString('ids-btn--inline', $classAttr, 'Inline size class should be applied');
+        self::assertStringContainsString('ids-btn--none', $classAttr, 'None size class should be applied');
         self::assertStringNotContainsString('ids-btn--medium', $classAttr, 'Default size class should not be applied');
     }
 
