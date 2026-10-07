@@ -23,6 +23,14 @@ jobs:
             -   uses: actions/setup-node@v7
                 with:
                     node-version: '20'
+            -   uses: ibexa/gh-workflows/actions/setup-composer-root-version@main
+            -   uses: ibexa/gh-workflows/actions/composer-install@main
+                with:
+                    php-version: '8.3'
+                    gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                    gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                    satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
+                    satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
             -   run: yarn install
             -   run: yarn ids-prepare-dev-env
             -   run: yarn test
