@@ -531,7 +531,8 @@ export abstract class BaseDropdown extends Base {
 
         const visibleItemsNodes = this.getVisibleItemsNodes();
         const offset = isMovingDown ? 1 : -1; // eslint-disable-line no-magic-numbers
-        const nextItemNode: HTMLLIElement | undefined = visibleItemsNodes[visibleItemsNodes.indexOf(activeElement) + offset];
+        const nextItemIndex = visibleItemsNodes.indexOf(activeElement) + offset;
+        const nextItemNode = nextItemIndex >= 0 ? visibleItemsNodes.at(nextItemIndex) : undefined;
 
         if (nextItemNode) {
             event.preventDefault();
