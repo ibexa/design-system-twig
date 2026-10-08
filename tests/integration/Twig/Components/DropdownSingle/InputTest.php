@@ -271,7 +271,11 @@ final class InputTest extends KernelTestCase
         $group = $groups->first();
         $groupLabel = $group->filter('.ids-dropdown__group-label')->first();
         self::assertSame('group', $group->attr('role'), 'Group node should carry role="group".');
-        self::assertSame('fruits', $groupLabel->attr('id'), 'Group label id should come from the group id.');
+        self::assertMatchesRegularExpression(
+            '/^ids-dropdown-\d+-fruits$/',
+            (string) $groupLabel->attr('id'),
+            'Group label id should come from the group id, prefixed per dropdown.'
+        );
         self::assertSame($groupLabel->attr('id'), $group->attr('aria-labelledby'), 'Group should be labelled by its label node.');
         self::assertSame('Fruits', trim($groupLabel->text('')), 'Group label should render the group label.');
         self::assertNull($groupLabel->attr('tabindex'), 'Group label must not be focusable.');
@@ -362,7 +366,11 @@ final class InputTest extends KernelTestCase
         $nestedGroup = $nestedGroups->first();
         $nestedLabel = $nestedGroup->filter('.ids-dropdown__group-label')->first();
         self::assertSame('group', $nestedGroup->attr('role'), 'Nested group node should carry role="group".');
-        self::assertSame('fruits-group-1', $nestedLabel->attr('id'), 'A nested group without an id should build its id from the parent group id.');
+        self::assertMatchesRegularExpression(
+            '/^ids-dropdown-\d+-fruits-group-1$/',
+            (string) $nestedLabel->attr('id'),
+            'A nested group without an id should build its id from the prefixed parent group id.'
+        );
         self::assertSame($nestedLabel->attr('id'), $nestedGroup->attr('aria-labelledby'), 'Nested group should be labelled by its label node.');
         self::assertSame(
             1,
