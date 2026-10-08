@@ -1,5 +1,5 @@
-import { DropdownMultiInput } from './dropdown_multi_input';
 import { BaseDropdownWidgetNodes } from '../../partials';
+import { DropdownMultiInput } from './dropdown_multi_input';
 
 const SINGLE_SELECTION_COUNT = 1;
 const PANEL_MIN_WIDTH = 200;
