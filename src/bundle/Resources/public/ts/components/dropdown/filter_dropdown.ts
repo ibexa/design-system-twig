@@ -10,6 +10,7 @@ export class FilterDropdown extends DropdownMultiInput {
     private _counterNode: HTMLElement | null;
     private _valueNode: HTMLElement | null;
     private _clearBtnNode: HTMLButtonElement | null;
+    private _hasSearch: boolean;
 
     constructor(container: HTMLDivElement) {
         super(container);
@@ -25,6 +26,7 @@ export class FilterDropdown extends DropdownMultiInput {
         this._counterNode = triggerNode.querySelector<HTMLElement>('.ids-dropdown__counter');
         this._valueNode = triggerNode.querySelector<HTMLElement>('.ids-dropdown__value');
         this._clearBtnNode = this._itemsContainerNode.querySelector<HTMLButtonElement>('.ids-dropdown__footer .ids-btn');
+        this._hasSearch = !this._searchNode.hasAttribute('hidden');
     }
 
     protected resolveWidgetNodes(): BaseDropdownWidgetNodes {
@@ -86,13 +88,26 @@ export class FilterDropdown extends DropdownMultiInput {
         this._container.classList.toggle('ids-dropdown--open', this._isExpanded);
     }
 
-    protected initKeyboardWidgetOpenEvent() {
-        // the trigger is a native <button>: Enter and Space already fire its click handler
+    protected toggleSearchVisibility(): void {
+        this._searchNode.toggleAttribute('hidden', !this._hasSearch);
+    }
+
+    protected focusFirstFocusableNode() {
+        const searchInput = this._searchInstance.getInputElement();
+
+        if (this._hasSearch) {
+            searchInput.focus();
+
+            return;
+        }
+
+        this.getVisibleItemsNodes().at(0)?.focus();
     }
 
     protected initClearBtn() {
         this._clearBtnNode?.addEventListener('click', () => {
             this.clearCurrentSelection();
+            this.focusFirstFocusableNode();
         });
     }
 

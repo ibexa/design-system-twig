@@ -43,7 +43,7 @@
         type="button"
         class="ids-dropdown__trigger"
         aria-expanded="false"
-        aria-haspopup="true"
+        aria-controls="{{ group_id_prefix }}-panel"
         data-label="{{ label }}"
         {% if is_icon_only %} aria-label="{{ label }}"{% endif %}
     >
@@ -64,6 +64,8 @@
         {% endif %}
     </button>
 {% endblock widget %}
+
+{% block items_container_attributes %} id="{{ group_id_prefix }}-panel" role="group" aria-label="{{ label }}"{% endblock items_container_attributes %}
 
 {% block item_content %}
     <twig:ibexa:checkbox:input
