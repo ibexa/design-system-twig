@@ -118,7 +118,7 @@ export class DropdownSingleInput extends BaseDropdown {
         super.setItems(entries);
 
         const selectedItem = this.getItemById(this._value);
-        const firstItem: BaseDropdownItem | undefined = flattenDropdownEntries(entries)[0];
+        const firstItem = flattenDropdownEntries(entries).at(0);
 
         if (!selectedItem && firstItem) {
             this.setValue(firstItem.id);
