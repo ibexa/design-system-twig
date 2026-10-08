@@ -157,8 +157,8 @@ final class InputTest extends KernelTestCase
         $items = $crawler->filter('.ids-dropdown__items .ids-dropdown__item');
         $iconStates = $items->each(static fn (Crawler $item): array => [
             $item->attr('data-id'),
-            $item->filter('.ids-icon')->count(),
-            $item->filter('.ids-icon')->attr('hidden') !== null,
+            $item->filter('.ids-icon.ids-dropdown__item-check')->count(),
+            $item->filter('.ids-icon.ids-dropdown__item-check')->attr('hidden') !== null,
         ]);
 
         self::assertSame(
@@ -272,10 +272,11 @@ final class InputTest extends KernelTestCase
         $groupLabel = $group->filter('.ids-dropdown__group-label')->first();
         self::assertSame('group', $group->attr('role'), 'Group node should carry role="group".');
         self::assertMatchesRegularExpression(
-            '/^ids-dropdown-\d+-fruits$/',
+            '/^ids-dropdown-[0-9a-f]{8}-fruits$/',
             (string) $groupLabel->attr('id'),
             'Group label id should come from the group id, prefixed per dropdown.'
         );
+        self::assertSame('fruits', $group->attr('data-group-id'), 'Group should keep its own id for the scripts.');
         self::assertSame($groupLabel->attr('id'), $group->attr('aria-labelledby'), 'Group should be labelled by its label node.');
         self::assertSame('Fruits', trim($groupLabel->text('')), 'Group label should render the group label.');
         self::assertNull($groupLabel->attr('tabindex'), 'Group label must not be focusable.');
@@ -367,7 +368,7 @@ final class InputTest extends KernelTestCase
         $nestedLabel = $nestedGroup->filter('.ids-dropdown__group-label')->first();
         self::assertSame('group', $nestedGroup->attr('role'), 'Nested group node should carry role="group".');
         self::assertMatchesRegularExpression(
-            '/^ids-dropdown-\d+-fruits-group-1$/',
+            '/^ids-dropdown-[0-9a-f]{8}-fruits-group-1$/',
             (string) $nestedLabel->attr('id'),
             'A nested group without an id should build its id from the prefixed parent group id.'
         );
@@ -400,7 +401,7 @@ final class InputTest extends KernelTestCase
         ]))->crawler();
 
         self::assertMatchesRegularExpression(
-            '/^ids-dropdown-\d+-group-0$/',
+            '/^ids-dropdown-[0-9a-f]{8}-group-0$/',
             (string) $crawler->filter('.ids-dropdown__group-label')->first()->attr('id'),
             'A top-level group without an id should get a per-dropdown prefixed id instead of one built from the field name.'
         );

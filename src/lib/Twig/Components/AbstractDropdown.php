@@ -56,8 +56,6 @@ abstract class AbstractDropdown
     #[ExposeInTemplate('max_visible_items')]
     public int $maxVisibleItems = 10;
 
-    private static int $instancesCount = 0;
-
     private ?string $groupIdPrefix = null;
 
     public function __construct(
@@ -156,7 +154,7 @@ abstract class AbstractDropdown
     #[ExposeInTemplate('group_id_prefix')]
     public function getGroupIdPrefix(): string
     {
-        return $this->groupIdPrefix ??= sprintf('ids-dropdown-%d', ++self::$instancesCount);
+        return $this->groupIdPrefix ??= sprintf('ids-dropdown-%s', bin2hex(random_bytes(4)));
     }
 
     /**
