@@ -84,7 +84,7 @@ export class DropdownSingleInput extends BaseDropdown {
 
     protected toggleItemSelection(itemNode: HTMLLIElement | null, isSelected: boolean) {
         itemNode?.classList.toggle('ids-dropdown__item--selected', isSelected);
-        itemNode?.querySelector('.ids-icon')?.toggleAttribute('hidden', !isSelected);
+        itemNode?.querySelector('.ids-dropdown__item-check')?.toggleAttribute('hidden', !isSelected);
     }
 
     protected setSelectionInfo(id: string) {
