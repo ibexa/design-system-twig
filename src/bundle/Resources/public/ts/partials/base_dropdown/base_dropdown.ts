@@ -164,7 +164,7 @@ export abstract class BaseDropdown extends Base {
     protected createEntriesNodes(entries: BaseDropdownEntry[], idPrefix: string, itemTemplate: HTMLLIElement): HTMLLIElement[] {
         return entries.reduce<HTMLLIElement[]>((entriesNodes, entry, index) => {
             const entryNode = isDropdownItemGroup(entry)
-                ? this.createGroupNode(entry, entry.id ?? `${idPrefix}-group-${index.toString()}`, itemTemplate)
+                ? this.createGroupNode(entry, `${idPrefix}-${entry.id ?? `group-${index.toString()}`}`, itemTemplate)
                 : this.createItemNode(entry, itemTemplate);
 
             if (entryNode) {
