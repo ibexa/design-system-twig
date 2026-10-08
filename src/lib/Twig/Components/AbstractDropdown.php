@@ -223,7 +223,7 @@ abstract class AbstractDropdown
      */
     private static function normalizeItems(Options $options, array $items): array
     {
-        return self::normalizeEntries($items, '', self::createItemResolver());
+        return self::normalizeEntries($items, '', self::createItemResolver(), self::createGroupResolver());
     }
 
     /**
@@ -231,8 +231,12 @@ abstract class AbstractDropdown
      *
      * @return array<int, TDropdownEntry>
      */
-    private static function normalizeEntries(array $entries, string $path, OptionsResolver $itemResolver): array
-    {
+    private static function normalizeEntries(
+        array $entries,
+        string $path,
+        OptionsResolver $itemResolver,
+        OptionsResolver $groupResolver
+    ): array {
         $normalizedEntries = [];
 
         foreach ($entries as $index => $entry) {
@@ -249,7 +253,7 @@ abstract class AbstractDropdown
             }
 
             if (array_key_exists('items', $entry)) {
-                $group = self::normalizeItemGroup($entry, $entryPath, $itemResolver);
+                $group = self::normalizeItemGroup($entry, $entryPath, $itemResolver, $groupResolver);
 
                 if ($group !== null) {
                     $normalizedEntries[] = $group;
@@ -272,7 +276,26 @@ abstract class AbstractDropdown
      *
      * @return TDropdownItemGroup|null
      */
-    private static function normalizeItemGroup(array $group, string $path, OptionsResolver $itemResolver): ?array
+    private static function normalizeItemGroup(
+        array $group,
+        string $path,
+        OptionsResolver $itemResolver,
+        OptionsResolver $groupResolver
+    ): ?array {
+        /** @var array{label: string, items: array<int, mixed>, id?: string} $resolvedGroup */
+        $resolvedGroup = $groupResolver->resolve($group);
+        $groupEntries = self::normalizeEntries($resolvedGroup['items'], $path, $itemResolver, $groupResolver);
+
+        if ($groupEntries === []) {
+            return null;
+        }
+
+        $resolvedGroup['items'] = $groupEntries;
+
+        return $resolvedGroup;
+    }
+
+    private static function createGroupResolver(): OptionsResolver
     {
         $groupResolver = new OptionsResolver();
         $groupResolver
@@ -283,17 +306,7 @@ abstract class AbstractDropdown
             ->setAllowedTypes('id', ['int', 'string'])
             ->setNormalizer('id', static fn (Options $groupOptions, int|string $id): string => (string) $id);
 
-        /** @var array{label: string, items: array<int, mixed>, id?: string} $resolvedGroup */
-        $resolvedGroup = $groupResolver->resolve($group);
-        $groupEntries = self::normalizeEntries($resolvedGroup['items'], $path, $itemResolver);
-
-        if ($groupEntries === []) {
-            return null;
-        }
-
-        $resolvedGroup['items'] = $groupEntries;
-
-        return $resolvedGroup;
+        return $groupResolver;
     }
 
     private static function createItemResolver(): OptionsResolver
