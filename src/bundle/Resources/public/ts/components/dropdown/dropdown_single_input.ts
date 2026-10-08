@@ -1,5 +1,4 @@
 import { BaseDropdown, BaseDropdownEntry, BaseDropdownItem, flattenDropdownEntries, isDropdownItemGroup } from '../../partials';
-import { createNodesFromTemplate } from '../../utils/dom';
 
 export class DropdownSingleInput extends BaseDropdown {
     private _sourceInputNode: HTMLSelectElement;
@@ -86,16 +85,6 @@ export class DropdownSingleInput extends BaseDropdown {
     protected toggleItemSelection(itemNode: HTMLLIElement | null, isSelected: boolean) {
         itemNode?.classList.toggle('ids-dropdown__item--selected', isSelected);
         itemNode?.querySelector('.ids-icon')?.toggleAttribute('hidden', !isSelected);
-    }
-
-    public getItemContent(item: BaseDropdownItem, listItem: HTMLLIElement): NodeListOf<ChildNode> | string {
-        const placeholders = {
-            '{{ id }}': item.id,
-            '{{ label }}': item.label,
-        };
-        const itemContent = createNodesFromTemplate(listItem.innerHTML, placeholders);
-
-        return itemContent instanceof NodeList ? itemContent : item.label;
     }
 
     protected setSelectionInfo(id: string) {
