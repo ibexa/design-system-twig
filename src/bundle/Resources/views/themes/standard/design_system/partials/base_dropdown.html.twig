@@ -99,7 +99,7 @@
 {% macro entries(entries, items_content, value, id_prefix) %}
     {% for entry in entries %}
         {% if entry.items is defined %}
-            {% set group_id = entry.id|default(id_prefix ~ '-group-' ~ loop.index0) %}
+            {% set group_id = id_prefix ~ '-' ~ entry.id|default('group-' ~ loop.index0) %}
 
             {{ _self.group_wrapper(_self.entries(entry.items, items_content, value, group_id), group_id, entry.label) }}
         {% else %}
