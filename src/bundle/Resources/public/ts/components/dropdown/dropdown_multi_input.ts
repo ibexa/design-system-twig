@@ -2,7 +2,6 @@ import { BaseDropdown, BaseDropdownEntry, BaseDropdownItem, flattenDropdownEntri
 import { getInstance, hasInstance } from '../../helpers/object.instances';
 import { HTMLElementIDSInstance } from '../../shared/types';
 import { OverflowList } from '../overflow_list';
-import { createNodesFromTemplate } from '../../utils/dom';
 
 export enum DropdownMultiInputAction {
     Check = 'check',
@@ -134,17 +133,6 @@ export class DropdownMultiInput extends BaseDropdown {
             this._selectionInfoItemsNode.setAttribute('hidden', '');
             this._placeholderNode.removeAttribute('hidden');
         }
-    }
-
-    public getItemContent(item: BaseDropdownItem, listItem: HTMLLIElement): NodeListOf<ChildNode> | string {
-        const placeholders = {
-            '{{ id }}': item.id,
-            '{{ label }}': item.label,
-        };
-
-        const itemContent = createNodesFromTemplate(listItem.innerHTML, placeholders);
-
-        return itemContent instanceof NodeList ? itemContent : item.label;
     }
 
     public setItems(entries: BaseDropdownEntry[]) {

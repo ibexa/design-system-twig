@@ -4,6 +4,7 @@ import { Base } from '../base';
 import { Expander } from '../../components/expander';
 import { InputTextInput } from '../../components/input_text';
 import { Keyboard } from '../../utils/Keyboard';
+import { createNodesFromTemplate } from '../../utils/dom';
 
 import { getBetterFittingPlacementHeight, getBottomAndTopAvailableSpace, getItemsHeight } from './utils';
 import { HTMLElementIDSInstance } from '../../shared/types';
@@ -138,18 +139,18 @@ export abstract class BaseDropdown extends Base {
     }
 
     protected createGroupNode(group: BaseDropdownItemGroup, groupId: string, itemTemplate: HTMLLIElement): HTMLLIElement | null {
-        const groupTemplate = this._templates.group?.content.querySelector<HTMLLIElement>('li');
-        const groupNode = groupTemplate?.cloneNode(true);
-
-        if (!groupNode || !(groupNode instanceof HTMLLIElement) || flattenDropdownEntries(group.items).length === 0) {
+        if (flattenDropdownEntries(group.items).length === 0) {
             return null;
         }
 
-        const groupLabelNode = groupNode.querySelector<HTMLElement>('.ids-dropdown__group-label');
-        const groupItemsNode = groupNode.querySelector<HTMLUListElement>('.ids-dropdown__group-items');
+        const groupNode = this._templates.group?.content.querySelector<HTMLLIElement>('li')?.cloneNode(true);
+        const groupLabelNode =
+            groupNode instanceof HTMLLIElement ? groupNode.querySelector<HTMLElement>('.ids-dropdown__group-label') : null;
+        const groupItemsNode =
+            groupNode instanceof HTMLLIElement ? groupNode.querySelector<HTMLUListElement>('.ids-dropdown__group-items') : null;
 
-        if (!groupLabelNode || !groupItemsNode) {
-            return null;
+        if (!(groupNode instanceof HTMLLIElement) || !groupLabelNode || !groupItemsNode) {
+            throw new Error('Dropdown: Group template is missing in the container.');
         }
 
         groupNode.setAttribute('aria-labelledby', groupId);
@@ -201,9 +202,14 @@ export abstract class BaseDropdown extends Base {
 
     /******* Items management ********/
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public getItemContent(item: BaseDropdownItem, _listItem: HTMLLIElement): NodeListOf<ChildNode> | string {
-        return item.label;
+    public getItemContent(item: BaseDropdownItem, listItem: HTMLLIElement): NodeListOf<ChildNode> | string {
+        const placeholders = {
+            '{{ id }}': item.id,
+            '{{ label }}': item.label,
+        };
+        const itemContent = createNodesFromTemplate(listItem.innerHTML, placeholders);
+
+        return itemContent instanceof NodeList ? itemContent : item.label;
     }
 
     public getItemsNodes() {
