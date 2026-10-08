@@ -82,7 +82,6 @@ final class FilterDropdownTest extends KernelTestCase
         $crawler = $this->renderTwigComponent(FilterDropdown::class, $this->baseProps([
             'type' => FilterDropdown::TYPE_MORE_FILTERS_SMALL,
             'hasSearch' => false,
-            'disabled' => true,
         ]))->crawler();
 
         $wrapper = $this->getWrapper($crawler);
@@ -90,7 +89,6 @@ final class FilterDropdownTest extends KernelTestCase
         self::assertSame('Filter', $trigger->attr('aria-label'), 'Icon-only trigger should expose the label as aria-label.');
         self::assertSame(0, $trigger->filter('.ids-dropdown__trigger-label')->count(), 'Icon-only trigger should not render the label text.');
         self::assertGreaterThan(0, $trigger->filter('.ids-dropdown__trigger-icon')->count(), 'Icon-only trigger should render the filters icon.');
-        self::assertNotNull($trigger->attr('disabled'), 'Disabled prop should disable the trigger.');
         self::assertNotNull($wrapper->filter('.ids-dropdown__search')->attr('hidden'), 'hasSearch=false should hide the search.');
         self::assertNotNull($wrapper->filter('.ids-dropdown__footer .ids-btn')->attr('disabled'), 'Clear should be disabled without a selection.');
     }
@@ -110,6 +108,13 @@ final class FilterDropdownTest extends KernelTestCase
         unset($props['label']);
 
         $this->mountTwigComponent(FilterDropdown::class, $props);
+    }
+
+    public function testDisabledPropCausesResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(FilterDropdown::class, $this->baseProps(['disabled' => true]));
     }
 
     /**

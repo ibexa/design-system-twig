@@ -20,7 +20,6 @@
     {% else %}
         <select{{ source_attributes.defaults({
             name: name,
-            disabled: disabled,
             required: required|default(false),
             multiple: 'multiple',
         }) }}>
@@ -47,7 +46,6 @@
         aria-haspopup="true"
         data-label="{{ label }}"
         {% if is_icon_only %} aria-label="{{ label }}"{% endif %}
-        {% if disabled %} disabled{% endif %}
     >
         {% if has_trigger_icon %}
             <span class="ids-dropdown__trigger-icon" aria-hidden="true">
