@@ -93,6 +93,40 @@ final class FilterDropdownTest extends KernelTestCase
         self::assertNotNull($wrapper->filter('.ids-dropdown__footer .ids-btn')->attr('disabled'), 'Clear should be disabled without a selection.');
     }
 
+    public function testIntegerValuesMatchStringItemIds(): void
+    {
+        $crawler = $this->renderTwigComponent(FilterDropdown::class, $this->baseProps([
+            'items' => [['id' => 1, 'label' => 'One'], ['id' => 2, 'label' => 'Two']],
+            'value' => [2],
+        ]))->crawler();
+
+        $wrapper = $this->getWrapper($crawler);
+        self::assertSame('1', trim($wrapper->filter('.ids-dropdown__counter')->text('')), 'An integer value should count as the matching item.');
+        self::assertNull($wrapper->filter('.ids-dropdown__footer .ids-btn')->attr('disabled'), 'Clear should be enabled for a matching integer value.');
+    }
+
+    public function testUnknownValueDoesNotCountAsSelection(): void
+    {
+        $crawler = $this->renderTwigComponent(FilterDropdown::class, $this->baseProps(['value' => ['missing']]))->crawler();
+
+        $wrapper = $this->getWrapper($crawler);
+        self::assertStringNotContainsString('ids-dropdown--selected', (string) $wrapper->attr('class'), 'An unknown value should not mark the dropdown as selected.');
+        self::assertNotNull($wrapper->filter('.ids-dropdown__footer .ids-btn')->attr('disabled'), 'Clear should stay disabled for an unknown value.');
+    }
+
+    public function testPanelIsAnAccessibleGroupControlledByTheTrigger(): void
+    {
+        $crawler = $this->renderTwigComponent(FilterDropdown::class, $this->baseProps())->crawler();
+
+        $wrapper = $this->getWrapper($crawler);
+        $trigger = $wrapper->filter('.ids-dropdown__trigger')->first();
+        $panel = $wrapper->filter('.ids-dropdown__items-container')->first();
+        self::assertSame('group', $panel->attr('role'), 'The panel should be a group.');
+        self::assertSame('Filter', $panel->attr('aria-label'), 'The panel should be labelled with the dropdown label.');
+        self::assertSame($panel->attr('id'), $trigger->attr('aria-controls'), 'The trigger should control the panel.');
+        self::assertNull($trigger->attr('aria-haspopup'), 'The trigger does not open a menu.');
+    }
+
     public function testInvalidTypeCausesResolverError(): void
     {
         $this->expectException(InvalidOptionsException::class);

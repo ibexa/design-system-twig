@@ -23,6 +23,7 @@ interface TemplatesType {
     group?: HTMLTemplateElement;
     item?: HTMLTemplateElement;
 }
+
 export interface BaseDropdownWidgetNodes {
     placeholderNode: HTMLDivElement | null;
     selectionInfoItemsNode: HTMLDivElement | null;
@@ -499,6 +500,10 @@ export abstract class BaseDropdown extends Base {
     }
 
     protected initKeyboardWidgetOpenEvent() {
+        if (this._widgetNode instanceof HTMLButtonElement) {
+            return;
+        }
+
         this._keyboard.bindKey(
             ['Enter', ' '],
             (event) => {
