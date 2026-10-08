@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -35,13 +36,11 @@ final class FilterDropdown extends AbstractDropdown
     /** @var array<string> */
     public array $value = [];
 
-    #[ExposeInTemplate('has_search')]
     public bool $hasSearch = true;
 
     /**
      * @return list<TDropdownItem>
      */
-    #[ExposeInTemplate('selected_items')]
     public function getSelectedItems(): array
     {
         return array_values(array_filter(
@@ -53,7 +52,7 @@ final class FilterDropdown extends AbstractDropdown
     #[ExposeInTemplate('is_empty')]
     public function isEmpty(): bool
     {
-        return count($this->value) === 0;
+        return count($this->getSelectedItems()) === 0;
     }
 
     /**
@@ -96,7 +95,8 @@ final class FilterDropdown extends AbstractDropdown
         $resolver
             ->define('value')
             ->allowedTypes('array')
-            ->default([]);
+            ->default([])
+            ->normalize(static fn (Options $options, array $value): array => array_map(strval(...), array_values($value)));
         $resolver
             ->define('hasSearch')
             ->allowedTypes('bool')

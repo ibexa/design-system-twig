@@ -53,7 +53,7 @@
         </div>
     </div>
     {% endblock widget %}
-    <div class="ids-dropdown__items-container" hidden>
+    <div class="ids-dropdown__items-container"{% block items_container_attributes %}{% endblock items_container_attributes %} hidden>
         <div class="ids-dropdown__search"{% if not is_search_visible %} hidden{% endif %}>
             <twig:ibexa:input_text:input
                 name="dropdown-search"
