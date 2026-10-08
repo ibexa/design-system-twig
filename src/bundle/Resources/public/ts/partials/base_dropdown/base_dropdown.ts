@@ -31,7 +31,6 @@ export const flattenDropdownEntries = (entries: BaseDropdownEntry[]): BaseDropdo
     entries.flatMap((entry) => (isDropdownItemGroup(entry) ? flattenDropdownEntries(entry.items) : [entry]));
 
 const MAX_VISIBLE_ITEMS_DEFAULT = 10;
-let dropdownInstancesCount = 0;
 const POPPER_OFFSET = 4;
 const VIEWPORT_MARGIN = 16;
 
@@ -62,6 +61,7 @@ export abstract class BaseDropdown extends Base {
         const togglerNode = this._container.querySelector<HTMLElementIDSInstance<Expander>>('.ids-expander');
         const itemsContainerNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__items-container');
         const itemsNode = itemsContainerNode?.querySelector<HTMLUListElement>('.ids-dropdown__items');
+        const groupIdPrefix = itemsNode?.dataset.groupIdPrefix;
         const noResultsNode = itemsContainerNode?.querySelector<HTMLDivElement>('.ids-dropdown__no-results') ?? null;
         const selectionInfoNode = this._container.querySelector<HTMLDivElement>('.ids-dropdown__selection-info');
         const placeholderNode = selectionInfoNode?.querySelector<HTMLDivElement>('.ids-dropdown__placeholder');
@@ -75,6 +75,7 @@ export abstract class BaseDropdown extends Base {
             !togglerNode ||
             !itemsContainerNode ||
             !itemsNode ||
+            !groupIdPrefix ||
             !placeholderNode ||
             !searchNode ||
             !searchWidgetNode ||
@@ -90,6 +91,7 @@ export abstract class BaseDropdown extends Base {
         this._searchInstance = new InputTextInput(searchWidgetNode);
         this._itemsContainerNode = itemsContainerNode;
         this._itemsNode = itemsNode;
+        this._groupIdPrefix = groupIdPrefix;
         this._noResultsNode = noResultsNode;
         this._placeholderNode = placeholderNode;
         this._searchNode = searchNode;
@@ -104,8 +106,6 @@ export abstract class BaseDropdown extends Base {
             item: this._container.querySelector<HTMLTemplateElement>('template.ids-dropdown__template[data-id="item"]') ?? undefined,
         };
 
-        dropdownInstancesCount++;
-        this._groupIdPrefix = `ids-dropdown-${dropdownInstancesCount.toString()}`;
         this._entries = this.getEntriesFromNodes();
         this.setItemsMapFromItems(flattenDropdownEntries(this._entries));
 
@@ -154,6 +154,11 @@ export abstract class BaseDropdown extends Base {
         }
 
         groupNode.setAttribute('aria-labelledby', groupId);
+
+        if (group.id !== undefined) {
+            groupNode.dataset.groupId = group.id;
+        }
+
         groupLabelNode.id = groupId;
         groupLabelNode.textContent = group.label;
         groupItemsNode.replaceChildren(...this.createEntriesNodes(group.items, groupId, itemTemplate));
@@ -239,7 +244,7 @@ export abstract class BaseDropdown extends Base {
                 const groupItemsNode = node.querySelector<HTMLUListElement>(':scope > .ids-dropdown__group-items');
                 const items = groupItemsNode ? this.getEntriesFromList(groupItemsNode) : [];
 
-                entries.push({ id: labelNode?.id, items, label: labelNode?.textContent?.trim() ?? '' });
+                entries.push({ id: node.dataset.groupId, items, label: labelNode?.textContent?.trim() ?? '' });
 
                 return entries;
             }
