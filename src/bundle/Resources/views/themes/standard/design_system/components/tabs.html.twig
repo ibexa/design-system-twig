@@ -1,0 +1,15 @@
+{% set tabs_classes = html_classes('ids-tabs', attributes.render('class') ?? '') %}
+{% set list_classes = html_classes('ids-tabs__list', list_class) %}
+{% set panels_content %}{% block panels %}{% endblock panels %}{% endset %}
+
+<div class="{{ tabs_classes }}" {{ attributes }}>
+    <ul class="{{ list_classes }}" role="tablist">
+        {% block content %}{% endblock content %}
+    </ul>
+    {% block after_list %}{% endblock after_list %}
+    {% if panels_content|trim is not empty %}
+        <div class="ids-tabs__panels">
+            {{ panels_content }}
+        </div>
+    {% endif %}
+</div>

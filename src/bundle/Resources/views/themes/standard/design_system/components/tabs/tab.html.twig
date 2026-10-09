@@ -1,0 +1,36 @@
+{% set tab_classes =
+    html_classes(
+        'ids-tabs__tab',
+        {
+            'ids-tabs__tab--selected': is_selected,
+            'ids-tabs__tab--error': has_error,
+            'ids-tabs__tab--disabled': is_disabled,
+        },
+        attributes.render('class') ?? ''
+    )
+%}
+{% set item_classes = html_classes('ids-tabs__item', item_class) %}
+{% set label_content %}{% block content %}{{ label }}{% endblock content %}{% endset %}
+
+<li class="{{ item_classes }}" role="presentation">
+    <{{ tag }}
+        class="{{ tab_classes }}"
+        role="tab"
+        aria-selected="{{ is_selected ? 'true' : 'false' }}"
+        tabindex="{{ is_selected ? '0' : '-1' }}"
+        {% if panel_id is not empty %}aria-controls="{{ panel_id }}"{% endif %}
+        {% if tag == 'button' %}
+            type="button"
+            {% if is_disabled %}disabled{% endif %}
+        {% else %}
+            href="{{ href }}"
+            {% if is_disabled %}aria-disabled="true"{% endif %}
+        {% endif %}
+        {{ attributes }}
+    >
+        <span class="ids-tabs__tab-label" data-label="{{ (label ~ '')|striptags }}">{{ label_content }}</span>
+        {% if has_error %}
+            <twig:ibexa:icon name="alert-error" size="tiny-small" class="ids-tabs__tab-error-icon" />
+        {% endif %}
+    </{{ tag }}>
+</li>
