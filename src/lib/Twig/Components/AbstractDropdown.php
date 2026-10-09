@@ -25,6 +25,12 @@ use Twig\Runtime\EscaperRuntime;
  *     id: string,
  *     label: string
  * }
+ * @phpstan-type TDropdownItemGroup array{
+ *     label: string,
+ *     items: array<int, array<string, mixed>>,
+ *     id?: string
+ * }
+ * @phpstan-type TDropdownEntry TDropdownItem|TDropdownItemGroup
  */
 abstract class AbstractDropdown
 {
@@ -39,7 +45,7 @@ abstract class AbstractDropdown
 
     public bool $error = false;
 
-    /** @var array<TDropdownItem> */
+    /** @var array<TDropdownEntry> */
     public array $items = [];
 
     /** @var array<string> */
@@ -49,6 +55,8 @@ abstract class AbstractDropdown
 
     #[ExposeInTemplate('max_visible_items')]
     public int $maxVisibleItems = 10;
+
+    private ?string $groupIdPrefix = null;
 
     public function __construct(
         private readonly TranslatorInterface $translator,
@@ -112,7 +120,75 @@ abstract class AbstractDropdown
     #[ExposeInTemplate('is_search_visible')]
     public function getIsSearchVisible(): bool
     {
-        return count($this->items) > $this->maxVisibleItems;
+        return count($this->getFlatItems()) > $this->maxVisibleItems;
+    }
+
+    /**
+     * @return array<int, TDropdownItem>
+     */
+    #[ExposeInTemplate('flat_items')]
+    public function getFlatItems(): array
+    {
+        return self::flattenEntries($this->items);
+    }
+
+    /**
+     * @return array<int, TDropdownEntry>
+     */
+    #[ExposeInTemplate('source_entries')]
+    public function getSourceEntries(): array
+    {
+        $sourceEntries = [];
+
+        foreach ($this->items as $entry) {
+            if (self::isItemGroup($entry)) {
+                $entry['items'] = self::flattenEntries($entry['items']);
+            }
+
+            $sourceEntries[] = $entry;
+        }
+
+        return $sourceEntries;
+    }
+
+    #[ExposeInTemplate('group_id_prefix')]
+    public function getGroupIdPrefix(): string
+    {
+        return $this->groupIdPrefix ??= sprintf('ids-dropdown-%s', bin2hex(random_bytes(4)));
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $entries
+     *
+     * @return array<int, TDropdownItem>
+     */
+    private static function flattenEntries(array $entries): array
+    {
+        $flatItems = [];
+
+        foreach ($entries as $entry) {
+            if (self::isItemGroup($entry)) {
+                array_push($flatItems, ...self::flattenEntries($entry['items']));
+
+                continue;
+            }
+
+            $flatItems[] = $entry;
+        }
+
+        return $flatItems;
+    }
+
+    /**
+     * @param array<string, mixed> $entry
+     *
+     * @phpstan-assert-if-true TDropdownItemGroup $entry
+     *
+     * @phpstan-assert-if-false TDropdownItem $entry
+     */
+    protected static function isItemGroup(array $entry): bool
+    {
+        return array_key_exists('items', $entry);
     }
 
     /**
@@ -141,9 +217,97 @@ abstract class AbstractDropdown
      * @param Options<array<string, mixed>> $options
      * @param array<int, mixed> $items
      *
-     * @return array<int, TDropdownItem>
+     * @return array<int, TDropdownEntry>
      */
     private static function normalizeItems(Options $options, array $items): array
+    {
+        return self::normalizeEntries($items, '', self::createItemResolver(), self::createGroupResolver());
+    }
+
+    /**
+     * @param array<int, mixed> $entries
+     *
+     * @return array<int, TDropdownEntry>
+     */
+    private static function normalizeEntries(
+        array $entries,
+        string $path,
+        OptionsResolver $itemResolver,
+        OptionsResolver $groupResolver
+    ): array {
+        $normalizedEntries = [];
+
+        foreach ($entries as $index => $entry) {
+            $entryPath = $path === '' ? (string) $index : sprintf('%s.%s', $path, $index);
+
+            if (!is_array($entry)) {
+                throw new InvalidOptionsException(
+                    sprintf(
+                        'Each dropdown item must be an array, "%s" given at index %s.',
+                        get_debug_type($entry),
+                        $entryPath
+                    )
+                );
+            }
+
+            if (array_key_exists('items', $entry)) {
+                $group = self::normalizeItemGroup($entry, $entryPath, $itemResolver, $groupResolver);
+
+                if ($group !== null) {
+                    $normalizedEntries[] = $group;
+                }
+
+                continue;
+            }
+
+            /** @var TDropdownItem $resolvedItem */
+            $resolvedItem = $itemResolver->resolve($entry);
+
+            $normalizedEntries[] = $resolvedItem;
+        }
+
+        return $normalizedEntries;
+    }
+
+    /**
+     * @param array<string, mixed> $group
+     *
+     * @return TDropdownItemGroup|null
+     */
+    private static function normalizeItemGroup(
+        array $group,
+        string $path,
+        OptionsResolver $itemResolver,
+        OptionsResolver $groupResolver
+    ): ?array {
+        /** @var array{label: string, items: array<int, mixed>, id?: string} $resolvedGroup */
+        $resolvedGroup = $groupResolver->resolve($group);
+        $groupEntries = self::normalizeEntries($resolvedGroup['items'], $path, $itemResolver, $groupResolver);
+
+        if ($groupEntries === []) {
+            return null;
+        }
+
+        $resolvedGroup['items'] = $groupEntries;
+
+        return $resolvedGroup;
+    }
+
+    private static function createGroupResolver(): OptionsResolver
+    {
+        $groupResolver = new OptionsResolver();
+        $groupResolver
+            ->setRequired(['label', 'items'])
+            ->setDefined(['id'])
+            ->setAllowedTypes('label', 'string')
+            ->setAllowedTypes('items', 'array')
+            ->setAllowedTypes('id', ['int', 'string'])
+            ->setNormalizer('id', static fn (Options $groupOptions, int|string $id): string => (string) $id);
+
+        return $groupResolver;
+    }
+
+    private static function createItemResolver(): OptionsResolver
     {
         $itemResolver = new OptionsResolver();
         $itemResolver
@@ -152,27 +316,6 @@ abstract class AbstractDropdown
             ->setNormalizer('id', static fn (Options $itemOptions, int|string $id): string => (string) $id)
             ->setAllowedTypes('label', 'string');
 
-        /** @var array<int, array{id: string, label: string}> $normalizedItems */
-        $normalizedItems = [];
-
-        foreach ($items as $index => $item) {
-            if (!is_array($item)) {
-                throw new InvalidOptionsException(
-                    sprintf(
-                        'Each dropdown item must be an array, "%s" given at index %d.',
-                        get_debug_type($item),
-                        $index
-                    )
-                );
-            }
-
-            /** @var array{id: string, label: string} $resolvedItem */
-            $resolvedItem = $itemResolver->resolve($item);
-
-            $items[$index] = $resolvedItem;
-        }
-
-        /** @var array<int, array{id: string, label: string}> $items */
-        return $items;
+        return $itemResolver;
     }
 }

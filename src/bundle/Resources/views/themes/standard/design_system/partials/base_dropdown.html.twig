@@ -60,21 +60,25 @@
                 data-ids-custom-init="true"
             />
         </div>
-        <ul class="ids-dropdown__items" data-max-visible-items="{{ max_visible_items }}" style="--max-visible-items: {{ max_visible_items }}">
-            {% for item in items %}
-                {% set item_content %}
-                    {% with { item } %}
-                        {% if block('item_content') is defined %}
-                            {{ block('item_content') }}
-                        {% else %}
-                            <span class="ids-dropdown__item-label">{{ item.label }}</span>
-                        {% endif %}
-                    {% endwith %}
-                {% endset %}
-
-                {{ _self.item_wrapper(item_content, item.id == value, item.id, item.label) }}
-            {% endfor %}
+        {% set items_content = {} %}
+        {% for item in flat_items %}
+            {% set item_content %}
+                {% with { item } %}
+                    {% if block('item_content') is defined %}
+                        {{ block('item_content') }}
+                    {% else %}
+                        <span class="ids-dropdown__item-label">{{ item.label }}</span>
+                    {% endif %}
+                {% endwith %}
+            {% endset %}
+            {% set items_content = items_content|merge({ ('item-' ~ item.id): item_content }) %}
+        {% endfor %}
+        <ul class="ids-dropdown__items" data-group-id-prefix="{{ group_id_prefix }}" data-max-visible-items="{{ max_visible_items }}" style="--max-visible-items: {{ max_visible_items }}">
+            {{ _self.entries(items, items_content, value, group_id_prefix) }}
         </ul>
+        <div class="ids-dropdown__no-results" aria-live="polite" hidden>
+            {{ 'ibexa.dropdown.search.no_results'|trans|desc('No results found') }}
+        </div>
     </div>
     {% block templates %}
         {% set item_content %}
@@ -86,8 +90,23 @@
         <template class="ids-dropdown__template" data-id="item">
             {{ _self.item_wrapper(item_content) }}
         </template>
+        <template class="ids-dropdown__template" data-id="group">
+            {{ _self.group_wrapper() }}
+        </template>
     {% endblock templates %}
 </div>
+
+{% macro entries(entries, items_content, value, id_prefix) %}
+    {% for entry in entries %}
+        {% if entry.items is defined %}
+            {% set group_id = id_prefix ~ '-' ~ entry.id|default('group-' ~ loop.index0) %}
+
+            {{ _self.group_wrapper(_self.entries(entry.items, items_content, value, group_id), group_id, entry.label, entry.id|default('')) }}
+        {% else %}
+            {{ _self.item_wrapper(items_content['item-' ~ entry.id]|default(''), entry.id == value, entry.id, entry.label) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
 
 {% macro item_wrapper(content = '', is_selected = false, id = '', label = '') %}
     {% set item_classes =
@@ -107,5 +126,19 @@
         tabIndex="0"
     >
         {{ content }}
+    </li>
+{% endmacro %}
+
+{% macro group_wrapper(content = '', id = '', label = '', group_id = '') %}
+    <li
+        class="ids-dropdown__group"
+        role="group"
+        aria-labelledby="{{ id }}"
+        {% if group_id is not empty %}data-group-id="{{ group_id }}"{% endif %}
+    >
+        <div class="ids-dropdown__group-label" id="{{ id }}">{{ label }}</div>
+        <ul class="ids-dropdown__group-items">
+            {{ content }}
+        </ul>
     </li>
 {% endmacro %}
