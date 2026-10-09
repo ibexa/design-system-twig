@@ -127,6 +127,30 @@ final class FilterDropdownTest extends KernelTestCase
         self::assertNull($trigger->attr('aria-haspopup'), 'The trigger does not open a menu.');
     }
 
+    public function testNestedGroupsAreFlattenedInTheSourceSelect(): void
+    {
+        $crawler = $this->renderTwigComponent(FilterDropdown::class, $this->baseProps([
+            'value' => ['cherry'],
+            'items' => [
+                ['id' => 'a', 'label' => 'Alpha'],
+                [
+                    'label' => 'Fruits',
+                    'items' => [
+                        ['id' => 'apple', 'label' => 'Apple'],
+                        ['label' => 'Berries', 'items' => [['id' => 'cherry', 'label' => 'Cherry']]],
+                    ],
+                ],
+            ],
+        ]))->crawler();
+
+        $wrapper = $this->getWrapper($crawler);
+        $select = $wrapper->filter('.ids-dropdown__source select')->first();
+        self::assertSame(0, $select->filter('optgroup optgroup')->count(), 'Optgroups must not nest in the source select.');
+        self::assertSame(2, $select->filter('optgroup[label="Fruits"] > option')->count(), 'Nested leaves should be flattened into the top-level optgroup.');
+        self::assertSame('cherry', $select->filter('option[selected]')->attr('value'), 'Selected option inside a nested group should be marked selected.');
+        self::assertSame('1', trim($wrapper->filter('.ids-dropdown__counter')->text('')), 'A selection inside a nested group should be counted.');
+    }
+
     public function testInvalidTypeCausesResolverError(): void
     {
         $this->expectException(InvalidOptionsException::class);
