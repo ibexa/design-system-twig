@@ -5,7 +5,6 @@ const SINGLE_SELECTION_COUNT = 1;
 const PANEL_MIN_WIDTH = 200;
 
 export class FilterDropdown extends DropdownMultiInput {
-    private _triggerNode: HTMLButtonElement;
     private _triggerLabelNode: HTMLElement | null;
     private _counterNode: HTMLElement | null;
     private _valueNode: HTMLElement | null;
@@ -15,16 +14,9 @@ export class FilterDropdown extends DropdownMultiInput {
     constructor(container: HTMLDivElement) {
         super(container);
 
-        const triggerNode = this._container.querySelector<HTMLButtonElement>('.ids-dropdown__trigger');
-
-        if (!triggerNode) {
-            throw new Error('FilterDropdown: Required elements are missing in the container.');
-        }
-
-        this._triggerNode = triggerNode;
-        this._triggerLabelNode = triggerNode.querySelector<HTMLElement>('.ids-dropdown__trigger-label');
-        this._counterNode = triggerNode.querySelector<HTMLElement>('.ids-dropdown__counter');
-        this._valueNode = triggerNode.querySelector<HTMLElement>('.ids-dropdown__value');
+        this._triggerLabelNode = this._widgetNode.querySelector<HTMLElement>('.ids-dropdown__trigger-label');
+        this._counterNode = this._widgetNode.querySelector<HTMLElement>('.ids-dropdown__counter');
+        this._valueNode = this._widgetNode.querySelector<HTMLElement>('.ids-dropdown__value');
         this._clearBtnNode = this._itemsContainerNode.querySelector<HTMLButtonElement>('.ids-dropdown__footer .ids-btn');
         this._hasSearch = !this._searchNode.hasAttribute('hidden');
     }
@@ -52,7 +44,7 @@ export class FilterDropdown extends DropdownMultiInput {
     protected setSelectionInfo(values: string[]) {
         const selectedValues = new Set(values);
         const selectedItems = Array.from(this._itemsMap.values()).filter((item) => selectedValues.has(item.id));
-        const label = this._triggerNode.dataset.label ?? '';
+        const label = this._widgetNode.dataset.label ?? '';
         const showsValue = this.isDashboardType() && selectedItems.length === SINGLE_SELECTION_COUNT;
         const showsCounter = selectedItems.length > 0 && !showsValue;
 
@@ -80,12 +72,13 @@ export class FilterDropdown extends DropdownMultiInput {
     public toggleItemsContainer(nextIsExpanded?: boolean) {
         super.toggleItemsContainer(nextIsExpanded);
 
+        this._widgetNode.setAttribute('aria-expanded', this._isExpanded.toString());
+        this._container.classList.toggle('ids-dropdown--open', this._isExpanded);
+
         if (this._isExpanded) {
             this._itemsContainerNode.style.minWidth = `${Math.max(this._widgetNode.offsetWidth, PANEL_MIN_WIDTH).toString()}px`;
+            this.focusFirstFocusableNode();
         }
-
-        this._triggerNode.setAttribute('aria-expanded', this._isExpanded.toString());
-        this._container.classList.toggle('ids-dropdown--open', this._isExpanded);
     }
 
     protected toggleSearchVisibility(): void {
