@@ -57,6 +57,11 @@ final class FilterDropdownTest extends KernelTestCase
         self::assertSame(2, $select->filter('option[selected]')->count(), 'Selected options should be marked.');
 
         self::assertSame(3, $wrapper->filter('.ids-dropdown__items input[type="checkbox"]')->count(), 'Every item should render a checkbox.');
+        self::assertSame(
+            3,
+            $wrapper->filter('.ids-dropdown__items input[type="checkbox"][tabindex="-1"]')->count(),
+            'Checkboxes should stay out of the tab order, the item itself takes the focus.'
+        );
         self::assertGreaterThan(0, $wrapper->filter('.ids-dropdown__footer .ids-dropdown__divider')->count(), 'Footer should render the divider.');
 
         $clearBtn = $wrapper->filter('.ids-dropdown__footer .ids-btn')->first();

@@ -71,6 +71,7 @@
     <twig:ibexa:checkbox:input
         :checked="item.id in value"
         value="{{ item.id ~ '' }}"
+        tabindex="-1"
         data-ids-custom-init="true"
     />
     <span class="ids-dropdown__item-label">{{ item.label }}</span>
