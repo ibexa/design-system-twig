@@ -27,9 +27,7 @@ final class Input extends AbstractChoiceInput
 
     public string $id = '';
 
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {

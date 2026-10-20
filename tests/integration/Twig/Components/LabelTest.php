@@ -49,8 +49,10 @@ final class LabelTest extends KernelTestCase
      * @param array<string, mixed> $props
      * @param list<string> $expectedPresent
      */
-    public function testVariantClasses(array $props, array $expectedPresent): void
-    {
+    public function testVariantClasses(
+        array $props,
+        array $expectedPresent
+    ): void {
         $rendered = $this->renderTwigComponent('ibexa:label', $props);
         $label = $this->getLabel($rendered->crawler());
         $classStr = (string) $label->attr('class');

@@ -10,6 +10,4 @@ namespace Ibexa\Bundle\DesignSystemTwig;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-final class IbexaDesignSystemTwigBundle extends Bundle
-{
-}
+final class IbexaDesignSystemTwigBundle extends Bundle {}

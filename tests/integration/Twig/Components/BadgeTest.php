@@ -61,8 +61,12 @@ final class BadgeTest extends KernelTestCase
      * @param non-empty-string $size
      */
     #[DataProvider('stretchedProvider')]
-    public function testStretchedModifier(string $size, int|string $value, string $variant, bool $expected): void
-    {
+    public function testStretchedModifier(
+        string $size,
+        int | string $value,
+        string $variant,
+        bool $expected
+    ): void {
         $crawler = $this->renderTwigComponent(Badge::class, [
             'size' => $size,
             'value' => $value,

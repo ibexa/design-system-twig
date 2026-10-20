@@ -91,8 +91,10 @@ final class HelperTextTest extends KernelTestCase
      * @param array<string,mixed> $props
      * @param non-empty-string $expectedIconId
      */
-    public function testIconIsRenderedForType(array $props, string $expectedIconId): void
-    {
+    public function testIconIsRenderedForType(
+        array $props,
+        string $expectedIconId
+    ): void {
         $rendered = $this->renderTwigComponent('ibexa:helper_text', $props, 'This is some helper text');
 
         $iconUse = $rendered->crawler()->filter('.ids-helper-text__icon use')->first();
