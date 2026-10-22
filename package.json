@@ -10,8 +10,8 @@
     "scripts": {
         "test": "yarn prettier-test && yarn eslint-test",
         "fix": "yarn prettier-test --write && yarn eslint-test --fix",
-        "eslint-test": "eslint \"./src/bundle/Resources/**/*.{js,ts}\"",
-        "prettier-test": "yarn prettier \"./src/bundle/Resources/**/*.{js,ts,scss}\" --check"
+        "eslint-test": "eslint \"./src/bundle/Resources/**/*.{js,ts}\" \"./src/bundle/ui-dev/**/*.{js,ts,tsx}\" --no-error-on-unmatched-pattern",
+        "prettier-test": "yarn prettier \"./src/bundle/Resources/**/*.{js,ts,scss}\" \"./src/bundle/ui-dev/**/*.{js,ts,tsx}\" --check --no-error-on-unmatched-pattern"
     },
     "packageManager": "yarn@1.22.22"
 }
