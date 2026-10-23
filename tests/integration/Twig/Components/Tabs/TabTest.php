@@ -131,7 +131,7 @@ final class TabTest extends KernelTestCase
     }
 
     /**
-     * @return \Generator<string, array{array<string, mixed>}>
+     * @return Generator<string, array{array<string, mixed>}>
      */
     public static function invalidPropsProvider(): Generator
     {

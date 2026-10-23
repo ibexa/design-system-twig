@@ -20,7 +20,7 @@ final class Input
 
     public string $size = 'medium';
 
-    public string|Markup|null $actions_after = null;
+    public string | Markup | null $actions_after = null;
 
     public bool $has_search_action = false;
 

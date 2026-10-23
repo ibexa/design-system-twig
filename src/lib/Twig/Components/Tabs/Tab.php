@@ -17,7 +17,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 #[AsTwigComponent('ibexa:tabs:tab')]
 final class Tab
 {
-    public string|Stringable $label = '';
+    public string | Stringable $label = '';
 
     #[ExposeInTemplate('is_selected')]
     public bool $isSelected = false;

@@ -12,6 +12,7 @@ use Ibexa\DesignSystemTwig\Twig\Components\Link;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
 
 final class LinkTest extends KernelTestCase
@@ -42,7 +43,7 @@ final class LinkTest extends KernelTestCase
 
     public function testHrefIsRequired(): void
     {
-        $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
+        $this->expectException(MissingOptionsException::class);
         $this->expectExceptionMessage('The required option "href" is missing');
 
         $this->mountTwigComponent('ibexa:link', []);

@@ -34,7 +34,7 @@ final class Alert
 
     public string $variant = 'floating';
 
-    public string|\Stringable $title = '';
+    public string | \Stringable $title = '';
 
     public string $icon = '';
 

@@ -64,8 +64,10 @@ final class AlertTest extends KernelTestCase
      * @param list<string> $expectedClasses
      */
     #[DataProvider('variantProvider')]
-    public function testVariantsProduceExpectedClasses(array $props, array $expectedClasses): void
-    {
+    public function testVariantsProduceExpectedClasses(
+        array $props,
+        array $expectedClasses
+    ): void {
         $crawler = $this->renderTwigComponent(Alert::class, $props + self::REQUIRED_PROPS)->crawler();
         $class = $this->getClassAttr($this->getWrapper($crawler));
 
@@ -90,8 +92,10 @@ final class AlertTest extends KernelTestCase
      * @param non-empty-string $expectedHrefSuffix
      */
     #[DataProvider('iconProvider')]
-    public function testIconResolution(array $props, string $expectedHrefSuffix): void
-    {
+    public function testIconResolution(
+        array $props,
+        string $expectedHrefSuffix
+    ): void {
         $crawler = $this->renderTwigComponent(Alert::class, $props + self::REQUIRED_PROPS)->crawler();
         $use = $crawler->filter('.ids-alert__icon use')->first();
 
@@ -118,8 +122,10 @@ final class AlertTest extends KernelTestCase
      * @param array<string, mixed> $props
      */
     #[DataProvider('roleProvider')]
-    public function testRoleResolution(array $props, string $expectedRole): void
-    {
+    public function testRoleResolution(
+        array $props,
+        string $expectedRole
+    ): void {
         $crawler = $this->renderTwigComponent(Alert::class, $props + self::REQUIRED_PROPS)->crawler();
 
         self::assertSame($expectedRole, $this->getWrapper($crawler)->attr('role'), 'Role should be derived from type unless overridden.');

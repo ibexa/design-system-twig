@@ -53,8 +53,7 @@ abstract class AbstractDropdown
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly Environment $twig,
-    ) {
-    }
+    ) {}
 
     /**
      * @param array<string, mixed> $props
@@ -73,7 +72,7 @@ abstract class AbstractDropdown
         $resolver
             ->define('source')
             ->allowedTypes('null', 'string', Markup::class)
-            ->normalize(static fn (Options $options, string|Markup|null $source): ?string => $source !== null ? (string) $source : null)
+            ->normalize(static fn (Options $options, string | Markup | null $source): ?string => $source !== null ? (string) $source : null)
             ->default(null);
         $resolver
             ->define('sourceAttributes')
