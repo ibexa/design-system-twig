@@ -23,7 +23,7 @@ final class Input extends AbstractDropdown
     public function postMount(): void
     {
         if (empty($this->value)) {
-            $this->value = $this->items[0]['id'] ?? '';
+            $this->value = $this->getFlatItems()[0]['id'] ?? '';
         }
     }
 
@@ -31,7 +31,7 @@ final class Input extends AbstractDropdown
     public function getSelectedLabel(): string
     {
         $value = $this->value ?? '';
-        $selected_item = array_find($this->items, static function (array $item) use ($value): bool {
+        $selected_item = array_find($this->getFlatItems(), static function (array $item) use ($value): bool {
             return $item['id'] === $value;
         });
 

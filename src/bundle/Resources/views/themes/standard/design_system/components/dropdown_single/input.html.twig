@@ -11,12 +11,30 @@
             disabled: disabled,
             required: required|default(false),
         }) }}>
-            {% for item in items %}
-                <option value="{{ item.id }}"{% if item.id == value %} selected{% endif %}>{{ item.label }}</option>
+            {% for entry in source_entries %}
+                {% if entry.items is defined %}
+                    <optgroup label="{{ entry.label }}">
+                        {% for item in entry.items %}
+                            <option value="{{ item.id }}"{% if item.id == value %} selected{% endif %}>{{ item.label }}</option>
+                        {% endfor %}
+                    </optgroup>
+                {% else %}
+                    <option value="{{ entry.id }}"{% if entry.id == value %} selected{% endif %}>{{ entry.label }}</option>
+                {% endif %}
             {% endfor %}
         </select>
     {% endif %}
 {% endblock source %}
+
+{% block item_content %}
+    <span class="ids-dropdown__item-label">{{ item.label }}</span>
+    <twig:ibexa:icon
+        name="check-circle"
+        size="tiny-small"
+        class="ids-dropdown__item-check"
+        :hidden="item.id != value"
+    />
+{% endblock item_content %}
 
 {% block selected_items %}
     {{ selected_label }}
