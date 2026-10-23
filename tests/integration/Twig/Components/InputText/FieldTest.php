@@ -117,8 +117,10 @@ final class FieldTest extends KernelTestCase
      * @param array<string, mixed> $attrs
      */
     #[DataProvider('forbiddenAttributeProviders')]
-    public function testForbiddenKeysThrow(string $option, array $attrs): void
-    {
+    public function testForbiddenKeysThrow(
+        string $option,
+        array $attrs
+    ): void {
         $this->expectException(InvalidOptionsException::class);
 
         $this->mountTwigComponent(

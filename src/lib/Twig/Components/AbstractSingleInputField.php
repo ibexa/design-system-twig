@@ -58,7 +58,10 @@ abstract class AbstractSingleInputField extends AbstractField
             ->define('id')
             ->allowedTypes('null', 'string')
             ->default(null)
-            ->normalize(static function (Options $options, ?string $id) use ($idFactory): string {
+            ->normalize(static function (
+                Options $options,
+                ?string $id
+            ) use ($idFactory): string {
                 if (null !== $id) {
                     if ('' === trim($id)) {
                         throw new InvalidTypeException('non-empty-string', 'string', 'id');
@@ -84,7 +87,10 @@ abstract class AbstractSingleInputField extends AbstractField
             ->define('input')
             ->allowedTypes('array')
             ->default([])
-            ->normalize(static function (Options $options, array $attributes): array {
+            ->normalize(static function (
+                Options $options,
+                array $attributes
+            ): array {
                 return self::assertForbidden($attributes, ['id', 'name', 'required', 'value'], 'input');
             });
 

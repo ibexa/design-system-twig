@@ -143,13 +143,15 @@ abstract class AbstractDropdown
      *
      * @return array<int, TDropdownItem>
      */
-    private static function normalizeItems(Options $options, array $items): array
-    {
+    private static function normalizeItems(
+        Options $options,
+        array $items
+    ): array {
         $itemResolver = new OptionsResolver();
         $itemResolver
             ->setRequired(['id', 'label'])
             ->setAllowedTypes('id', ['int', 'string'])
-            ->setNormalizer('id', static fn (Options $itemOptions, int|string $id): string => (string) $id)
+            ->setNormalizer('id', static fn (Options $itemOptions, int | string $id): string => (string) $id)
             ->setAllowedTypes('label', 'string');
 
         /** @var array<int, array{id: string, label: string}> $normalizedItems */

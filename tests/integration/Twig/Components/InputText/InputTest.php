@@ -58,8 +58,10 @@ final class InputTest extends KernelTestCase
      * @param list<string> $expectedClasses
      */
     #[DataProvider('variantProvider')]
-    public function testVariantClasses(array $props, array $expectedClasses): void
-    {
+    public function testVariantClasses(
+        array $props,
+        array $expectedClasses
+    ): void {
         $crawler = $this->renderTwigComponent(Input::class, $props)->crawler();
         $input = $this->getInput($crawler);
         $class = $this->getClassAttr($input);
@@ -249,8 +251,10 @@ final class InputTest extends KernelTestCase
         return $node;
     }
 
-    private function assertClearActionHidden(Crawler $crawler, bool $expectedHidden): void
-    {
+    private function assertClearActionHidden(
+        Crawler $crawler,
+        bool $expectedHidden
+    ): void {
         $action = $crawler->filter('.ids-input-text__actions > div')->first();
         self::assertGreaterThan(0, $action->count(), 'Clear action container should be present.');
 

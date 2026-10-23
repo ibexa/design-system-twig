@@ -11,6 +11,4 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\Checkbox;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent('ibexa:checkbox:input')]
-final class Input extends AbstractCheckbox
-{
-}
+final class Input extends AbstractCheckbox {}

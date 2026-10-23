@@ -45,7 +45,10 @@ final class Icon
             ->allowedTypes('string')
             ->default('')
             ->normalize(
-                static function (Options $options, string $value): string {
+                static function (
+                    Options $options,
+                    string $value
+                ): string {
                     $name = trim($value);
                     $path = trim($options['path'] ?? '');
 

@@ -11,6 +11,4 @@ namespace Ibexa\DesignSystemTwig\Twig\Components\RadioButton;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent('ibexa:radio_button:input')]
-final class Input extends AbstractRadioButton
-{
-}
+final class Input extends AbstractRadioButton {}
