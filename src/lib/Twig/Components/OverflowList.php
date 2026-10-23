@@ -72,8 +72,10 @@ final class OverflowList
      *
      * @return list<array<string, mixed>>
      */
-    private static function normalizeItems(Options $options, array $value): array
-    {
+    private static function normalizeItems(
+        Options $options,
+        array $value
+    ): array {
         if (!array_is_list($value)) {
             throw new InvalidArgumentException(
                 'Property "items" must be a list (sequential array).'
@@ -109,8 +111,10 @@ final class OverflowList
      *
      * @return array<int, string>
      */
-    private static function normalizeItemTemplateProps(Options $options, array $value): array
-    {
+    private static function normalizeItemTemplateProps(
+        Options $options,
+        array $value
+    ): array {
         foreach ($value as $key => $prop) {
             if (!is_string($prop)) {
                 $index = is_int($key) ? (string) $key : sprintf('"%s"', $key);

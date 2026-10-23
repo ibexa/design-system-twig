@@ -52,8 +52,10 @@ final class TagTest extends KernelTestCase
      * @param list<string> $expectedClasses
      */
     #[DataProvider('variantProvider')]
-    public function testVariantsProduceExpectedClasses(array $props, array $expectedClasses): void
-    {
+    public function testVariantsProduceExpectedClasses(
+        array $props,
+        array $expectedClasses
+    ): void {
         $crawler = $this->renderTwigComponent(
             Tag::class,
             $props,

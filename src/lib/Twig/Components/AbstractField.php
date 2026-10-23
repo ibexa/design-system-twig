@@ -58,7 +58,10 @@ abstract class AbstractField
 
         $resolver->setNormalizer(
             'labelExtra',
-            static function (Options $options, array $attributes): array {
+            static function (
+                Options $options,
+                array $attributes
+            ): array {
                 return self::assertForbidden($attributes, ['for', 'required'], 'labelExtra');
             }
         );
@@ -83,10 +86,13 @@ abstract class AbstractField
      *
      * @return array<string, scalar>
      *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws InvalidOptionsException
      */
-    protected static function assertForbidden(array $attributes, array $forbidden, string $optionName): array
-    {
+    protected static function assertForbidden(
+        array $attributes,
+        array $forbidden,
+        string $optionName
+    ): array {
         $disallowedKeys = array_intersect(array_keys($attributes), $forbidden);
         if ($disallowedKeys) {
             throw new InvalidOptionsException(sprintf(
