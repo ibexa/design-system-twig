@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -19,15 +20,15 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 #[AsTwigComponent('ibexa:filter_dropdown')]
 final class FilterDropdown extends AbstractDropdown
 {
-    public const TYPE_DEFAULT = 'default';
-    public const TYPE_DASHBOARD = 'dashboard';
-    public const TYPE_MORE_FILTERS = 'more-filters';
-    public const TYPE_MORE_FILTERS_SMALL = 'more-filters-small';
-    public const TYPES = [self::TYPE_DEFAULT, self::TYPE_DASHBOARD, self::TYPE_MORE_FILTERS, self::TYPE_MORE_FILTERS_SMALL];
+    public const string TYPE_DEFAULT = 'default';
+    public const string TYPE_DASHBOARD = 'dashboard';
+    public const string TYPE_MORE_FILTERS = 'more-filters';
+    public const string TYPE_MORE_FILTERS_SMALL = 'more-filters-small';
+    public const array TYPES = [self::TYPE_DEFAULT, self::TYPE_DASHBOARD, self::TYPE_MORE_FILTERS, self::TYPE_MORE_FILTERS_SMALL];
 
-    public const SUMMARY_NONE = 'none';
-    public const SUMMARY_COUNTER = 'counter';
-    public const SUMMARY_VALUE = 'value';
+    public const string SUMMARY_NONE = 'none';
+    public const string SUMMARY_COUNTER = 'counter';
+    public const string SUMMARY_VALUE = 'value';
 
     public string $label;
 
@@ -96,10 +97,31 @@ final class FilterDropdown extends AbstractDropdown
             ->define('value')
             ->allowedTypes('array')
             ->default([])
-            ->normalize(static fn (Options $options, array $value): array => array_map(strval(...), array_values($value)));
+            ->normalize(self::normalizeValue(...));
         $resolver
             ->define('hasSearch')
             ->allowedTypes('bool')
             ->default(true);
+    }
+
+    /**
+     * @param Options<array<string, mixed>> $options
+     * @param array<mixed> $value
+     *
+     * @return array<int, string>
+     */
+    private static function normalizeValue(
+        Options $options,
+        array $value
+    ): array {
+        foreach ($value as $index => $id) {
+            if (!is_int($id) && !is_string($id)) {
+                throw new InvalidOptionsException(
+                    sprintf('Each filter dropdown value must be an int or a string, "%s" given at index %s.', get_debug_type($id), $index)
+                );
+            }
+        }
+
+        return array_map(strval(...), array_values($value));
     }
 }

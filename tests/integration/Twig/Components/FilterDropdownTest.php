@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components;
 
 use Ibexa\DesignSystemTwig\Twig\Components\FilterDropdown;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -178,6 +179,28 @@ final class FilterDropdownTest extends KernelTestCase
         $this->expectException(InvalidOptionsException::class);
 
         $this->mountTwigComponent(FilterDropdown::class, $this->baseProps(['disabled' => true]));
+    }
+
+    /**
+     * @param array<mixed> $value
+     */
+    #[DataProvider('invalidValueProvider')]
+    public function testInvalidValueElementCausesResolverError(array $value): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage('Each filter dropdown value must be an int or a string');
+
+        $this->mountTwigComponent(FilterDropdown::class, $this->baseProps(['value' => $value]));
+    }
+
+    /**
+     * @return iterable<string, array{0: array<mixed>}>
+     */
+    public static function invalidValueProvider(): iterable
+    {
+        yield 'nested array' => [[['a']]];
+        yield 'null' => [[null]];
+        yield 'bool' => [[true]];
     }
 
     /**
