@@ -218,8 +218,10 @@ abstract class AbstractDropdown
      *
      * @return array<int, TDropdownEntry>
      */
-    private static function normalizeItems(Options $options, array $items): array
-    {
+    private static function normalizeItems(
+        Options $options,
+        array $items
+    ): array {
         return self::normalizeEntries($items, '', self::createItemResolver(), self::createGroupResolver());
     }
 
@@ -301,7 +303,7 @@ abstract class AbstractDropdown
             ->setAllowedTypes('label', 'string')
             ->setAllowedTypes('items', 'array')
             ->setAllowedTypes('id', ['int', 'string'])
-            ->setNormalizer('id', static fn (Options $groupOptions, int|string $id): string => (string) $id);
+            ->setNormalizer('id', static fn (Options $groupOptions, int | string $id): string => (string) $id);
 
         return $groupResolver;
     }
