@@ -58,6 +58,9 @@ abstract class AbstractDropdown
 
     private ?string $groupIdPrefix = null;
 
+    /** @var array<int, TDropdownItem>|null */
+    private ?array $flatItems = null;
+
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly Environment $twig,
@@ -128,7 +131,7 @@ abstract class AbstractDropdown
     #[ExposeInTemplate('flat_items')]
     public function getFlatItems(): array
     {
-        return self::flattenEntries($this->items);
+        return $this->flatItems ??= self::flattenEntries($this->items);
     }
 
     /**
@@ -185,7 +188,7 @@ abstract class AbstractDropdown
      *
      * @phpstan-assert-if-false TDropdownItem $entry
      */
-    protected static function isItemGroup(array $entry): bool
+    private static function isItemGroup(array $entry): bool
     {
         return array_key_exists('items', $entry);
     }
@@ -251,7 +254,7 @@ abstract class AbstractDropdown
                 );
             }
 
-            if (array_key_exists('items', $entry)) {
+            if (self::isItemGroup($entry)) {
                 $group = self::normalizeItemGroup($entry, $entryPath, $itemResolver, $groupResolver);
 
                 if ($group !== null) {

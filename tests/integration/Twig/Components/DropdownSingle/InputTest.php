@@ -420,6 +420,28 @@ final class InputTest extends KernelTestCase
         self::assertSame(1, $this->getSelect($crawler)->filter('option')->count(), 'Only the ungrouped option should remain in the source select.');
     }
 
+    public function testGroupWithNonArrayItemsCausesResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps([
+            'items' => [['label' => 'Fruits', 'items' => 'apple']],
+        ]));
+    }
+
+    public function testIntGroupIdIsNormalizedToString(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'items' => [['id' => 7, 'label' => 'Fruits', 'items' => [['id' => 'apple', 'label' => 'Apple']]]],
+        ]))->crawler();
+
+        self::assertSame(
+            '7',
+            $crawler->filter('.ids-dropdown__group')->first()->attr('data-group-id'),
+            'An int group id should be rendered as a string group id.'
+        );
+    }
+
     /**
      * @param array<string, mixed> $overrides
      *
