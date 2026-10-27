@@ -58,10 +58,16 @@ export class DropdownMultiInput extends BaseDropdown {
                 return;
             }
 
+            const groupItems = flattenDropdownEntries(entry.items);
+
+            if (groupItems.length === 0) {
+                return;
+            }
+
             const optgroup = document.createElement('optgroup');
 
             optgroup.label = entry.label;
-            flattenDropdownEntries(entry.items).forEach((item) => {
+            groupItems.forEach((item) => {
                 optgroup.appendChild(this.createOptionNode(item));
             });
             this._sourceInputNode.appendChild(optgroup);
@@ -136,13 +142,13 @@ export class DropdownMultiInput extends BaseDropdown {
     }
 
     public setItems(entries: BaseDropdownEntry[]) {
-        super.setItems(entries);
-
-        const tempValue = this._value;
+        const previousValue = this._value;
 
         this._value = [];
 
-        this.setValues(tempValue);
+        super.setItems(entries);
+
+        this.setValues(previousValue.filter((value) => this._itemsMap.has(value)));
     }
 
     public setValues(values: string[]) {
