@@ -1,5 +1,5 @@
 import { Base } from '../partials';
-import { escapeTemplateValue } from '../utils/dom';
+import { escapeHTMLAttribute } from '@ids-core/helpers/escape';
 
 const RESIZE_TIMEOUT = 200;
 const MIN_VISIBLE_ITEMS = 1;
@@ -170,7 +170,7 @@ export class OverflowList extends Base {
         items.forEach((item) => {
             const filledItem = Object.entries(item).reduce<string>((acc, [key, value]) => {
                 const pattern = `{{ ${key} }}`;
-                const escapedValue = escapeTemplateValue(value);
+                const escapedValue = escapeHTMLAttribute(value);
 
                 return acc.replaceAll(pattern, () => escapedValue);
             }, this._templates.item);
