@@ -31,6 +31,8 @@ export const flattenDropdownEntries = (entries: BaseDropdownEntry[]): BaseDropdo
     entries.flatMap((entry) => (isDropdownItemGroup(entry) ? flattenDropdownEntries(entry.items) : [entry]));
 
 const MAX_VISIBLE_ITEMS_DEFAULT = 10;
+const NEXT_ITEM_OFFSET = 1;
+const PREVIOUS_ITEM_OFFSET = -1;
 const POPPER_OFFSET = 4;
 const VIEWPORT_MARGIN = 16;
 
@@ -541,7 +543,7 @@ export abstract class BaseDropdown extends Base {
         }
 
         const visibleItemsNodes = this.getVisibleItemsNodes();
-        const offset = isMovingDown ? 1 : -1; // eslint-disable-line no-magic-numbers
+        const offset = isMovingDown ? NEXT_ITEM_OFFSET : PREVIOUS_ITEM_OFFSET;
         const nextItemIndex = visibleItemsNodes.indexOf(activeElement) + offset;
         const nextItemNode = nextItemIndex >= 0 ? visibleItemsNodes.at(nextItemIndex) : undefined;
 

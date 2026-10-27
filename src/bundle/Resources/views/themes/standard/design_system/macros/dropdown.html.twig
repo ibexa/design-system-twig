@@ -1,0 +1,17 @@
+{% macro source_options(entries, selected_ids) %}
+    {% for entry in entries %}
+        {% if entry.items is defined %}
+            <optgroup label="{{ entry.label }}">
+                {% for item in entry.items %}
+                    {{ _self.source_option(item, selected_ids) }}
+                {% endfor %}
+            </optgroup>
+        {% else %}
+            {{ _self.source_option(entry, selected_ids) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro source_option(item, selected_ids) %}
+    <option value="{{ item.id }}"{% if item.id in selected_ids %} selected{% endif %}>{{ item.label }}</option>
+{% endmacro %}

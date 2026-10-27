@@ -73,7 +73,12 @@
             {% endset %}
             {% set items_content = items_content|merge({ ('item-' ~ item.id): item_content }) %}
         {% endfor %}
-        <ul class="ids-dropdown__items" data-group-id-prefix="{{ group_id_prefix }}" data-max-visible-items="{{ max_visible_items }}" style="--max-visible-items: {{ max_visible_items }}">
+        <ul
+            class="ids-dropdown__items"
+            data-group-id-prefix="{{ group_id_prefix }}"
+            data-max-visible-items="{{ max_visible_items }}"
+            style="--max-visible-items: {{ max_visible_items }}"
+        >
             {{ _self.entries(items, items_content, value, group_id_prefix) }}
         </ul>
         <div class="ids-dropdown__no-results" aria-live="polite" hidden>

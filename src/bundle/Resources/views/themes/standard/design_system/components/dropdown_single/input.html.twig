@@ -3,6 +3,8 @@
 {% set class = html_classes('ids-dropdown--single', attributes.render('class') ?? '') %}
 
 {% block source %}
+    {% from '@IbexaDesignSystemTwig/themes/standard/design_system/macros/dropdown.html.twig' import source_options %}
+
     {% if source is defined and source is not empty %}
         {{ source|raw }}
     {% else %}
@@ -11,17 +13,7 @@
             disabled: disabled,
             required: required|default(false),
         }) }}>
-            {% for entry in source_entries %}
-                {% if entry.items is defined %}
-                    <optgroup label="{{ entry.label }}">
-                        {% for item in entry.items %}
-                            <option value="{{ item.id }}"{% if item.id == value %} selected{% endif %}>{{ item.label }}</option>
-                        {% endfor %}
-                    </optgroup>
-                {% else %}
-                    <option value="{{ entry.id }}"{% if entry.id == value %} selected{% endif %}>{{ entry.label }}</option>
-                {% endif %}
-            {% endfor %}
+            {{ source_options(source_entries, [value]) }}
         </select>
     {% endif %}
 {% endblock source %}
