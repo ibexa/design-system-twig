@@ -44,10 +44,7 @@ final class FilterDropdown extends AbstractDropdown
      */
     public function getSelectedItems(): array
     {
-        return array_values(array_filter(
-            $this->getFlatItems(),
-            fn (array $item): bool => in_array($item['id'], $this->value, true)
-        ));
+        return $this->filterItemsByIds($this->value);
     }
 
     #[ExposeInTemplate('is_empty')]
