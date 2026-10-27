@@ -149,6 +149,7 @@ export class DropdownMultiInput extends BaseDropdown {
         super.setItems(entries);
 
         this.setValues(previousValue.filter((value) => this._itemsMap.has(value)));
+        this.setSelectionInfo(this._value);
     }
 
     public setValues(values: string[]) {
