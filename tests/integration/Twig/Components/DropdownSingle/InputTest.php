@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\DropdownSingle;
 
 use Ibexa\DesignSystemTwig\Twig\Components\DropdownSingle\Input;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -169,8 +170,8 @@ final class InputTest extends KernelTestCase
 
         $templateIcon = $crawler->filter('template.ids-dropdown__template[data-id="item"]')->first();
 
-        self::assertStringContainsString(
-            'hidden',
+        self::assertMatchesRegularExpression(
+            '/<svg(?=[^>]*\bids-dropdown__item-check\b)(?=[^>]*\shidden)[^>]*>/',
             (string) $templateIcon->html(''),
             'The JS item template should render the check icon hidden.'
         );
@@ -305,35 +306,101 @@ final class InputTest extends KernelTestCase
         self::assertNotNull($noResults->attr('hidden'), 'No-results node should start hidden.');
     }
 
-    public function testSearchVisibilityCountsLeafItems(): void
+    public function testFirstLeafIsSelectedByDefaultWhenTheFirstEntryIsAGroup(): void
     {
         $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
-            'maxVisibleItems' => 2,
             'items' => [
-                ['id' => 'a', 'label' => 'Alpha'],
                 [
-                    'id' => 'fruits',
                     'label' => 'Fruits',
                     'items' => [
                         ['id' => 'apple', 'label' => 'Apple'],
                         ['id' => 'banana', 'label' => 'Banana'],
                     ],
                 ],
+                ['id' => 'a', 'label' => 'Alpha'],
             ],
         ]))->crawler();
 
-        self::assertNull(
-            $crawler->filter('.ids-dropdown__search')->first()->attr('hidden'),
-            'Three leaf items over a limit of two should make the search visible even though there are only two top-level entries.'
+        self::assertSame(
+            'apple',
+            $this->getSelect($crawler)->filter('option[selected]')->attr('value'),
+            'Without a value, the first leaf of the first group should be selected.'
+        );
+        self::assertSame(
+            'Apple',
+            trim($crawler->filter('.ids-dropdown__selection-info-items')->first()->text('')),
+            'Selection box should show the first leaf label by default.'
+        );
+        self::assertSame(
+            ['apple'],
+            $crawler->filter('.ids-dropdown__item--selected')->each(static fn (Crawler $item): ?string => $item->attr('data-id')),
+            'Only the first leaf should be marked selected in the list.'
         );
     }
 
-    public function testGroupMissingLabelCausesResolverError(): void
+    /**
+     * @param array<int, mixed> $items
+     */
+    #[DataProvider('invalidEntryProvider')]
+    public function testInvalidEntryErrorNamesItsPath(
+        array $items,
+        string $expectedMessage
+    ): void {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps(['items' => $items]));
+    }
+
+    /**
+     * @return iterable<string, array{0: array<int, mixed>, 1: string}>
+     */
+    public static function invalidEntryProvider(): iterable
     {
-        $this->expectException(MissingOptionsException::class);
+        yield 'group without label' => [
+            [['id' => 'g', 'items' => [['id' => 'a', 'label' => 'Alpha']]]],
+            'Invalid dropdown entry at index 0: The required option "label" is missing.',
+        ];
+
+        yield 'group with non-array items' => [
+            [['label' => 'Fruits', 'items' => 'apple']],
+            'Invalid dropdown entry at index 0: The option "items" with value "apple" is expected to be of type "array"',
+        ];
+
+        yield 'nested item without id' => [
+            [['id' => 'a', 'label' => 'Alpha'], ['label' => 'Fruits', 'items' => [['label' => 'Apple']]]],
+            'Invalid dropdown entry at index 1.0: The required option "id" is missing.',
+        ];
+
+        yield 'nested group without label' => [
+            [['label' => 'Fruits', 'items' => [['id' => 'apple', 'label' => 'Apple'], ['items' => [['id' => 'cherry', 'label' => 'Cherry']]]]]],
+            'Invalid dropdown entry at index 0.1: The required option "label" is missing.',
+        ];
+    }
+
+    public function testDuplicatedItemIdsCauseResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage('Dropdown item ids must be unique, "a" given more than once.');
 
         $this->mountTwigComponent(Input::class, $this->baseProps([
-            'items' => [['id' => 'g', 'items' => [['id' => 'a', 'label' => 'Alpha']]]],
+            'items' => [
+                ['id' => 'a', 'label' => 'First'],
+                ['label' => 'Group', 'items' => [['id' => 'a', 'label' => 'Second']]],
+            ],
+        ]));
+    }
+
+    public function testDuplicatedGroupIdsCauseResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage('Dropdown group ids must be unique, "g" given more than once.');
+
+        $this->mountTwigComponent(Input::class, $this->baseProps([
+            'items' => [
+                ['id' => 'g', 'label' => 'First', 'items' => [['id' => 'a', 'label' => 'Alpha']]],
+                ['label' => 'Outer', 'items' => [['id' => 'g', 'label' => 'Second', 'items' => [['id' => 'b', 'label' => 'Beta']]]]],
+            ],
         ]));
     }
 
@@ -420,26 +487,15 @@ final class InputTest extends KernelTestCase
         self::assertSame(1, $this->getSelect($crawler)->filter('option')->count(), 'Only the ungrouped option should remain in the source select.');
     }
 
-    public function testGroupWithNonArrayItemsCausesResolverError(): void
-    {
-        $this->expectException(InvalidOptionsException::class);
-
-        $this->mountTwigComponent(Input::class, $this->baseProps([
-            'items' => [['label' => 'Fruits', 'items' => 'apple']],
-        ]));
-    }
-
     public function testIntGroupIdIsNormalizedToString(): void
     {
-        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+        $component = $this->mountTwigComponent(Input::class, $this->baseProps([
             'items' => [['id' => 7, 'label' => 'Fruits', 'items' => [['id' => 'apple', 'label' => 'Apple']]]],
-        ]))->crawler();
+        ]));
 
-        self::assertSame(
-            '7',
-            $crawler->filter('.ids-dropdown__group')->first()->attr('data-group-id'),
-            'An int group id should be rendered as a string group id.'
-        );
+        self::assertInstanceOf(Input::class, $component, 'Component should mount as DropdownSingle\\Input.');
+        self::assertArrayHasKey('id', $component->items[0], 'The group should keep its id after normalization.');
+        self::assertSame('7', $component->items[0]['id'], 'An int group id should be normalized to a string.');
     }
 
     /**

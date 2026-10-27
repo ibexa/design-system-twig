@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
 use JMS\TranslationBundle\Annotation\Desc;
+use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -225,7 +226,52 @@ abstract class AbstractDropdown
         Options $options,
         array $items
     ): array {
-        return self::normalizeEntries($items, '', self::createItemResolver(), self::createGroupResolver());
+        $normalizedEntries = self::normalizeEntries($items, '', self::createItemResolver(), self::createGroupResolver());
+
+        self::assertUniqueIds('item', array_column(self::flattenEntries($normalizedEntries), 'id'));
+        self::assertUniqueIds('group', self::collectGroupIds($normalizedEntries));
+
+        return $normalizedEntries;
+    }
+
+    /**
+     * @param array<int, string> $ids
+     */
+    private static function assertUniqueIds(
+        string $kind,
+        array $ids
+    ): void {
+        $duplicatedIds = array_unique(array_diff_assoc($ids, array_unique($ids)));
+
+        if ($duplicatedIds !== []) {
+            throw new InvalidOptionsException(
+                sprintf('Dropdown %s ids must be unique, "%s" given more than once.', $kind, implode('", "', $duplicatedIds))
+            );
+        }
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $entries
+     *
+     * @return array<int, string>
+     */
+    private static function collectGroupIds(array $entries): array
+    {
+        $groupIds = [];
+
+        foreach ($entries as $entry) {
+            if (!self::isItemGroup($entry)) {
+                continue;
+            }
+
+            if (isset($entry['id'])) {
+                $groupIds[] = $entry['id'];
+            }
+
+            array_push($groupIds, ...self::collectGroupIds($entry['items']));
+        }
+
+        return $groupIds;
     }
 
     /**
@@ -265,12 +311,33 @@ abstract class AbstractDropdown
             }
 
             /** @var TDropdownItem $resolvedItem */
-            $resolvedItem = $itemResolver->resolve($entry);
+            $resolvedItem = self::resolveEntry($itemResolver, $entry, $entryPath);
 
             $normalizedEntries[] = $resolvedItem;
         }
 
         return $normalizedEntries;
+    }
+
+    /**
+     * @param array<string, mixed> $entry
+     *
+     * @return array<string, mixed>
+     */
+    private static function resolveEntry(
+        OptionsResolver $resolver,
+        array $entry,
+        string $path
+    ): array {
+        try {
+            return $resolver->resolve($entry);
+        } catch (ExceptionInterface $exception) {
+            throw new InvalidOptionsException(
+                sprintf('Invalid dropdown entry at index %s: %s', $path, $exception->getMessage()),
+                0,
+                $exception
+            );
+        }
     }
 
     /**
@@ -285,7 +352,7 @@ abstract class AbstractDropdown
         OptionsResolver $groupResolver
     ): ?array {
         /** @var array{label: string, items: array<int, mixed>, id?: string} $resolvedGroup */
-        $resolvedGroup = $groupResolver->resolve($group);
+        $resolvedGroup = self::resolveEntry($groupResolver, $group, $path);
         $groupEntries = self::normalizeEntries($resolvedGroup['items'], $path, $itemResolver, $groupResolver);
 
         if ($groupEntries === []) {
