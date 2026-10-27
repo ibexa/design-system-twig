@@ -53,11 +53,25 @@ final class FilterDropdownTest extends KernelTestCase
         self::assertGreaterThan(0, $trigger->filter('.ids-dropdown__chevron')->count(), 'Default type should render the chevron.');
         self::assertSame(0, $wrapper->filter('.ids-dropdown__widget')->count(), 'The input-like dropdown widget must not render for the filter.');
 
+        self::assertNotNull($trigger->filter('.ids-dropdown__value')->attr('hidden'), 'Value should be hidden in counter mode.');
+        self::assertNull($wrapper->filter('.ids-dropdown__search')->attr('hidden'), 'Search should be visible by default even below the base item limit.');
+
         $select = $wrapper->filter('.ids-dropdown__source select')->first();
         self::assertSame('multiple', $select->attr('multiple'), 'Source select should be multiple.');
-        self::assertSame(2, $select->filter('option[selected]')->count(), 'Selected options should be marked.');
+        self::assertSame(
+            ['b', 'c'],
+            $select->filter('option[selected]')->each(static fn (Crawler $option): ?string => $option->attr('value')),
+            'Exactly the selected options should be marked.'
+        );
 
         self::assertSame(3, $wrapper->filter('.ids-dropdown__items input[type="checkbox"]')->count(), 'Every item should render a checkbox.');
+        self::assertSame(
+            ['b', 'c'],
+            $wrapper->filter('.ids-dropdown__items input[type="checkbox"][checked]')->each(
+                static fn (Crawler $checkbox): ?string => $checkbox->attr('value')
+            ),
+            'Exactly the selected items should render a checked checkbox.'
+        );
         self::assertSame(
             3,
             $wrapper->filter('.ids-dropdown__items input[type="checkbox"][tabindex="-1"]')->count(),
@@ -65,9 +79,38 @@ final class FilterDropdownTest extends KernelTestCase
         );
         self::assertGreaterThan(0, $wrapper->filter('.ids-dropdown__footer .ids-dropdown__divider')->count(), 'Footer should render the divider.');
 
-        $clearBtn = $wrapper->filter('.ids-dropdown__footer .ids-btn')->first();
+        $clearBtn = $wrapper->filter('.ids-dropdown__clear-btn')->first();
         self::assertGreaterThan(0, $clearBtn->count(), 'Footer should render the Clear button.');
         self::assertNull($clearBtn->attr('disabled'), 'Clear should be enabled when items are selected.');
+    }
+
+    public function testEmptySelectionHidesCounterAndValue(): void
+    {
+        $crawler = $this->renderTwigComponent(FilterDropdown::class, $this->baseProps())->crawler();
+
+        $wrapper = $this->getWrapper($crawler);
+        $trigger = $wrapper->filter('.ids-dropdown__trigger')->first();
+        self::assertStringNotContainsString('ids-dropdown--selected', (string) $wrapper->attr('class'), 'Wrapper should not carry the selected modifier without a value.');
+        self::assertSame('Filter', trim($trigger->filter('.ids-dropdown__trigger-label')->text('')), 'Label should render without the colon when nothing is selected.');
+        self::assertNotNull($trigger->filter('.ids-dropdown__counter')->attr('hidden'), 'Counter should be hidden without a selection.');
+        self::assertSame('', trim($trigger->filter('.ids-dropdown__counter')->text('')), 'Counter should be empty without a selection.');
+        self::assertNotNull($trigger->filter('.ids-dropdown__value')->attr('hidden'), 'Value should be hidden without a selection.');
+        self::assertSame('', trim($trigger->filter('.ids-dropdown__value')->text('')), 'Value should be empty without a selection.');
+        self::assertSame(0, $wrapper->filter('.ids-dropdown__items input[type="checkbox"][checked]')->count(), 'No checkbox should be checked without a selection.');
+    }
+
+    public function testDashboardTypeWithSeveralSelectionsShowsTheCounter(): void
+    {
+        $crawler = $this->renderTwigComponent(FilterDropdown::class, $this->baseProps([
+            'type' => FilterDropdown::TYPE_DASHBOARD,
+            'value' => ['b', 'c'],
+        ]))->crawler();
+
+        $trigger = $this->getWrapper($crawler)->filter('.ids-dropdown__trigger')->first();
+        self::assertSame('Filter', trim($trigger->filter('.ids-dropdown__trigger-label')->text('')), 'Dashboard label should not get the colon in counter mode.');
+        self::assertSame('2', trim($trigger->filter('.ids-dropdown__counter')->text('')), 'Dashboard type with several selections should show the counter.');
+        self::assertNull($trigger->filter('.ids-dropdown__counter')->attr('hidden'), 'Counter should be visible with several selections.');
+        self::assertNotNull($trigger->filter('.ids-dropdown__value')->attr('hidden'), 'Value should be hidden with several selections.');
     }
 
     public function testDashboardTypeShowsTheSingleSelectedValue(): void
@@ -80,6 +123,7 @@ final class FilterDropdownTest extends KernelTestCase
         $trigger = $this->getWrapper($crawler)->filter('.ids-dropdown__trigger')->first();
         self::assertSame('Filter:', trim($trigger->filter('.ids-dropdown__trigger-label')->text('')), 'Dashboard label should get the colon in value mode.');
         self::assertSame('Beta', trim($trigger->filter('.ids-dropdown__value')->text('')), 'Dashboard type should show the single selected label.');
+        self::assertNull($trigger->filter('.ids-dropdown__value')->attr('hidden'), 'Value should be visible in value mode.');
         self::assertNotNull($trigger->filter('.ids-dropdown__counter')->attr('hidden'), 'Counter should be hidden in value mode.');
     }
 
@@ -96,7 +140,7 @@ final class FilterDropdownTest extends KernelTestCase
         self::assertSame(0, $trigger->filter('.ids-dropdown__trigger-label')->count(), 'Icon-only trigger should not render the label text.');
         self::assertGreaterThan(0, $trigger->filter('.ids-dropdown__trigger-icon')->count(), 'Icon-only trigger should render the filters icon.');
         self::assertNotNull($wrapper->filter('.ids-dropdown__search')->attr('hidden'), 'hasSearch=false should hide the search.');
-        self::assertNotNull($wrapper->filter('.ids-dropdown__footer .ids-btn')->attr('disabled'), 'Clear should be disabled without a selection.');
+        self::assertNotNull($wrapper->filter('.ids-dropdown__clear-btn')->attr('disabled'), 'Clear should be disabled without a selection.');
     }
 
     public function testIntegerValuesMatchStringItemIds(): void
@@ -108,7 +152,7 @@ final class FilterDropdownTest extends KernelTestCase
 
         $wrapper = $this->getWrapper($crawler);
         self::assertSame('1', trim($wrapper->filter('.ids-dropdown__counter')->text('')), 'An integer value should count as the matching item.');
-        self::assertNull($wrapper->filter('.ids-dropdown__footer .ids-btn')->attr('disabled'), 'Clear should be enabled for a matching integer value.');
+        self::assertNull($wrapper->filter('.ids-dropdown__clear-btn')->attr('disabled'), 'Clear should be enabled for a matching integer value.');
     }
 
     public function testUnknownValueDoesNotCountAsSelection(): void
@@ -117,7 +161,7 @@ final class FilterDropdownTest extends KernelTestCase
 
         $wrapper = $this->getWrapper($crawler);
         self::assertStringNotContainsString('ids-dropdown--selected', (string) $wrapper->attr('class'), 'An unknown value should not mark the dropdown as selected.');
-        self::assertNotNull($wrapper->filter('.ids-dropdown__footer .ids-btn')->attr('disabled'), 'Clear should stay disabled for an unknown value.');
+        self::assertNotNull($wrapper->filter('.ids-dropdown__clear-btn')->attr('disabled'), 'Clear should stay disabled for an unknown value.');
     }
 
     public function testPanelIsAnAccessibleGroupControlledByTheTrigger(): void
@@ -166,10 +210,10 @@ final class FilterDropdownTest extends KernelTestCase
 
     public function testMissingLabelCausesResolverError(): void
     {
-        $this->expectException(MissingOptionsException::class);
-
         $props = $this->baseProps();
         unset($props['label']);
+
+        $this->expectException(MissingOptionsException::class);
 
         $this->mountTwigComponent(FilterDropdown::class, $props);
     }
