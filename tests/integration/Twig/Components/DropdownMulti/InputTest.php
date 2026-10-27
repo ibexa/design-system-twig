@@ -250,6 +250,44 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testGroupedItemsRenderCheckboxesAndSelectedChips(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'value' => ['banana'],
+            'items' => [
+                ['id' => 'a', 'label' => 'Alpha'],
+                [
+                    'id' => 'fruits',
+                    'label' => 'Fruits',
+                    'items' => [
+                        ['id' => 'apple', 'label' => 'Apple'],
+                        ['id' => 'banana', 'label' => 'Banana'],
+                    ],
+                ],
+            ],
+        ]))->crawler();
+
+        $group = $crawler->filter('.ids-dropdown__items > .ids-dropdown__group')->first();
+        self::assertGreaterThan(0, $group->count(), 'Group node should be rendered.');
+        self::assertSame('group', $group->attr('role'), 'Group node should carry role="group".');
+        self::assertSame(
+            2,
+            $group->filter('.ids-dropdown__group-items .ids-dropdown__item input[type="checkbox"]')->count(),
+            'Every grouped item should render its checkbox.'
+        );
+        self::assertNotNull(
+            $group->filter('.ids-dropdown__item input[value="banana"]')->attr('checked'),
+            'Checkbox of the selected grouped item should be checked.'
+        );
+
+        $select = $this->getSelectElement($this->getDropdownWrapper($crawler));
+        self::assertSame(2, $select->filter('optgroup[label="Fruits"] > option')->count(), 'Source select should render the optgroup.');
+        self::assertNotNull($select->filter('option[value="banana"]')->attr('selected'), 'Selected grouped option should be marked selected.');
+
+        $chipLabels = $crawler->filter('.ids-dropdown__selection-info-items .ids-chip .ids-chip__content');
+        self::assertSame('Banana', trim($chipLabels->eq(0)->text('')), 'Selected grouped item should render as a chip.');
+    }
+
     /**
      * @param array<string, mixed> $overrides
      *

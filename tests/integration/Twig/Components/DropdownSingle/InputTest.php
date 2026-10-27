@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\DropdownSingle;
 
 use Ibexa\DesignSystemTwig\Twig\Components\DropdownSingle\Input;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -150,6 +151,32 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testOnlySelectedItemShowsCheckIcon(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps(['value' => 'b']))->crawler();
+
+        $items = $crawler->filter('.ids-dropdown__items .ids-dropdown__item');
+        $iconStates = $items->each(static fn (Crawler $item): array => [
+            $item->attr('data-id'),
+            $item->filter('.ids-icon.ids-dropdown__item-check')->count(),
+            $item->filter('.ids-icon.ids-dropdown__item-check')->attr('hidden') !== null,
+        ]);
+
+        self::assertSame(
+            [['a', 1, true], ['b', 1, false], ['c', 1, true]],
+            $iconStates,
+            'Every item should render the check icon, visible only on the selected one.'
+        );
+
+        $templateIcon = $crawler->filter('template.ids-dropdown__template[data-id="item"]')->first();
+
+        self::assertMatchesRegularExpression(
+            '/<svg(?=[^>]*\bids-dropdown__item-check\b)(?=[^>]*\shidden)[^>]*>/',
+            (string) $templateIcon->html(''),
+            'The JS item template should render the check icon hidden.'
+        );
+    }
+
     public function testDisabledAndErrorAddClassesAndSelectDisabled(): void
     {
         $crawler = $this->renderTwigComponent(
@@ -220,6 +247,255 @@ final class InputTest extends KernelTestCase
         $this->expectException(MissingOptionsException::class);
 
         $this->mountTwigComponent(Input::class);
+    }
+
+    public function testGroupedItemsRenderGroupMarkup(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'value' => 'banana',
+            'items' => [
+                ['id' => 'a', 'label' => 'Alpha'],
+                [
+                    'id' => 'fruits',
+                    'label' => 'Fruits',
+                    'items' => [
+                        ['id' => 'apple', 'label' => 'Apple'],
+                        ['id' => 'banana', 'label' => 'Banana'],
+                    ],
+                ],
+            ],
+        ]))->crawler();
+
+        $groups = $crawler->filter('.ids-dropdown__items > .ids-dropdown__group');
+        self::assertSame(1, $groups->count(), 'One group node should be rendered for the grouped entry.');
+
+        $group = $groups->first();
+        $groupLabel = $group->filter('.ids-dropdown__group-label')->first();
+        self::assertSame('group', $group->attr('role'), 'Group node should carry role="group".');
+        self::assertMatchesRegularExpression(
+            '/^ids-dropdown-[0-9a-f]{8}-fruits$/',
+            (string) $groupLabel->attr('id'),
+            'Group label id should come from the group id, prefixed per dropdown.'
+        );
+        self::assertSame('fruits', $group->attr('data-group-id'), 'Group should keep its own id for the scripts.');
+        self::assertSame($groupLabel->attr('id'), $group->attr('aria-labelledby'), 'Group should be labelled by its label node.');
+        self::assertSame('Fruits', trim($groupLabel->text('')), 'Group label should render the group label.');
+        self::assertNull($groupLabel->attr('tabindex'), 'Group label must not be focusable.');
+        self::assertSame(
+            2,
+            $group->filter('.ids-dropdown__group-items > .ids-dropdown__item')->count(),
+            'Grouped items should be nested inside the group items list.'
+        );
+        self::assertSame(
+            1,
+            $crawler->filter('.ids-dropdown__items > .ids-dropdown__item')->count(),
+            'Ungrouped items should stay direct children of the items list.'
+        );
+
+        $select = $this->getSelect($crawler);
+        self::assertSame(2, $select->filter('optgroup[label="Fruits"] > option')->count(), 'Source select should render an optgroup with the grouped options.');
+        self::assertSame('banana', $select->filter('option[selected]')->attr('value'), 'Selected option inside a group should be marked selected.');
+        self::assertSame(
+            'Banana',
+            trim($crawler->filter('.ids-dropdown__selection-info-items')->first()->text('')),
+            'Selected label should resolve for an item inside a group.'
+        );
+
+        $noResults = $crawler->filter('.ids-dropdown__no-results')->first();
+        self::assertGreaterThan(0, $noResults->count(), 'No-results node should be rendered.');
+        self::assertNotNull($noResults->attr('hidden'), 'No-results node should start hidden.');
+    }
+
+    public function testFirstLeafIsSelectedByDefaultWhenTheFirstEntryIsAGroup(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'items' => [
+                [
+                    'label' => 'Fruits',
+                    'items' => [
+                        ['id' => 'apple', 'label' => 'Apple'],
+                        ['id' => 'banana', 'label' => 'Banana'],
+                    ],
+                ],
+                ['id' => 'a', 'label' => 'Alpha'],
+            ],
+        ]))->crawler();
+
+        self::assertSame(
+            'apple',
+            $this->getSelect($crawler)->filter('option[selected]')->attr('value'),
+            'Without a value, the first leaf of the first group should be selected.'
+        );
+        self::assertSame(
+            'Apple',
+            trim($crawler->filter('.ids-dropdown__selection-info-items')->first()->text('')),
+            'Selection box should show the first leaf label by default.'
+        );
+        self::assertSame(
+            ['apple'],
+            $crawler->filter('.ids-dropdown__item--selected')->each(static fn (Crawler $item): ?string => $item->attr('data-id')),
+            'Only the first leaf should be marked selected in the list.'
+        );
+    }
+
+    /**
+     * @param array<int, mixed> $items
+     */
+    #[DataProvider('invalidEntryProvider')]
+    public function testInvalidEntryErrorNamesItsPath(
+        array $items,
+        string $expectedMessage
+    ): void {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps(['items' => $items]));
+    }
+
+    /**
+     * @return iterable<string, array{0: array<int, mixed>, 1: string}>
+     */
+    public static function invalidEntryProvider(): iterable
+    {
+        yield 'group without label' => [
+            [['id' => 'g', 'items' => [['id' => 'a', 'label' => 'Alpha']]]],
+            'Invalid dropdown entry at index 0: The required option "label" is missing.',
+        ];
+
+        yield 'group with non-array items' => [
+            [['label' => 'Fruits', 'items' => 'apple']],
+            'Invalid dropdown entry at index 0: The option "items" with value "apple" is expected to be of type "array"',
+        ];
+
+        yield 'nested item without id' => [
+            [['id' => 'a', 'label' => 'Alpha'], ['label' => 'Fruits', 'items' => [['label' => 'Apple']]]],
+            'Invalid dropdown entry at index 1.0: The required option "id" is missing.',
+        ];
+
+        yield 'nested group without label' => [
+            [['label' => 'Fruits', 'items' => [['id' => 'apple', 'label' => 'Apple'], ['items' => [['id' => 'cherry', 'label' => 'Cherry']]]]]],
+            'Invalid dropdown entry at index 0.1: The required option "label" is missing.',
+        ];
+    }
+
+    public function testDuplicatedItemIdsCauseResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage('Dropdown item ids must be unique, "a" given more than once.');
+
+        $this->mountTwigComponent(Input::class, $this->baseProps([
+            'items' => [
+                ['id' => 'a', 'label' => 'First'],
+                ['label' => 'Group', 'items' => [['id' => 'a', 'label' => 'Second']]],
+            ],
+        ]));
+    }
+
+    public function testDuplicatedGroupIdsCauseResolverError(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage('Dropdown group ids must be unique, "g" given more than once.');
+
+        $this->mountTwigComponent(Input::class, $this->baseProps([
+            'items' => [
+                ['id' => 'g', 'label' => 'First', 'items' => [['id' => 'a', 'label' => 'Alpha']]],
+                ['label' => 'Outer', 'items' => [['id' => 'g', 'label' => 'Second', 'items' => [['id' => 'b', 'label' => 'Beta']]]]],
+            ],
+        ]));
+    }
+
+    public function testNestedGroupsRenderNestedGroupMarkup(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'value' => 'cherry',
+            'maxVisibleItems' => 2,
+            'items' => [
+                ['id' => 'a', 'label' => 'Alpha'],
+                [
+                    'id' => 'fruits',
+                    'label' => 'Fruits',
+                    'items' => [
+                        ['id' => 'apple', 'label' => 'Apple'],
+                        [
+                            'label' => 'Berries',
+                            'items' => [
+                                ['id' => 'cherry', 'label' => 'Cherry'],
+                                ['label' => 'Empty', 'items' => []],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]))->crawler();
+
+        $nestedGroups = $crawler->filter('.ids-dropdown__items > .ids-dropdown__group .ids-dropdown__group');
+        self::assertSame(1, $nestedGroups->count(), 'The nested group should render inside its parent and the empty nested group should be dropped.');
+
+        $nestedGroup = $nestedGroups->first();
+        $nestedLabel = $nestedGroup->filter('.ids-dropdown__group-label')->first();
+        self::assertSame('group', $nestedGroup->attr('role'), 'Nested group node should carry role="group".');
+        self::assertMatchesRegularExpression(
+            '/^ids-dropdown-[0-9a-f]{8}-fruits-group-1$/',
+            (string) $nestedLabel->attr('id'),
+            'A nested group without an id should build its id from the prefixed parent group id.'
+        );
+        self::assertSame($nestedLabel->attr('id'), $nestedGroup->attr('aria-labelledby'), 'Nested group should be labelled by its label node.');
+        self::assertSame(
+            1,
+            $nestedGroup->filter('.ids-dropdown__group-items > .ids-dropdown__item')->count(),
+            'Nested group items should be nested inside the nested group items list.'
+        );
+
+        $select = $this->getSelect($crawler);
+        self::assertSame(0, $select->filter('optgroup optgroup')->count(), 'Optgroups must not nest in the source select.');
+        self::assertSame(2, $select->filter('optgroup[label="Fruits"] > option')->count(), 'Nested leaves should be flattened into the top-level optgroup.');
+        self::assertSame('cherry', $select->filter('option[selected]')->attr('value'), 'Selected option inside a nested group should be marked selected.');
+        self::assertSame(
+            'Cherry',
+            trim($crawler->filter('.ids-dropdown__selection-info-items')->first()->text('')),
+            'Selected label should resolve for an item inside a nested group.'
+        );
+        self::assertNull(
+            $crawler->filter('.ids-dropdown__search')->first()->attr('hidden'),
+            'Search visibility should count the leaves of nested groups.'
+        );
+    }
+
+    public function testGroupWithoutIdGetsPrefixedId(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'items' => [['label' => 'Fruits', 'items' => [['id' => 'apple', 'label' => 'Apple']]]],
+        ]))->crawler();
+
+        self::assertMatchesRegularExpression(
+            '/^ids-dropdown-[0-9a-f]{8}-group-0$/',
+            (string) $crawler->filter('.ids-dropdown__group-label')->first()->attr('id'),
+            'A top-level group without an id should get a per-dropdown prefixed id instead of one built from the field name.'
+        );
+    }
+
+    public function testEmptyGroupIsDropped(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'items' => [
+                ['label' => 'Empty', 'items' => []],
+                ['id' => 'a', 'label' => 'Alpha'],
+            ],
+        ]))->crawler();
+
+        self::assertSame(0, $crawler->filter('.ids-dropdown__items > .ids-dropdown__group')->count(), 'A group without items should not be rendered.');
+        self::assertSame(1, $this->getSelect($crawler)->filter('option')->count(), 'Only the ungrouped option should remain in the source select.');
+    }
+
+    public function testIntGroupIdIsNormalizedToString(): void
+    {
+        $component = $this->mountTwigComponent(Input::class, $this->baseProps([
+            'items' => [['id' => 7, 'label' => 'Fruits', 'items' => [['id' => 'apple', 'label' => 'Apple']]]],
+        ]));
+
+        self::assertInstanceOf(Input::class, $component, 'Component should mount as DropdownSingle\\Input.');
+        self::assertArrayHasKey('id', $component->items[0], 'The group should keep its id after normalization.');
+        self::assertSame('7', $component->items[0]['id'], 'An int group id should be normalized to a string.');
     }
 
     /**

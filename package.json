@@ -3,7 +3,7 @@
     "repository": "git@github.com:ibexa/design-system-twig.git",
     "private": true,
     "devDependencies": {
-        "@ibexa/design-system": "https://github.com/ibexa/design-system",
+        "@ibexa/design-system": "https://github.com/ibexa/design-system#IBX-12475-escape-html-attribute",
         "@ibexa/eslint-config": "https://github.com/ibexa/eslint-config-ibexa#~v2.0.0",
         "@ibexa/ts-config": "https://github.com/ibexa/ts-config-ibexa#~v1.1.0"
     },
