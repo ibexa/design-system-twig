@@ -32,28 +32,32 @@
         {% endblock source %}
     </div>
     {% block widget %}
-    <div class="{{ widget_classes }}" role="button" tabIndex="0">
-        <div class="ids-dropdown__selection-info">
-            {% block selection_info %}
-                {% block placeholder %}
-                    <div class="ids-dropdown__placeholder"{% if not is_empty %} hidden{% endif %}>
-                        {{ normalized_placeholder }}
+        <div class="{{ widget_classes }}" role="button" tabIndex="0">
+            <div class="ids-dropdown__selection-info">
+                {% block selection_info %}
+                    {% block placeholder %}
+                        <div class="ids-dropdown__placeholder"{% if not is_empty %} hidden{% endif %}>
+                            {{ normalized_placeholder }}
+                        </div>
+                    {% endblock placeholder %}
+                    <div class="ids-dropdown__selection-info-items"{% if is_empty %} hidden{% endif %}>
+                        {% block selected_items %}{% endblock selected_items %}
                     </div>
-                {% endblock placeholder %}
-                <div class="ids-dropdown__selection-info-items"{% if is_empty %} hidden{% endif %}>
-                    {% block selected_items %}{% endblock selected_items %}
-                </div>
-            {% endblock selection_info %}
+                {% endblock selection_info %}
+            </div>
+            <div class="ids-dropdown__expander">
+                <twig:ibexa:expander
+                    type="chevron"
+                    tabindex="-1"
+                />
+            </div>
         </div>
-        <div class="ids-dropdown__expander">
-            <twig:ibexa:expander
-                type="chevron"
-                tabindex="-1"
-            />
-        </div>
-    </div>
     {% endblock widget %}
-    <div class="ids-dropdown__items-container"{% block items_container_attributes %}{% endblock items_container_attributes %} hidden>
+    <div
+        class="ids-dropdown__items-container"
+        {% block items_container_attributes %}{% endblock items_container_attributes %}
+        hidden
+    >
         <div class="ids-dropdown__search"{% if not is_search_visible %} hidden{% endif %}>
             <twig:ibexa:input_text:input
                 name="dropdown-search"

@@ -25,10 +25,7 @@ final class Input extends AbstractDropdown
     #[ExposeInTemplate('selected_items')]
     public function getSelectedItems(): array
     {
-        return array_values(array_filter(
-            $this->getFlatItems(),
-            fn (array $item): bool => in_array($item['id'], $this->value, true)
-        ));
+        return $this->filterItemsByIds($this->value);
     }
 
     #[ExposeInTemplate('is_empty')]

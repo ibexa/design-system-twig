@@ -136,6 +136,19 @@ abstract class AbstractDropdown
     }
 
     /**
+     * @param array<string> $ids
+     *
+     * @return list<TDropdownItem>
+     */
+    protected function filterItemsByIds(array $ids): array
+    {
+        return array_values(array_filter(
+            $this->getFlatItems(),
+            static fn (array $item): bool => in_array($item['id'], $ids, true)
+        ));
+    }
+
+    /**
      * @return array<int, TDropdownEntry>
      */
     #[ExposeInTemplate('source_entries')]

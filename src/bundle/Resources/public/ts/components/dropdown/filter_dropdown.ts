@@ -17,7 +17,7 @@ export class FilterDropdown extends DropdownMultiInput {
         this._triggerLabelNode = this._widgetNode.querySelector<HTMLElement>('.ids-dropdown__trigger-label');
         this._counterNode = this._widgetNode.querySelector<HTMLElement>('.ids-dropdown__counter');
         this._valueNode = this._widgetNode.querySelector<HTMLElement>('.ids-dropdown__value');
-        this._clearBtnNode = this._itemsContainerNode.querySelector<HTMLButtonElement>('.ids-dropdown__footer .ids-btn');
+        this._clearBtnNode = this._itemsContainerNode.querySelector<HTMLButtonElement>('.ids-dropdown__clear-btn');
         this._hasSearch = !this._searchNode.hasAttribute('hidden');
     }
 
@@ -37,7 +37,7 @@ export class FilterDropdown extends DropdownMultiInput {
         };
     }
 
-    protected isDashboardType(): boolean {
+    protected checkIsDashboardType(): boolean {
         return this._container.classList.contains('ids-dropdown--filter-dashboard');
     }
 
@@ -45,7 +45,7 @@ export class FilterDropdown extends DropdownMultiInput {
         const selectedValues = new Set(values);
         const selectedItems = Array.from(this._itemsMap.values()).filter((item) => selectedValues.has(item.id));
         const label = this._widgetNode.dataset.label ?? '';
-        const showsValue = this.isDashboardType() && selectedItems.length === SINGLE_SELECTION_COUNT;
+        const showsValue = this.checkIsDashboardType() && selectedItems.length === SINGLE_SELECTION_COUNT;
         const showsCounter = selectedItems.length > 0 && !showsValue;
 
         if (this._triggerLabelNode) {
