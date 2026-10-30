@@ -45,21 +45,21 @@ export class FilterDropdown extends DropdownMultiInput {
         const selectedValues = new Set(values);
         const selectedItems = Array.from(this._itemsMap.values()).filter((item) => selectedValues.has(item.id));
         const label = this._widgetNode.dataset.label ?? '';
-        const showsValue = this.checkIsDashboardType() && selectedItems.length === SINGLE_SELECTION_COUNT;
-        const showsCounter = selectedItems.length > 0 && !showsValue;
+        const shouldShowValue = this.checkIsDashboardType() && selectedItems.length === SINGLE_SELECTION_COUNT;
+        const shouldShowCounter = selectedItems.length > 0 && !shouldShowValue;
 
         if (this._triggerLabelNode) {
-            this._triggerLabelNode.textContent = showsValue ? `${label}:` : label;
+            this._triggerLabelNode.textContent = shouldShowValue ? `${label}:` : label;
         }
 
         if (this._valueNode) {
-            this._valueNode.textContent = showsValue ? selectedItems[0].label : '';
-            this._valueNode.toggleAttribute('hidden', !showsValue);
+            this._valueNode.textContent = shouldShowValue ? selectedItems[0].label : '';
+            this._valueNode.toggleAttribute('hidden', !shouldShowValue);
         }
 
         if (this._counterNode) {
-            this._counterNode.textContent = showsCounter ? selectedItems.length.toString() : '';
-            this._counterNode.toggleAttribute('hidden', !showsCounter);
+            this._counterNode.textContent = shouldShowCounter ? selectedItems.length.toString() : '';
+            this._counterNode.toggleAttribute('hidden', !shouldShowCounter);
         }
 
         if (this._clearBtnNode) {
