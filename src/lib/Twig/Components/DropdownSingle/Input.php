@@ -17,7 +17,17 @@ use Symfony\UX\TwigComponent\Attribute\PostMount;
 #[AsTwigComponent('ibexa:dropdown_single:input')]
 final class Input extends AbstractDropdownInput
 {
+    public const string TYPE_INPUT = 'input';
+
+    public const string TYPE_CHIP = 'chip';
+
     public ?string $value = '';
+
+    public string $type = self::TYPE_INPUT;
+
+    public ?string $icon = null;
+
+    public ?string $label = null;
 
     #[PostMount]
     public function postMount(): void
@@ -44,6 +54,17 @@ final class Input extends AbstractDropdownInput
         return $this->value === '';
     }
 
+    public function isChip(): bool
+    {
+        return $this->type === self::TYPE_CHIP;
+    }
+
+    #[ExposeInTemplate('icon_size')]
+    public function getIconSize(): string
+    {
+        return $this->size === self::SIZE_SMALL ? 'tiny' : 'tiny-small';
+    }
+
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
         parent::configurePropsResolver($resolver);
@@ -52,5 +73,17 @@ final class Input extends AbstractDropdownInput
             ->define('value')
             ->allowedTypes('string')
             ->default('');
+        $resolver
+            ->define('type')
+            ->allowedValues(self::TYPE_INPUT, self::TYPE_CHIP)
+            ->default(self::TYPE_INPUT);
+        $resolver
+            ->define('icon')
+            ->allowedTypes('null', 'string')
+            ->default(null);
+        $resolver
+            ->define('label')
+            ->allowedTypes('null', 'string')
+            ->default(null);
     }
 }
