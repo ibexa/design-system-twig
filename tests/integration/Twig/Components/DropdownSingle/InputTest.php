@@ -187,6 +187,90 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testChipTypeRendersChipWidgetWithoutInputChrome(): void
+    {
+        $crawler = $this->renderTwigComponent(
+            Input::class,
+            $this->baseProps([
+                'type' => 'chip',
+                'size' => 'small',
+                'icon' => 'translation-language',
+                'label' => 'Language:',
+                'value' => 'b',
+            ])
+        )->crawler();
+
+        $wrapper = $this->getWrapper($crawler);
+        $widget = $this->getWidget($crawler);
+        $icon = $crawler->filter('.ids-dropdown__widget > .ids-dropdown__icon');
+        $label = $crawler->filter('.ids-dropdown__widget > .ids-dropdown__label')->first();
+
+        self::assertStringContainsString(
+            'ids-dropdown--chip',
+            $this->getClassAttr($wrapper),
+            'Wrapper should include the chip modifier.'
+        );
+        self::assertStringContainsString(
+            'ids-dropdown--small',
+            $this->getClassAttr($wrapper),
+            'Wrapper should include the size modifier for the chip.'
+        );
+        self::assertStringNotContainsString(
+            'ids-input',
+            $this->getClassAttr($widget),
+            'Chip widget should not carry the input classes.'
+        );
+        self::assertSame(1, $icon->count(), 'Chip should render the leading icon.');
+        self::assertSame('true', $icon->attr('aria-hidden'), 'Chip icon should be decorative.');
+        self::assertStringContainsString(
+            'ids-icon--tiny',
+            $icon->html(),
+            'Small chip should render the tiny icon size.'
+        );
+        self::assertSame('Language:', trim($label->text('')), 'Chip should render the static label.');
+        self::assertStringContainsString(
+            'Beta',
+            trim($crawler->filter('.ids-dropdown__selection-info-items')->first()->text('')),
+            'Chip should render the selected label.'
+        );
+    }
+
+    public function testInputTypeRendersNoChipParts(): void
+    {
+        $crawler = $this->renderTwigComponent(
+            Input::class,
+            $this->baseProps(['icon' => 'translation-language', 'label' => 'Language:'])
+        )->crawler();
+
+        $wrapper = $this->getWrapper($crawler);
+
+        self::assertStringNotContainsString(
+            'ids-dropdown--chip',
+            $this->getClassAttr($wrapper),
+            'Input type should not include the chip modifier.'
+        );
+        self::assertStringContainsString(
+            'ids-input',
+            $this->getClassAttr($this->getWidget($crawler)),
+            'Input type widget should keep the input classes.'
+        );
+        self::assertCount(
+            0,
+            $crawler->filterXPath('//*[contains(concat(" ", normalize-space(@class), " "), " ids-dropdown__icon ")]'),
+            'Input type should ignore the chip icon.'
+        );
+        self::assertCount(0, $crawler->filter('.ids-dropdown__label'), 'Input type should ignore the chip label.');
+        self::assertNull($wrapper->attr('icon'), 'The icon prop should be consumed, not rendered as an attribute.');
+        self::assertNull($wrapper->attr('label'), 'The label prop should be consumed, not rendered as an attribute.');
+    }
+
+    public function testInvalidTypeCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps(['type' => 'pill']));
+    }
+
     public function testWrapperClassMergesFromAttributes(): void
     {
         $crawler = $this->renderTwigComponent(

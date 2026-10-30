@@ -4,6 +4,8 @@
     html_classes(
         'ids-dropdown',
         {
+            'ids-dropdown--chip': is_chip,
+            ('ids-dropdown--' ~ size): is_chip,
             'ids-dropdown--disabled': disabled,
             'ids-dropdown--error': error,
         },
@@ -12,10 +14,11 @@
 %}
 {% set widget_classes =
     html_classes(
-        'ids-dropdown__widget ids-input',
+        'ids-dropdown__widget',
         {
-            'ids-input--disabled': disabled,
-            'ids-input--error': error,
+            'ids-input': not is_chip,
+            'ids-input--disabled': not is_chip and disabled,
+            'ids-input--error': not is_chip and error,
         }
     )
 %}
@@ -32,6 +35,17 @@
         {% endblock source %}
     </div>
     <div class="{{ widget_classes }}" role="button" tabIndex="0">
+        {% if is_chip and icon is not empty %}
+            <span class="ids-dropdown__icon" aria-hidden="true">
+                <twig:ibexa:icon
+                    :name="icon"
+                    :size="icon_size"
+                />
+            </span>
+        {% endif %}
+        {% if is_chip and label is not empty %}
+            <div class="ids-dropdown__label">{{ label }}</div>
+        {% endif %}
         <div class="ids-dropdown__selection-info">
             {% block selection_info %}
                 {% block placeholder %}

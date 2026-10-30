@@ -250,6 +250,17 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testChipTypeIsRejected(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, [
+            'name' => 'group',
+            'type' => 'chip',
+            'items' => [['id' => 'a', 'label' => 'Alpha']],
+        ]);
+    }
+
     /**
      * @param array<string, mixed> $overrides
      *

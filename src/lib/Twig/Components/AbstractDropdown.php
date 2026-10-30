@@ -28,7 +28,23 @@ use Twig\Runtime\EscaperRuntime;
  */
 abstract class AbstractDropdown
 {
+    protected const string TYPE_INPUT = 'input';
+
+    protected const string TYPE_CHIP = 'chip';
+
+    private const string SIZE_MEDIUM = 'medium';
+
+    private const string SIZE_SMALL = 'small';
+
     public string $name;
+
+    public string $type = self::TYPE_INPUT;
+
+    public string $size = self::SIZE_MEDIUM;
+
+    public ?string $icon = null;
+
+    public ?string $label = null;
 
     public ?string $source = null;
 
@@ -79,6 +95,22 @@ abstract class AbstractDropdown
             ->allowedTypes('array')
             ->default([]);
         $resolver
+            ->define('type')
+            ->allowedValues(...$this->getAllowedTypes())
+            ->default(self::TYPE_INPUT);
+        $resolver
+            ->define('size')
+            ->allowedValues(self::SIZE_MEDIUM, self::SIZE_SMALL)
+            ->default(self::SIZE_MEDIUM);
+        $resolver
+            ->define('icon')
+            ->allowedTypes('null', 'string')
+            ->default(null);
+        $resolver
+            ->define('label')
+            ->allowedTypes('null', 'string')
+            ->default(null);
+        $resolver
             ->define('disabled')
             ->allowedTypes('bool')
             ->default(false);
@@ -114,6 +146,18 @@ abstract class AbstractDropdown
         return count($this->items) > $this->maxVisibleItems;
     }
 
+    #[ExposeInTemplate('is_chip')]
+    public function isChip(): bool
+    {
+        return $this->type === self::TYPE_CHIP;
+    }
+
+    #[ExposeInTemplate('icon_size')]
+    public function getIconSize(): string
+    {
+        return $this->size === self::SIZE_SMALL ? 'tiny' : 'tiny-small';
+    }
+
     /**
      * @return array<string, string>
      */
@@ -135,6 +179,14 @@ abstract class AbstractDropdown
     }
 
     abstract protected function configurePropsResolver(OptionsResolver $resolver): void;
+
+    /**
+     * @return list<string>
+     */
+    protected function getAllowedTypes(): array
+    {
+        return [self::TYPE_INPUT];
+    }
 
     /**
      * @param Options<array<string, mixed>> $options
