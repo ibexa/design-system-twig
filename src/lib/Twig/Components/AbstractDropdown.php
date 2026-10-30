@@ -136,6 +136,40 @@ abstract class AbstractDropdown
     }
 
     /**
+     * @param list<string> $ids
+     *
+     * @return list<TDropdownItem>
+     */
+    protected function filterItemsByIds(array $ids): array
+    {
+        return array_values(array_filter(
+            $this->getFlatItems(),
+            static fn (array $item): bool => in_array($item['id'], $ids, true)
+        ));
+    }
+
+    /**
+     * @param Options<array<string, mixed>> $options
+     * @param array<mixed> $value
+     *
+     * @return list<string>
+     */
+    protected static function normalizeValue(
+        Options $options,
+        array $value
+    ): array {
+        foreach ($value as $index => $id) {
+            if (!is_int($id) && !is_string($id)) {
+                throw new InvalidOptionsException(
+                    sprintf('Each dropdown value must be an int or a string, "%s" given at index %s.', get_debug_type($id), $index)
+                );
+            }
+        }
+
+        return array_map(strval(...), array_values($value));
+    }
+
+    /**
      * @return array<int, TDropdownEntry>
      */
     #[ExposeInTemplate('source_entries')]

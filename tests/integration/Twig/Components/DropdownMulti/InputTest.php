@@ -240,6 +240,42 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testIntegerValuesMatchStringItemIds(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'items' => [['id' => 1, 'label' => 'One'], ['id' => 2, 'label' => 'Two']],
+            'value' => [2],
+        ]))->crawler();
+
+        $chipLabels = $crawler->filter('.ids-dropdown__selection-info-items .ids-chip .ids-chip__content');
+        self::assertSame('Two', trim($chipLabels->eq(0)->text('')), 'An integer value should render the matching item as a chip.');
+        self::assertNotNull(
+            $crawler->filter('.ids-dropdown__placeholder')->attr('hidden'),
+            'Placeholder should be hidden for a matching integer value.'
+        );
+    }
+
+    public function testUnknownValueShowsPlaceholder(): void
+    {
+        $crawler = $this->renderTwigComponent(Input::class, $this->baseProps([
+            'value' => ['missing'],
+        ]))->crawler();
+
+        self::assertSame(0, $crawler->filter('.ids-overflow-list__items > .ids-chip .ids-chip__delete')->count(), 'An unknown value should not render a chip.');
+        self::assertNull(
+            $crawler->filter('.ids-dropdown__placeholder')->attr('hidden'),
+            'Placeholder should stay visible when no value matches an item.'
+        );
+    }
+
+    public function testInvalidValueElementCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        $this->expectExceptionMessage('Each dropdown value must be an int or a string');
+
+        $this->mountTwigComponent(Input::class, $this->baseProps(['value' => [null]]));
+    }
+
     public function testInvalidValueTypeCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);

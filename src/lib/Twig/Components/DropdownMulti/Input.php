@@ -16,8 +16,11 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 #[AsTwigComponent('ibexa:dropdown_multi:input')]
 final class Input extends AbstractDropdown
 {
-    /** @var array<string> */
+    /** @var list<string> */
     public array $value = [];
+
+    /** @var list<array{id: string, label: string}>|null */
+    private ?array $selectedItems = null;
 
     /**
      * @return list<array{id: string, label: string}>
@@ -25,16 +28,13 @@ final class Input extends AbstractDropdown
     #[ExposeInTemplate('selected_items')]
     public function getSelectedItems(): array
     {
-        return array_values(array_filter(
-            $this->getFlatItems(),
-            fn (array $item): bool => in_array($item['id'], $this->value, true)
-        ));
+        return $this->selectedItems ??= $this->filterItemsByIds($this->value);
     }
 
     #[ExposeInTemplate('is_empty')]
     public function isEmpty(): bool
     {
-        return count($this->value) === 0;
+        return count($this->getSelectedItems()) === 0;
     }
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
@@ -42,6 +42,7 @@ final class Input extends AbstractDropdown
         $resolver
             ->define('value')
             ->allowedTypes('array')
-            ->default([]);
+            ->default([])
+            ->normalize(self::normalizeValue(...));
     }
 }
