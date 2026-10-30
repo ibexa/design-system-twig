@@ -2,9 +2,11 @@
 
 {% trans_default_domain 'ibexa_design_system_twig' %}
 
-{% set is_icon_only = type == 'more-filters-small' %}
-{% set has_trigger_icon = type in ['more-filters', 'more-filters-small'] %}
-{% set has_chevron = type in ['default', 'dashboard'] %}
+{% set is_icon_only = type == constant('TYPE_MORE_FILTERS_SMALL', this) %}
+{% set has_trigger_icon = type in [constant('TYPE_MORE_FILTERS', this), constant('TYPE_MORE_FILTERS_SMALL', this)] %}
+{% set has_chevron = type in [constant('TYPE_DEFAULT', this), constant('TYPE_DASHBOARD', this)] %}
+{% set is_value_summary = summary.mode == constant('SUMMARY_VALUE', this) %}
+{% set is_counter_summary = summary.mode == constant('SUMMARY_COUNTER', this) %}
 {% set class = html_classes(
     'ids-dropdown--filter',
     'ids-dropdown--filter-' ~ type,
@@ -45,10 +47,10 @@
             </span>
         {% endif %}
         {% if not is_icon_only %}
-            <span class="ids-dropdown__trigger-label">{{ label }}{% if summary.mode == 'value' %}:{% endif %}</span>
+            <span class="ids-dropdown__trigger-label">{{ label }}{% if is_value_summary %}:{% endif %}</span>
         {% endif %}
-        <span class="ids-dropdown__value"{% if summary.mode != 'value' %} hidden{% endif %}>{{ summary.mode == 'value' ? summary.text : '' }}</span>
-        <span class="ids-dropdown__counter"{% if summary.mode != 'counter' %} hidden{% endif %}>{{ summary.mode == 'counter' ? summary.text : '' }}</span>
+        <span class="ids-dropdown__value"{% if not is_value_summary %} hidden{% endif %}>{{ is_value_summary ? summary.text : '' }}</span>
+        <span class="ids-dropdown__counter"{% if not is_counter_summary %} hidden{% endif %}>{{ is_counter_summary ? summary.text : '' }}</span>
         {% if has_chevron %}
             <span class="ids-dropdown__chevron" aria-hidden="true">
                 <twig:ibexa:icon name="arrow-chevron-down" size="tiny-small" />

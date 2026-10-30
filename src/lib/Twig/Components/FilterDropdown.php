@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -34,17 +32,20 @@ final class FilterDropdown extends AbstractDropdown
 
     public string $type = self::TYPE_DEFAULT;
 
-    /** @var array<string> */
+    /** @var list<string> */
     public array $value = [];
 
     public bool $hasSearch = true;
+
+    /** @var list<TDropdownItem>|null */
+    private ?array $selectedItems = null;
 
     /**
      * @return list<TDropdownItem>
      */
     public function getSelectedItems(): array
     {
-        return $this->filterItemsByIds($this->value);
+        return $this->selectedItems ??= $this->filterItemsByIds($this->value);
     }
 
     #[ExposeInTemplate('is_empty')]
@@ -99,26 +100,5 @@ final class FilterDropdown extends AbstractDropdown
             ->define('hasSearch')
             ->allowedTypes('bool')
             ->default(true);
-    }
-
-    /**
-     * @param Options<array<string, mixed>> $options
-     * @param array<mixed> $value
-     *
-     * @return array<int, string>
-     */
-    private static function normalizeValue(
-        Options $options,
-        array $value
-    ): array {
-        foreach ($value as $index => $id) {
-            if (!is_int($id) && !is_string($id)) {
-                throw new InvalidOptionsException(
-                    sprintf('Each filter dropdown value must be an int or a string, "%s" given at index %s.', get_debug_type($id), $index)
-                );
-            }
-        }
-
-        return array_map(strval(...), array_values($value));
     }
 }
