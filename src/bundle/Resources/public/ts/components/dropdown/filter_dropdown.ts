@@ -9,7 +9,6 @@ export class FilterDropdown extends DropdownMultiInput {
     private _counterNode: HTMLElement | null;
     private _valueNode: HTMLElement | null;
     private _clearBtnNode: HTMLButtonElement | null;
-    private _hasSearch: boolean;
 
     constructor(container: HTMLDivElement) {
         super(container);
@@ -18,7 +17,6 @@ export class FilterDropdown extends DropdownMultiInput {
         this._counterNode = this._widgetNode.querySelector<HTMLElement>('.ids-dropdown__counter');
         this._valueNode = this._widgetNode.querySelector<HTMLElement>('.ids-dropdown__value');
         this._clearBtnNode = this._itemsContainerNode.querySelector<HTMLButtonElement>('.ids-dropdown__clear-btn');
-        this._hasSearch = !this._searchNode.hasAttribute('hidden');
     }
 
     protected resolveWidgetNodes(): BaseDropdownWidgetNodes {
@@ -81,14 +79,12 @@ export class FilterDropdown extends DropdownMultiInput {
         }
     }
 
-    protected toggleSearchVisibility(): void {
-        this._searchNode.toggleAttribute('hidden', !this._hasSearch);
-    }
+    protected toggleSearchVisibility(): void {} // eslint-disable-line @typescript-eslint/no-empty-function
 
     protected focusFirstFocusableNode() {
         const searchInput = this._searchInstance.getInputElement();
 
-        if (this._hasSearch) {
+        if (this.isSearchVisible()) {
             searchInput.focus();
 
             return;
