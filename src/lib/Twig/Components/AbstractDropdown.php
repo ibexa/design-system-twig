@@ -204,12 +204,6 @@ abstract class AbstractDropdown
         return array_key_exists('items', $entry);
     }
 
-    #[ExposeInTemplate('is_chip')]
-    public function isChip(): bool
-    {
-        return false;
-    }
-
     /**
      * @return array<string, string>
      */
