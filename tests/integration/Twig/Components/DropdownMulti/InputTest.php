@@ -250,6 +250,20 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testSmallSizeRendersSizeModifier(): void
+    {
+        $crawler = $this->renderTwigComponent(
+            Input::class,
+            $this->baseProps(['size' => 'small'])
+        )->crawler();
+
+        self::assertStringContainsString(
+            'ids-dropdown--small',
+            $this->getClassAttr($this->getDropdownWrapper($crawler)),
+            'Multi dropdown should include the small size modifier.'
+        );
+    }
+
     public function testChipTypeIsRejected(): void
     {
         $this->expectException(InvalidOptionsException::class);

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\DropdownSingle;
 
 use Ibexa\DesignSystemTwig\Twig\Components\DropdownSingle\Input;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -313,6 +314,22 @@ final class InputTest extends KernelTestCase
         self::assertCount(0, $crawler->filter('.ids-dropdown__item-check'), 'Input type items should not carry the chip check icon.');
         self::assertNull($wrapper->attr('icon'), 'The icon prop should be consumed, not rendered as an attribute.');
         self::assertNull($wrapper->attr('label'), 'The label prop should be consumed, not rendered as an attribute.');
+    }
+
+    #[TestWith(['medium'])]
+    #[TestWith(['small'])]
+    public function testInputTypeRendersSizeModifier(string $size): void
+    {
+        $crawler = $this->renderTwigComponent(
+            Input::class,
+            $this->baseProps(['size' => $size])
+        )->crawler();
+
+        self::assertStringContainsString(
+            'ids-dropdown--' . $size,
+            $this->getClassAttr($this->getWrapper($crawler)),
+            'Input type should include the size modifier.'
+        );
     }
 
     public function testInvalidTypeCausesResolverErrorOnMount(): void
