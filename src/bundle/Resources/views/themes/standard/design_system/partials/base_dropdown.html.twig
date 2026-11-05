@@ -81,7 +81,7 @@
                         {% if block('item_content') is defined %}
                             {{ block('item_content') }}
                         {% else %}
-                            <span class="ids-dropdown__item-label">{{ item.label }}</span>
+                            {{ _self.default_item_content(item, is_chip) }}
                         {% endif %}
                     {% endwith %}
                 {% endset %}
@@ -93,7 +93,7 @@
     {% block templates %}
         {% set item_content %}
             {% with { item: item_template_props } %}
-                {{ block('item_content') is defined ? block('item_content') : '' }}
+                {{ block('item_content') is defined ? block('item_content') : _self.default_item_content(item, is_chip) }}
             {% endwith %}
         {% endset %}
 
@@ -102,6 +102,18 @@
         </template>
     {% endblock templates %}
 </div>
+
+{% macro default_item_content(item, is_chip) %}
+    <span class="ids-dropdown__item-label">{{ item.label }}</span>
+    {% if is_chip %}
+        <span class="ids-dropdown__item-check" aria-hidden="true">
+            <twig:ibexa:icon
+                name="form-check"
+                size="tiny-small"
+            />
+        </span>
+    {% endif %}
+{% endmacro %}
 
 {% macro item_wrapper(content = '', is_selected = false, id = '', label = '') %}
     {% set item_classes =

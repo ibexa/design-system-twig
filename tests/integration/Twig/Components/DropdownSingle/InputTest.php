@@ -235,6 +235,56 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testChipTypeHidesSearchAndMarksItemsWithCheckIcon(): void
+    {
+        $items = array_map(
+            static fn (int $index): array => ['id' => 'item-' . $index, 'label' => 'Item ' . $index],
+            range(1, 12)
+        );
+        $chipCrawler = $this->renderTwigComponent(
+            Input::class,
+            $this->baseProps(['type' => 'chip', 'items' => $items, 'value' => 'item-2'])
+        )->crawler();
+        $inputCrawler = $this->renderTwigComponent(
+            Input::class,
+            $this->baseProps(['items' => $items, 'value' => 'item-2'])
+        )->crawler();
+
+        self::assertNotNull(
+            $chipCrawler->filter('.ids-dropdown__search')->first()->attr('hidden'),
+            'Chip should hide the search even above the visible items limit.'
+        );
+        self::assertNull(
+            $inputCrawler->filter('.ids-dropdown__search')->first()->attr('hidden'),
+            'Input type should keep the search above the visible items limit.'
+        );
+        self::assertCount(
+            12,
+            $chipCrawler->filter('.ids-dropdown__items .ids-dropdown__item .ids-dropdown__item-check'),
+            'Every chip item should carry the check icon for the selected state.'
+        );
+        self::assertCount(
+            1,
+            $chipCrawler->filter('.ids-dropdown__items .ids-dropdown__item--selected .ids-dropdown__item-check'),
+            'The selected chip item should carry the check icon.'
+        );
+        self::assertStringContainsString(
+            '#form-check',
+            $chipCrawler->filter('.ids-dropdown__items .ids-dropdown__item--selected .ids-dropdown__item-check use')->first()->attr('xlink:href') ?? '',
+            'The chip check icon should be the form-check glyph.'
+        );
+        self::assertSame(
+            'true',
+            $chipCrawler->filter('.ids-dropdown__items .ids-dropdown__item--selected .ids-dropdown__item-check')->first()->attr('aria-hidden'),
+            'The chip check icon should be decorative.'
+        );
+        self::assertCount(
+            1,
+            $chipCrawler->filter('.ids-dropdown__template .ids-dropdown__item .ids-dropdown__item-check'),
+            'The item template should carry the check icon so items re-rendered by setItems() keep it.'
+        );
+    }
+
     public function testInputTypeRendersNoChipParts(): void
     {
         $crawler = $this->renderTwigComponent(
@@ -260,6 +310,7 @@ final class InputTest extends KernelTestCase
             'Input type should ignore the chip icon.'
         );
         self::assertCount(0, $crawler->filter('.ids-dropdown__label'), 'Input type should ignore the chip label.');
+        self::assertCount(0, $crawler->filter('.ids-dropdown__item-check'), 'Input type items should not carry the chip check icon.');
         self::assertNull($wrapper->attr('icon'), 'The icon prop should be consumed, not rendered as an attribute.');
         self::assertNull($wrapper->attr('label'), 'The label prop should be consumed, not rendered as an attribute.');
     }

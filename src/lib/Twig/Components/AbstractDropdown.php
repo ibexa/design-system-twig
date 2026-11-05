@@ -143,7 +143,7 @@ abstract class AbstractDropdown
     #[ExposeInTemplate('is_search_visible')]
     public function getIsSearchVisible(): bool
     {
-        return count($this->items) > $this->maxVisibleItems;
+        return !$this->isChip() && count($this->items) > $this->maxVisibleItems;
     }
 
     #[ExposeInTemplate('is_chip')]
