@@ -4,6 +4,8 @@
     html_classes(
         'ids-dropdown',
         {
+            'ids-dropdown--chip': is_chip,
+            ('ids-dropdown--' ~ size): is_chip,
             'ids-dropdown--disabled': disabled,
             'ids-dropdown--error': error,
         },
@@ -12,10 +14,11 @@
 %}
 {% set widget_classes =
     html_classes(
-        'ids-dropdown__widget ids-input',
+        'ids-dropdown__widget',
         {
-            'ids-input--disabled': disabled,
-            'ids-input--error': error,
+            'ids-input': not is_chip,
+            'ids-input--disabled': not is_chip and disabled,
+            'ids-input--error': not is_chip and error,
         }
     )
 %}
@@ -32,6 +35,17 @@
         {% endblock source %}
     </div>
     <div class="{{ widget_classes }}" role="button" tabIndex="0">
+        {% if is_chip and icon is not empty %}
+            <span class="ids-dropdown__icon" aria-hidden="true">
+                <twig:ibexa:icon
+                    :name="icon"
+                    :size="icon_size"
+                />
+            </span>
+        {% endif %}
+        {% if is_chip and label is not empty %}
+            <div class="ids-dropdown__label">{{ label }}</div>
+        {% endif %}
         <div class="ids-dropdown__selection-info">
             {% block selection_info %}
                 {% block placeholder %}
@@ -67,7 +81,7 @@
                         {% if block('item_content') is defined %}
                             {{ block('item_content') }}
                         {% else %}
-                            <span class="ids-dropdown__item-label">{{ item.label }}</span>
+                            {{ _self.default_item_content(item, is_chip) }}
                         {% endif %}
                     {% endwith %}
                 {% endset %}
@@ -79,7 +93,7 @@
     {% block templates %}
         {% set item_content %}
             {% with { item: item_template_props } %}
-                {{ block('item_content') is defined ? block('item_content') : '' }}
+                {{ block('item_content') is defined ? block('item_content') : _self.default_item_content(item, is_chip) }}
             {% endwith %}
         {% endset %}
 
@@ -88,6 +102,18 @@
         </template>
     {% endblock templates %}
 </div>
+
+{% macro default_item_content(item, is_chip) %}
+    <span class="ids-dropdown__item-label">{{ item.label }}</span>
+    {% if is_chip %}
+        <span class="ids-dropdown__item-check" aria-hidden="true">
+            <twig:ibexa:icon
+                name="form-check"
+                size="tiny-small"
+            />
+        </span>
+    {% endif %}
+{% endmacro %}
 
 {% macro item_wrapper(content = '', is_selected = false, id = '', label = '') %}
     {% set item_classes =

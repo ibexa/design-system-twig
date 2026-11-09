@@ -120,7 +120,13 @@ export abstract class BaseDropdown extends Base {
                     listItem.appendChild(childNode);
                 });
             } else {
-                listItem.textContent = itemContent;
+                const labelNode = listItem.querySelector<HTMLElement>('.ids-dropdown__item-label');
+
+                if (labelNode) {
+                    labelNode.textContent = itemContent;
+                } else {
+                    listItem.textContent = itemContent;
+                }
             }
 
             this._itemsNode.appendChild(listItem);
@@ -132,7 +138,8 @@ export abstract class BaseDropdown extends Base {
     protected toggleSearchVisibility(): void {
         const { maxVisibleItems: maxVisibleItemsString } = this._itemsNode.dataset;
         const maxVisibleItems = maxVisibleItemsString ? parseInt(maxVisibleItemsString, 10) : MAX_VISIBLE_ITEMS_DEFAULT;
-        const shouldBeVisible = this._itemsMap.size >= maxVisibleItems;
+        const isChip = this._container.classList.contains('ids-dropdown--chip');
+        const shouldBeVisible = !isChip && this._itemsMap.size >= maxVisibleItems;
 
         if (shouldBeVisible) {
             this._searchNode.removeAttribute('hidden');
@@ -276,7 +283,12 @@ export abstract class BaseDropdown extends Base {
             this._itemsContainerNode.style.setProperty('visibility', 'hidden');
             this.updateItemsNodeHeight();
             this._itemsContainerNode.style.removeProperty('visibility');
-            searchInput.focus();
+
+            const focusTarget = this.isSearchVisible()
+                ? searchInput
+                : this.getItemsNodes().find((itemNode) => !itemNode.hasAttribute('hidden'));
+
+            focusTarget?.focus();
             document.addEventListener('click', this.clickOutsideItemsContainerHandler);
             void this._itemsContainerPopperInstance?.update();
         } else {

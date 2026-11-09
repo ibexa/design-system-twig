@@ -51,4 +51,9 @@ final class Input extends AbstractDropdown
             ->allowedTypes('string')
             ->default('');
     }
+
+    protected function getAllowedTypes(): array
+    {
+        return [self::TYPE_INPUT, self::TYPE_CHIP];
+    }
 }
