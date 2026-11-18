@@ -202,8 +202,7 @@ export abstract class BaseDropdown extends Base {
     protected toggleSearchVisibility(): void {
         const { maxVisibleItems: maxVisibleItemsString } = this._itemsNode.dataset;
         const maxVisibleItems = maxVisibleItemsString ? parseInt(maxVisibleItemsString, 10) : MAX_VISIBLE_ITEMS_DEFAULT;
-        const isChip = this._container.classList.contains('ids-dropdown--chip');
-        const shouldBeVisible = !isChip && this._itemsMap.size > maxVisibleItems;
+        const shouldBeVisible = this._itemsMap.size > maxVisibleItems;
 
         if (shouldBeVisible) {
             this._searchNode.removeAttribute('hidden');

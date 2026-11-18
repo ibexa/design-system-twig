@@ -21,10 +21,9 @@
 {% block item_content %}
     <span class="ids-dropdown__item-label">{{ item.label }}</span>
     <twig:ibexa:icon
-        :name="is_chip ? 'form-check' : 'check-circle'"
+        name="check-circle"
         size="tiny-small"
         class="ids-dropdown__item-check"
-        aria-hidden="true"
         :hidden="item.id != value"
     />
 {% endblock item_content %}

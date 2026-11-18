@@ -11,7 +11,6 @@ namespace Ibexa\DesignSystemTwig\Twig\Components;
 use JMS\TranslationBundle\Annotation\Desc;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Twig\Environment;
 
 abstract class AbstractDropdownInput extends AbstractDropdown
@@ -33,17 +32,6 @@ abstract class AbstractDropdownInput extends AbstractDropdown
         Environment $twig,
     ) {
         parent::__construct($twig);
-    }
-
-    #[ExposeInTemplate('is_search_visible')]
-    public function getIsSearchVisible(): bool
-    {
-        return !$this->isChip() && parent::getIsSearchVisible();
-    }
-
-    public function isChip(): bool
-    {
-        return false;
     }
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
