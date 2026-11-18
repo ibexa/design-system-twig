@@ -8,13 +8,13 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components\DropdownMulti;
 
-use Ibexa\DesignSystemTwig\Twig\Components\AbstractDropdown;
+use Ibexa\DesignSystemTwig\Twig\Components\AbstractDropdownInput;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 #[AsTwigComponent('ibexa:dropdown_multi:input')]
-final class Input extends AbstractDropdown
+final class Input extends AbstractDropdownInput
 {
     /** @var list<string> */
     public array $value = [];
@@ -39,6 +39,8 @@ final class Input extends AbstractDropdown
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
+        parent::configurePropsResolver($resolver);
+
         $resolver
             ->define('value')
             ->allowedTypes('array')

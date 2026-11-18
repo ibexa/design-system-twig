@@ -10,6 +10,7 @@ namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\DropdownSingl
 
 use Ibexa\DesignSystemTwig\Twig\Components\DropdownSingle\Input;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -230,6 +231,36 @@ final class InputTest extends KernelTestCase
             $this->getClassAttr($wrapper),
             'Custom class should be merged into wrapper classes.'
         );
+    }
+
+    #[TestWith(['medium'])]
+    #[TestWith(['small'])]
+    public function testSizeRendersSizeModifier(string $size): void
+    {
+        $crawler = $this->renderTwigComponent(
+            Input::class,
+            $this->baseProps(['size' => $size])
+        )->crawler();
+
+        self::assertStringContainsString(
+            'ids-dropdown--' . $size,
+            $this->getClassAttr($this->getWrapper($crawler)),
+            'Dropdown should include the size modifier.'
+        );
+    }
+
+    public function testInvalidErrorTypeCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps(['error' => 'yes']));
+    }
+
+    public function testInvalidSizeCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps(['size' => 'large']));
     }
 
     public function testInvalidItemsTypeCausesResolverErrorOnMount(): void
