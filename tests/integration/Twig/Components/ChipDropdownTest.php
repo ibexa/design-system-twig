@@ -143,6 +143,7 @@ final class ChipDropdownTest extends KernelTestCase
         self::assertSame('-1', $widget->attr('tabindex'), 'Disabled chip should leave the tab order.');
         self::assertSame('true', $widget->attr('aria-disabled'), 'Disabled chip should be announced as disabled.');
         self::assertNotNull($crawler->filter('.ids-dropdown__source > select')->first()->attr('disabled'), 'Source select should be disabled.');
+        self::assertSame('-1', $crawler->filter('.ids-dropdown__source > select')->first()->attr('tabindex'), 'Source select should stay out of the tab order.');
     }
 
     public function testInvalidSizeCausesResolverErrorOnMount(): void
