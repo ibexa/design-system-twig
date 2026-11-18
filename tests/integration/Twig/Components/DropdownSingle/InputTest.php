@@ -249,6 +249,13 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testInvalidErrorTypeCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps(['error' => 'yes']));
+    }
+
     public function testInvalidSizeCausesResolverErrorOnMount(): void
     {
         $this->expectException(InvalidOptionsException::class);

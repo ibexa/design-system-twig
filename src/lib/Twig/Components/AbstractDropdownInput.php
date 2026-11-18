@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-abstract class AbstractInputDropdown extends AbstractDropdown
+abstract class AbstractDropdownInput extends AbstractDropdown
 {
     public const string SIZE_MEDIUM = 'medium';
 
@@ -38,6 +38,10 @@ abstract class AbstractInputDropdown extends AbstractDropdown
     {
         $resolver
             ->define('disabled')
+            ->allowedTypes('bool')
+            ->default(false);
+        $resolver
+            ->define('error')
             ->allowedTypes('bool')
             ->default(false);
         $resolver

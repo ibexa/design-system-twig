@@ -8,14 +8,14 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components\DropdownSingle;
 
-use Ibexa\DesignSystemTwig\Twig\Components\AbstractInputDropdown;
+use Ibexa\DesignSystemTwig\Twig\Components\AbstractDropdownInput;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 #[AsTwigComponent('ibexa:dropdown_single:input')]
-final class Input extends AbstractInputDropdown
+final class Input extends AbstractDropdownInput
 {
     public ?string $value = '';
 
