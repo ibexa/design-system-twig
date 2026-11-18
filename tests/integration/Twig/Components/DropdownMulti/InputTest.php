@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Integration\DesignSystemTwig\Twig\Components\DropdownMulti;
 
 use Ibexa\DesignSystemTwig\Twig\Components\DropdownMulti\Input;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -284,6 +285,29 @@ final class InputTest extends KernelTestCase
             Input::class,
             $this->baseProps(['value' => 'opt-a'])
         );
+    }
+
+    #[TestWith(['medium'])]
+    #[TestWith(['small'])]
+    public function testSizeRendersSizeModifier(string $size): void
+    {
+        $crawler = $this->renderTwigComponent(
+            Input::class,
+            $this->baseProps(['size' => $size])
+        )->crawler();
+
+        self::assertStringContainsString(
+            'ids-dropdown--' . $size,
+            $this->getClassAttr($this->getDropdownWrapper($crawler)),
+            'Dropdown should include the size modifier.'
+        );
+    }
+
+    public function testInvalidSizeCausesResolverErrorOnMount(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        $this->mountTwigComponent(Input::class, $this->baseProps(['size' => 'large']));
     }
 
     public function testGroupedItemsRenderCheckboxesAndSelectedChips(): void
