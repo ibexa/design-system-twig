@@ -12,6 +12,7 @@
             name: name,
             disabled: disabled,
             required: required|default(false),
+            tabindex: '-1',
         }) }}>
             {{ source_options(source_entries, [value]) }}
         </select>
