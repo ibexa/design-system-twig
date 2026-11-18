@@ -1,11 +1,9 @@
 {% trans_default_domain 'ibexa_design_system_twig' %}
 
-{% set is_chip = this.isChip is defined and this.isChip %}
 {% set classes =
     html_classes(
         'ids-dropdown',
         {
-            'ids-dropdown--chip': is_chip,
             ('ids-dropdown--' ~ this.size|default('')): this.size is defined,
             'ids-dropdown--disabled': this.disabled|default(false),
             'ids-dropdown--error': this.error|default(false),
@@ -15,11 +13,10 @@
 %}
 {% set widget_classes =
     html_classes(
-        'ids-dropdown__widget',
+        'ids-dropdown__widget ids-input',
         {
-            'ids-input': not is_chip,
-            'ids-input--disabled': not is_chip and this.disabled|default(false),
-            'ids-input--error': not is_chip and this.error|default(false),
+            'ids-input--disabled': this.disabled|default(false),
+            'ids-input--error': this.error|default(false),
         }
     )
 %}
@@ -37,17 +34,6 @@
     </div>
     {% block widget %}
         <div class="{{ widget_classes }}" role="button" tabIndex="0">
-            {% if is_chip and icon is not empty %}
-                <span class="ids-dropdown__icon" aria-hidden="true">
-                    <twig:ibexa:icon
-                        :name="icon"
-                        :size="icon_size"
-                    />
-                </span>
-            {% endif %}
-            {% if is_chip and label is not empty %}
-                <div class="ids-dropdown__label">{{ label }}</div>
-            {% endif %}
             <div class="ids-dropdown__selection-info">
                 {% block selection_info %}
                     {% block placeholder %}

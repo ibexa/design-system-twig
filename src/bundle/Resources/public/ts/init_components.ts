@@ -1,6 +1,6 @@
 import { AltRadioInput, AltRadiosListField } from './components/alt_radio';
 import { CheckboxInput, CheckboxesListField } from './components/checkbox';
-import { DropdownMultiInput, DropdownSingleInput, FilterDropdown } from './components/dropdown';
+import { ChipDropdown, DropdownMultiInput, DropdownSingleInput, FilterDropdown } from './components/dropdown';
 import { InputTextField, InputTextInput } from './components/input_text';
 import { RadioButtonInput, RadioButtonsListField } from './components/radio_button';
 import { ToggleButtonField, ToggleButtonInput } from './components/toggle_button';
@@ -65,6 +65,14 @@ dropdownMultiContainers.forEach((dropdownContainer: HTMLDivElement) => {
     const dropdownInstance = new DropdownMultiInput(dropdownContainer);
 
     dropdownInstance.init();
+});
+
+const chipDropdownContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown--chip:not([data-ids-custom-init])');
+
+chipDropdownContainers.forEach((chipDropdownContainer: HTMLDivElement) => {
+    const chipDropdownInstance = new ChipDropdown(chipDropdownContainer);
+
+    chipDropdownInstance.init();
 });
 
 const filterDropdownContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown--filter:not([data-ids-custom-init])');
