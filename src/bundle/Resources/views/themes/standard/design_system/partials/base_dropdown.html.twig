@@ -5,8 +5,8 @@
         'ids-dropdown',
         {
             ('ids-dropdown--' ~ this.size|default('')): this.size is defined,
-            'ids-dropdown--disabled': disabled,
-            'ids-dropdown--error': error,
+            'ids-dropdown--disabled': this.disabled|default(false),
+            'ids-dropdown--error': this.error|default(false),
         },
         class
     )
@@ -15,8 +15,8 @@
     html_classes(
         'ids-dropdown__widget ids-input',
         {
-            'ids-input--disabled': disabled,
-            'ids-input--error': error,
+            'ids-input--disabled': this.disabled|default(false),
+            'ids-input--error': this.error|default(false),
         }
     )
 %}

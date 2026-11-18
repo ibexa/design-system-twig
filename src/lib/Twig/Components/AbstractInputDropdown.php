@@ -8,7 +8,10 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
+use JMS\TranslationBundle\Annotation\Desc;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 abstract class AbstractInputDropdown extends AbstractDropdown
 {
@@ -16,10 +19,38 @@ abstract class AbstractInputDropdown extends AbstractDropdown
 
     public const string SIZE_SMALL = 'small';
 
+    public bool $disabled = false;
+
+    public bool $error = false;
+
+    public string $placeholder;
+
     public string $size = self::SIZE_MEDIUM;
+
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        Environment $twig,
+    ) {
+        parent::__construct($twig);
+    }
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
+        $resolver
+            ->define('disabled')
+            ->allowedTypes('bool')
+            ->default(false);
+        $resolver
+            ->define('placeholder')
+            ->allowedTypes('string')
+            ->default(
+                $this->translator->trans(
+                    /** @Desc("Select an item") */
+                    'ids.dropdown.placeholder',
+                    [],
+                    'ibexa_design_system_twig'
+                )
+            );
         $resolver
             ->define('size')
             ->allowedValues(self::SIZE_MEDIUM, self::SIZE_SMALL)
