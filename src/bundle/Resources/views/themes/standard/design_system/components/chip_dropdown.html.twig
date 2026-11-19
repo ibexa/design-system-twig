@@ -1,0 +1,72 @@
+{% extends '@IbexaDesignSystemTwig/themes/standard/design_system/partials/base_dropdown.html.twig' %}
+
+{% set class = html_classes('ids-dropdown--chip', 'ids-dropdown--chip-' ~ size, attributes.render('class') ?? '') %}
+
+{% block source %}
+    {% from '@IbexaDesignSystemTwig/themes/standard/design_system/macros/dropdown.html.twig' import source_options %}
+
+    {% if source is defined and source is not empty %}
+        {{ source|raw }}
+    {% else %}
+        <select{{ source_attributes.defaults({
+            name: name,
+            disabled: disabled,
+            required: required|default(false),
+            tabindex: '-1',
+        }) }}>
+            {{ source_options(source_entries, [value]) }}
+        </select>
+    {% endif %}
+{% endblock source %}
+
+{% block widget %}
+    <div
+        class="ids-dropdown__widget"
+        role="button"
+        tabIndex="{{ disabled ? '-1' : '0' }}"
+        aria-expanded="false"
+        aria-controls="{{ group_id_prefix }}-panel"
+        {% if disabled %}aria-disabled="true"{% endif %}
+    >
+        {% if icon is not empty %}
+            <span class="ids-dropdown__icon" aria-hidden="true">
+                <twig:ibexa:icon
+                    :name="icon"
+                    :size="icon_size"
+                />
+            </span>
+        {% endif %}
+        {% if label is not empty %}
+            <div class="ids-dropdown__label">{{ label }}</div>
+        {% endif %}
+        <div class="ids-dropdown__selection-info">
+            <div class="ids-dropdown__placeholder"{% if not is_empty %} hidden{% endif %}>
+                {{ normalized_placeholder }}
+            </div>
+            <div class="ids-dropdown__selection-info-items"{% if is_empty %} hidden{% endif %}>
+                {{ selected_label }}
+            </div>
+        </div>
+        <div class="ids-dropdown__expander">
+            <twig:ibexa:expander
+                type="chevron"
+                tabindex="-1"
+            />
+        </div>
+    </div>
+{% endblock widget %}
+
+{% block items_container_attributes %}
+    id="{{ group_id_prefix }}-panel"
+{% endblock items_container_attributes %}
+
+{% block item_content %}
+    <span class="ids-dropdown__item-label">{{ item.label }}</span>
+    <twig:ibexa:icon
+        name="form-check"
+        size="tiny-small"
+        class="ids-dropdown__item-check"
+        aria-hidden="true"
+        :hidden="item.id != value"
+    />
+{% endblock item_content %}

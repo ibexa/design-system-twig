@@ -317,6 +317,16 @@ export abstract class BaseDropdown extends Base {
         return !this._searchNode.hasAttribute('hidden');
     }
 
+    protected focusFirstFocusableNode(): void {
+        if (this.isSearchVisible()) {
+            this._searchInstance.getInputElement().focus();
+
+            return;
+        }
+
+        this.getVisibleItemsNodes().at(0)?.focus();
+    }
+
     protected clickOutsideItemsContainerHandler = (event: MouseEvent) => {
         if (event.target instanceof Node && !this._widgetNode.contains(event.target) && !this._itemsContainerNode.contains(event.target)) {
             this.toggleItemsContainer(false);
@@ -390,8 +400,6 @@ export abstract class BaseDropdown extends Base {
         this._isExpanded = isExpanded;
 
         if (isExpanded) {
-            const searchInput = this._searchInstance.getInputElement();
-
             const { left: widgetLeft } = this._widgetNode.getBoundingClientRect();
             const availableWidth = document.documentElement.clientWidth - widgetLeft - VIEWPORT_MARGIN;
 
@@ -402,7 +410,8 @@ export abstract class BaseDropdown extends Base {
             this._itemsContainerNode.style.setProperty('visibility', 'hidden');
             this.updateItemsNodeHeight();
             this._itemsContainerNode.style.removeProperty('visibility');
-            searchInput.focus();
+
+            this.focusFirstFocusableNode();
             document.addEventListener('click', this.clickOutsideItemsContainerHandler);
             void this._itemsContainerPopperInstance?.update();
         } else {
