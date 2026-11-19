@@ -94,6 +94,33 @@ final class ChipDropdownTest extends KernelTestCase
         self::assertNull($wrapper->attr('label'), 'The label prop should be consumed, not rendered as an attribute.');
     }
 
+    public function testEmptyItemsShowPlaceholderAndHideSelection(): void
+    {
+        $crawler = $this->renderTwigComponent(ChipDropdown::class, ['name' => 'language', 'items' => []])->crawler();
+
+        $placeholder = $crawler->filter('.ids-dropdown__placeholder')->first();
+        $selection = $crawler->filter('.ids-dropdown__selection-info-items')->first();
+
+        self::assertNull($placeholder->attr('hidden'), 'Placeholder should be visible without items.');
+        self::assertSame('Select an item', trim($placeholder->text('')), 'Placeholder should show the default text.');
+        self::assertNotNull($selection->attr('hidden'), 'Selection should be hidden without items.');
+        self::assertSame('', trim($selection->text('')), 'Selection should be empty without items.');
+        self::assertCount(0, $crawler->filter('.ids-dropdown__items .ids-dropdown__item'), 'No item should render.');
+        self::assertCount(0, $crawler->filter('.ids-dropdown__source > select > option'), 'No option should render.');
+    }
+
+    public function testRendersWithoutIconAndLabel(): void
+    {
+        $crawler = $this->renderTwigComponent(ChipDropdown::class, $this->baseProps())->crawler();
+
+        $widget = $this->getWidget($crawler);
+
+        self::assertCount(0, $widget->filter('.ids-dropdown__icon'), 'No icon should render without the icon prop.');
+        self::assertCount(0, $widget->filter('.ids-dropdown__label'), 'No label should render without the label prop.');
+        self::assertSame('Alpha', trim($widget->filter('.ids-dropdown__selection-info-items')->first()->text('')), 'The first item should be selected by default.');
+        self::assertStringContainsString('ids-dropdown--chip-medium', $this->getClassAttr($this->getWrapper($crawler)), 'Default size should be medium.');
+    }
+
     public function testHidesSearchAndMarksItemsWithCheckIcon(): void
     {
         $items = array_map(
