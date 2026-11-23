@@ -287,6 +287,42 @@ final class InputTest extends KernelTestCase
         );
     }
 
+    public function testDisabledAndErrorAddClassesAndSelectDisabled(): void
+    {
+        $crawler = $this->renderTwigComponent(
+            Input::class,
+            $this->baseProps(['disabled' => true, 'error' => true])
+        )->crawler();
+
+        $wrapper = $this->getDropdownWrapper($crawler);
+        $widget = $wrapper->filter('.ids-dropdown__widget');
+
+        self::assertStringContainsString(
+            'ids-dropdown--disabled',
+            $this->getClassAttr($wrapper),
+            'Wrapper should include disabled modifier.'
+        );
+        self::assertStringContainsString(
+            'ids-dropdown--error',
+            $this->getClassAttr($wrapper),
+            'Wrapper should include error modifier.'
+        );
+        self::assertStringContainsString(
+            'ids-input--disabled',
+            $this->getClassAttr($widget),
+            'Widget should include disabled modifier.'
+        );
+        self::assertStringContainsString(
+            'ids-input--error',
+            $this->getClassAttr($widget),
+            'Widget should include error modifier.'
+        );
+        self::assertNotNull(
+            $this->getSelectElement($wrapper)->attr('disabled'),
+            'Native "disabled" attribute should be present on <select> when disabled=true.'
+        );
+    }
+
     #[TestWith(['medium'])]
     #[TestWith(['small'])]
     public function testSizeRendersSizeModifier(string $size): void
