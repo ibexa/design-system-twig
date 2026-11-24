@@ -8,12 +8,10 @@ declare(strict_types=1);
 
 namespace Ibexa\DesignSystemTwig\Twig\Components;
 
-use JMS\TranslationBundle\Annotation\Desc;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 use Symfony\UX\TwigComponent\ComponentAttributes;
@@ -42,17 +40,11 @@ abstract class AbstractDropdown
     /** @var array<string, mixed> */
     public array $sourceAttributes = [];
 
-    public bool $disabled = false;
-
-    public bool $error = false;
-
     /** @var array<TDropdownEntry> */
     public array $items = [];
 
     /** @var array<string> */
     public array $itemTemplateProps = ['id', 'label'];
-
-    public string $placeholder;
 
     #[ExposeInTemplate('max_visible_items')]
     public int $maxVisibleItems = 10;
@@ -63,7 +55,6 @@ abstract class AbstractDropdown
     private ?array $flatItems = null;
 
     public function __construct(
-        private readonly TranslatorInterface $translator,
         private readonly Environment $twig,
     ) {}
 
@@ -91,25 +82,10 @@ abstract class AbstractDropdown
             ->allowedTypes('array')
             ->default([]);
         $resolver
-            ->define('disabled')
-            ->allowedTypes('bool')
-            ->default(false);
-        $resolver
             ->define('items')
             ->allowedTypes('array')
             ->default([])
             ->normalize(self::normalizeItems(...));
-        $resolver
-            ->define('placeholder')
-            ->allowedTypes('string')
-            ->default(
-                $this->translator->trans(
-                    /** @Desc("Select an item") */
-                    'ids.dropdown.placeholder',
-                    [],
-                    'ibexa_design_system_twig'
-                )
-            );
         $resolver
             ->define('maxVisibleItems')
             ->allowedTypes('int')

@@ -82,7 +82,9 @@ final class FilterDropdown extends AbstractDropdown
 
     protected function configurePropsResolver(OptionsResolver $resolver): void
     {
-        $resolver->setAllowedValues('disabled', false);
+        $resolver
+            ->define('disabled')
+            ->allowedValues(false);
         $resolver
             ->define('label')
             ->required()

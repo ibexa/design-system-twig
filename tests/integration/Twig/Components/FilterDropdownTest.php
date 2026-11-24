@@ -203,6 +203,18 @@ final class FilterDropdownTest extends KernelTestCase
         self::assertSame('1', trim($wrapper->filter('.ids-dropdown__counter')->text('')), 'A selection inside a nested group should be counted.');
     }
 
+    public function testInputDropdownPropsDoNotAddModifiers(): void
+    {
+        $crawler = $this->renderTwigComponent(
+            FilterDropdown::class,
+            $this->baseProps(['size' => 'small', 'error' => true])
+        )->crawler();
+        $wrapperClass = (string) $this->getWrapper($crawler)->attr('class');
+
+        self::assertStringNotContainsString('ids-dropdown--small', $wrapperClass, 'Filter dropdown has no size and should not render a size modifier.');
+        self::assertStringNotContainsString('ids-dropdown--error', $wrapperClass, 'Filter dropdown has no error state and should not render an error modifier.');
+    }
+
     public function testInvalidTypeCausesResolverError(): void
     {
         $this->expectException(InvalidOptionsException::class);

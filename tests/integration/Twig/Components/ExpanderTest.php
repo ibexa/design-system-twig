@@ -198,6 +198,23 @@ final class ExpanderTest extends KernelTestCase
         self::assertStringContainsString('custom-hook', $classAttr, 'Custom class custom-hook should be merged');
     }
 
+    public function testPassesOtherAttributesToButton(): void
+    {
+        $rendered = $this->renderTwigComponent(
+            'ibexa:expander',
+            [
+                'type' => 'chevron',
+                'tabindex' => '-1',
+                'data-custom' => 'value',
+            ]
+        );
+
+        $button = $this->getButton($rendered->crawler());
+
+        self::assertSame('-1', $button->attr('tabindex'), 'tabindex should be passed to the button');
+        self::assertSame('value', $button->attr('data-custom'), 'data attributes should be passed to the button');
+    }
+
     private function getButton(Crawler $crawler): Crawler
     {
         return $crawler->filter('button.ids-expander');
