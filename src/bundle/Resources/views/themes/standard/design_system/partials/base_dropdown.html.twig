@@ -27,7 +27,7 @@
     : default_placeholder
 %}
 
-<div class="{{ classes }}" {{ attributes.without('class') }}>
+<div class="{{ classes }}" data-ids-twig {{ attributes.without('class') }}>
     <div class="ids-dropdown__source">
         {% block source %}
         {% endblock source %}

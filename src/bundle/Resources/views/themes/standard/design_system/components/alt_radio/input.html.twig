@@ -12,7 +12,7 @@
 %}
 {% set custom_init = attributes.render('data-ids-custom-init') is not null %}
 
-<div class="{{ component_classes }}"{{ custom_init ? ' data-ids-custom-init' : '' }}>
+<div class="{{ component_classes }}" data-ids-twig{{ custom_init ? ' data-ids-custom-init' : '' }}>
     <div class="ids-alt-radio__source">
         <input
             class="ids-input ids-input--radio"

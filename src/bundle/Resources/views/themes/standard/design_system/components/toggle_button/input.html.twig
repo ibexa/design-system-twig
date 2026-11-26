@@ -16,7 +16,7 @@
     )
 %}
 
-<div class="{{ component_classes.apply({ size }, attributes.render('class')) }}" {{ attributes }}>
+<div class="{{ component_classes.apply({ size }, attributes.render('class')) }}" data-ids-twig {{ attributes }}>
     <div class="ids-toggle__source">
         {% block input %}
             <twig:ibexa:checkbox:input
