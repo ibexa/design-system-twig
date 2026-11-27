@@ -23,6 +23,7 @@
 {% set has_actions = block('actions') is defined and block('actions')|trim is not empty %}
 
 <div
+    data-ids-twig
     class="{{
         alert_classes.apply(
             {

@@ -8,145 +8,101 @@ import { Accordion } from './components/accordion';
 import { Alert } from './components/alert';
 import { OverflowList } from './components/overflow_list';
 import { Tabs } from './components/tabs';
+import { hasInstance } from './helpers/object.instances';
 
-const accordionContainers = document.querySelectorAll<HTMLDivElement>('.ids-accordion:not([data-ids-custom-init])');
+interface InitComponentsOptions {
+    isTwigMarkerRequired?: boolean;
+}
 
-accordionContainers.forEach((accordionContainer: HTMLDivElement) => {
-    const accordionInstance = new Accordion(accordionContainer);
+interface InitMatchingOptions extends InitComponentsOptions {
+    instanceNodeSelector?: string;
+    shouldSkipToggleSource?: boolean;
+}
 
-    accordionInstance.init();
-});
+const COMPONENTS_ADDED_EVENT = 'ids:components:added';
 
-const alertContainers = document.querySelectorAll<HTMLDivElement>('.ids-alert:not([data-ids-custom-init])');
+const initMatching = <ContainerType extends HTMLElement>(
+    root: ParentNode,
+    selector: string,
+    createComponent: (container: ContainerType) => { init: () => void },
+    { instanceNodeSelector, isTwigMarkerRequired = false, shouldSkipToggleSource = false }: InitMatchingOptions,
+): void => {
+    const checkIsInitialized = (container: HTMLElement): boolean => {
+        const instanceNodes = instanceNodeSelector
+            ? Array.from(container.querySelectorAll<HTMLElement>(instanceNodeSelector))
+            : [container];
 
-alertContainers.forEach((alertContainer: HTMLDivElement) => {
-    const alertInstance = new Alert(alertContainer);
+        return instanceNodes.some((instanceNode) => hasInstance(instanceNode));
+    };
 
-    alertInstance.init();
-});
+    const fullSelector = `${selector}:not([data-ids-custom-init])`;
+    const checkIsMatchingRoot = (node: ParentNode): node is ContainerType => node instanceof HTMLElement && node.matches(fullSelector);
+    const matchingRoots = checkIsMatchingRoot(root) ? [root] : [];
 
-const altRadioContainers = document.querySelectorAll<HTMLDivElement>('.ids-alt-radio:not([data-ids-custom-init])');
+    [...matchingRoots, ...Array.from(root.querySelectorAll<ContainerType>(fullSelector))]
+        .filter((container) => !checkIsInitialized(container))
+        .filter((container) => !isTwigMarkerRequired || container.hasAttribute('data-ids-twig'))
+        .filter((container) => !shouldSkipToggleSource || !container.closest('.ids-toggle__source'))
+        .forEach((container) => {
+            createComponent(container).init();
+        });
+};
 
-altRadioContainers.forEach((altRadioContainer: HTMLDivElement) => {
-    const altRadioInstance = new AltRadioInput(altRadioContainer);
+const initComponents = (root: ParentNode, options: InitComponentsOptions = {}): void => {
+    const choiceInputOptions = { ...options, shouldSkipToggleSource: true };
 
-    altRadioInstance.init();
-});
+    initMatching<HTMLDivElement>(root, '.ids-accordion', (container) => new Accordion(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-alert', (container) => new Alert(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-alt-radio', (container) => new AltRadioInput(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-alt-radio-list-field', (container) => new AltRadiosListField(container), options);
+    initMatching<HTMLInputElement>(root, '.ids-input--checkbox', (container) => new CheckboxInput(container), choiceInputOptions);
+    initMatching<HTMLDivElement>(root, '.ids-checkboxes-list-field', (container) => new CheckboxesListField(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-dropdown--multi', (container) => new DropdownMultiInput(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-dropdown--filter', (container) => new FilterDropdown(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-dropdown--single', (container) => new DropdownSingleInput(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-field--input-text', (container) => new InputTextField(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-input-text', (container) => new InputTextInput(container), options);
+    initMatching<HTMLInputElement>(root, '.ids-input--radio', (container) => new RadioButtonInput(container), choiceInputOptions);
+    initMatching<HTMLDivElement>(root, '.ids-radio-buttons-list-field', (container) => new RadioButtonsListField(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-overflow-list', (container) => new OverflowList(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-tabs', (container) => new Tabs(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-toggle-field', (container) => new ToggleButtonField(container), options);
+    initMatching<HTMLDivElement>(root, '.ids-toggle', (container) => new ToggleButtonInput(container), {
+        ...options,
+        instanceNodeSelector: '.ids-toggle__source input',
+    });
+};
 
-const altRadiosListContainers = document.querySelectorAll<HTMLDivElement>('.ids-alt-radio-list-field:not([data-ids-custom-init])');
+const getDetailContainer = (event: Event): HTMLElement | null => {
+    if (!(event instanceof CustomEvent)) {
+        return null;
+    }
 
-altRadiosListContainers.forEach((altRadiosListContainer: HTMLDivElement) => {
-    const altRadiosListInstance = new AltRadiosListField(altRadiosListContainer);
+    const { detail }: { detail: unknown } = event;
 
-    altRadiosListInstance.init();
-});
+    if (typeof detail !== 'object' || detail === null || !('container' in detail)) {
+        return null;
+    }
 
-const checkboxContainers = Array.from(
-    document.querySelectorAll<HTMLInputElement>('.ids-input--checkbox:not([data-ids-custom-init])'),
-).filter((checkboxContainer: HTMLInputElement) => !checkboxContainer.closest('.ids-toggle__source'));
+    return detail.container instanceof HTMLElement ? detail.container : null;
+};
 
-checkboxContainers.forEach((checkboxContainer: HTMLInputElement) => {
-    const checkboxInstance = new CheckboxInput(checkboxContainer);
+const getAddedComponentsRoot = (event: Event): ParentNode => {
+    const detailContainer = getDetailContainer(event);
 
-    checkboxInstance.init();
-});
+    if (detailContainer) {
+        return detailContainer;
+    }
 
-const checkboxesFieldContainers = document.querySelectorAll<HTMLDivElement>('.ids-checkboxes-list-field:not([data-ids-custom-init])');
+    if (event.target instanceof HTMLElement) {
+        return event.target;
+    }
 
-checkboxesFieldContainers.forEach((checkboxesFieldContainer: HTMLDivElement) => {
-    const checkboxesFieldInstance = new CheckboxesListField(checkboxesFieldContainer);
+    return document;
+};
 
-    checkboxesFieldInstance.init();
-});
+initComponents(document);
 
-const dropdownMultiContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown--multi:not([data-ids-custom-init])');
-
-dropdownMultiContainers.forEach((dropdownContainer: HTMLDivElement) => {
-    const dropdownInstance = new DropdownMultiInput(dropdownContainer);
-
-    dropdownInstance.init();
-});
-
-const filterDropdownContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown--filter:not([data-ids-custom-init])');
-
-filterDropdownContainers.forEach((filterDropdownContainer: HTMLDivElement) => {
-    const filterDropdownInstance = new FilterDropdown(filterDropdownContainer);
-
-    filterDropdownInstance.init();
-});
-
-const dropdownSingleContainers = document.querySelectorAll<HTMLDivElement>('.ids-dropdown--single:not([data-ids-custom-init])');
-
-dropdownSingleContainers.forEach((dropdownContainer: HTMLDivElement) => {
-    const dropdownInstance = new DropdownSingleInput(dropdownContainer);
-
-    dropdownInstance.init();
-});
-
-const fieldInputTextContainers = document.querySelectorAll<HTMLDivElement>('.ids-field--input-text:not([data-ids-custom-init])');
-
-fieldInputTextContainers.forEach((fieldInputTextContainer: HTMLDivElement) => {
-    const fieldInputTextInstance = new InputTextField(fieldInputTextContainer);
-
-    fieldInputTextInstance.init();
-});
-
-const inputTextContainers = document.querySelectorAll<HTMLDivElement>('.ids-input-text:not([data-ids-custom-init])');
-
-inputTextContainers.forEach((inputTextContainer: HTMLDivElement) => {
-    const inputTextInstance = new InputTextInput(inputTextContainer);
-
-    inputTextInstance.init();
-});
-
-const radioButtonContainers = Array.from(
-    document.querySelectorAll<HTMLInputElement>('.ids-input--radio:not([data-ids-custom-init])'),
-).filter((radioButtonContainer: HTMLInputElement) => !radioButtonContainer.closest('.ids-toggle__source'));
-
-radioButtonContainers.forEach((radioButtonContainer: HTMLInputElement) => {
-    const radioButtonInstance = new RadioButtonInput(radioButtonContainer);
-
-    radioButtonInstance.init();
-});
-
-const radioButtonsListFieldContainers = document.querySelectorAll<HTMLDivElement>(
-    '.ids-radio-buttons-list-field:not([data-ids-custom-init])',
-);
-
-radioButtonsListFieldContainers.forEach((radioButtonsListFieldContainer: HTMLDivElement) => {
-    const radioButtonsListFieldInstance = new RadioButtonsListField(radioButtonsListFieldContainer);
-
-    radioButtonsListFieldInstance.init();
-});
-
-const overflowListContainers = document.querySelectorAll<HTMLDivElement>('.ids-overflow-list:not([data-ids-custom-init])');
-
-overflowListContainers.forEach((overflowListContainer: HTMLDivElement) => {
-    const overflowListInstance = new OverflowList(overflowListContainer);
-
-    overflowListInstance.init();
-});
-
-const tabsContainers = document.querySelectorAll<HTMLDivElement>('.ids-tabs:not([data-ids-custom-init])');
-
-tabsContainers.forEach((tabsContainer: HTMLDivElement) => {
-    const tabsInstance = new Tabs(tabsContainer);
-
-    tabsInstance.init();
-});
-
-const toggleButtonFieldContainers = document.querySelectorAll<HTMLDivElement>('.ids-toggle-field:not([data-ids-custom-init])');
-
-toggleButtonFieldContainers.forEach((toggleButtonFieldContainer: HTMLDivElement) => {
-    const toggleButtonFieldInstance = new ToggleButtonField(toggleButtonFieldContainer);
-
-    toggleButtonFieldInstance.init();
-});
-
-const toggleButtonContainers = document.querySelectorAll<HTMLDivElement>('.ids-toggle:not([data-ids-custom-init])');
-
-toggleButtonContainers.forEach((toggleButtonContainer: HTMLDivElement) => {
-    const toggleButtonInstance = new ToggleButtonInput(toggleButtonContainer);
-
-    toggleButtonInstance.init();
+document.addEventListener(COMPONENTS_ADDED_EVENT, (event) => {
+    initComponents(getAddedComponentsRoot(event), { isTwigMarkerRequired: true });
 });
