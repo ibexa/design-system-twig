@@ -6,8 +6,8 @@
     {% set class = html_classes(class, { 'ids-input--indeterminate': indeterminate }) %}
 
     <input
-        class="{{ class }}"
         data-ids-twig
+        class="{{ class }}"
         {{
             attributes.defaults({
                 checked,
