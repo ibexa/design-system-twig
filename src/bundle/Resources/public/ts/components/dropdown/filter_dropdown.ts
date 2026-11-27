@@ -75,23 +75,10 @@ export class FilterDropdown extends DropdownMultiInput {
 
         if (this._isExpanded) {
             this._itemsContainerNode.style.minWidth = `${Math.max(this._widgetNode.offsetWidth, PANEL_MIN_WIDTH).toString()}px`;
-            this.focusFirstFocusableNode();
         }
     }
 
     protected toggleSearchVisibility(): void {} // eslint-disable-line @typescript-eslint/no-empty-function
-
-    protected focusFirstFocusableNode() {
-        const searchInput = this._searchInstance.getInputElement();
-
-        if (this.isSearchVisible()) {
-            searchInput.focus();
-
-            return;
-        }
-
-        this.getVisibleItemsNodes().at(0)?.focus();
-    }
 
     protected initClearBtn() {
         this._clearBtnNode?.addEventListener('click', () => {
